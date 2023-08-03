@@ -17,6 +17,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
+import {useNavigate} from "react-router-dom";
 
 type HomeItem = {
     id: string
@@ -35,9 +36,10 @@ const items: HomeItem[] = [
 
 export const SpaceItem = (props: SpaceItemProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const navigate = useNavigate()
 
     const onClickSpace = (spaceId: string) => {
-
+        navigate(`/s/${spaceId}`)
     }
 
     const handleMenu = (event: MouseEvent<HTMLElement>) => {
@@ -141,8 +143,8 @@ export const Home = () => {
                 </ListSubheader>
             }
         >
-            {items.map((e) => (
-                <SpaceItem spaceData={e}/>
+            {items.map((e, i) => (
+                <SpaceItem key={i} spaceData={e}/>
             ))}
         </List>
     </>

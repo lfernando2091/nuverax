@@ -3,6 +3,7 @@ import {Outlet, Route, Routes} from "react-router-dom";
 import {useContext, createContext} from "react";
 import {Home} from "./home/Home";
 import {Settings} from "./settings/Settings";
+import {Space} from "./space/Space";
 
 export type AppState = {
     appVersion: string
@@ -34,6 +35,7 @@ export const PagesRouter = () => {
                 <Route path="/" element={<PagesLayout />}>
                     <Route index element={<Home />} />
                     <Route path="settings" element={<Settings />} />
+                    <Route path="s/:id" element={<Space />} />
                 </Route>
             </Routes>
         </AppContext.Provider>
