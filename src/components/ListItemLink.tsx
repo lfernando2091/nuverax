@@ -11,7 +11,8 @@ interface ListItemLinkProps {
     primary: string;
     secondary?: string;
     to: string;
-    active?: boolean
+    active?: boolean;
+    disabled?: boolean
 }
 
 interface ButtonLinkProps {
@@ -48,11 +49,12 @@ export const ListItemLink = (props: ListItemLinkProps) => {
         primary,
         to ,
         secondary,
-        active
+        active,
+        disabled
     } = props;
 
     return (
-        <ListItemButton selected={active} component={Link} to={to}>
+        <ListItemButton selected={active} disabled={disabled} component={Link} to={to}>
             {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
             <ListItemText primary={primary} secondary={secondary}/>
         </ListItemButton>

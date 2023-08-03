@@ -1,16 +1,21 @@
 import {OneColumnLayout} from "../@core";
 import {Outlet, Route, Routes} from "react-router-dom";
-import {useContext, createContext} from "react";
+import {useContext, createContext, useState} from "react";
 import {Home} from "./home/Home";
 import {Settings} from "./settings/Settings";
 import {Space} from "./space/Space";
+import {defaultMenu, NavMenu} from "../@core/layout/Menu";
 
 export type AppState = {
-    appVersion: string
+    appVersion: string,
+    navMenu?: NavMenu,
+    setNavMenu: (value: NavMenu) => void
 }
 
 export const AppContext = createContext<AppState>({
-    appVersion: ""
+    appVersion: "",
+    navMenu: defaultMenu,
+    setNavMenu: (_value: NavMenu) => {}
 })
 
 export const useAppContext = () => useContext(AppContext)
@@ -24,9 +29,16 @@ const PagesLayout = () => {
 }
 
 export const PagesRouter = () => {
+    const [navMenu, setNavMenu] = useState<NavMenu>()
+
+    const updateNavMenu = (value: NavMenu) => {
+        setNavMenu(value)
+    }
 
     const state: AppState = {
-        appVersion: "0.0.1"
+        appVersion: "0.0.1",
+        navMenu,
+        setNavMenu: updateNavMenu
     }
 
     return (

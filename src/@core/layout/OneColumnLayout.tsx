@@ -1,5 +1,5 @@
 import "./OneColumnLayout.css"
-import {ReactNode} from "react";
+import {ReactNode, useState} from "react";
 import {Footer} from "./components/Footer";
 import {Header} from "./components/Header";
 import {
@@ -10,16 +10,18 @@ import {
     Grid, List, ListItem, ListItemAvatar, ListItemText,
     Toolbar
 } from "@mui/material";
-import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import {ListItemLink} from "../../components/ListItemLink";
+import {useAppContext} from "../../pages/router";
+import {SubMenu1Skeleton, SubMenu2Skeleton} from "./skeleton/Skeleton";
 
 export type Props = {
     children: ReactNode
 }
 const drawerWidth = 220;
 export const OneColumnLayout = ({ children }: Props) => {
+    const { navMenu } = useAppContext()
+
     return (<>
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
@@ -43,38 +45,50 @@ export const OneColumnLayout = ({ children }: Props) => {
                     }}
                 >
                     <Grid item>
-                        <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <RocketLaunchIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary="User ABC" />
-                        </ListItem>
-                        <List dense
-                              component="nav"
-                              aria-label="home">
-                            <ListItemLink
-                                to=""
-                                primary="Home"
-                                active
-                                icon={<HomeIcon/>}/>
-                        </List>
+                        {!navMenu &&
+                            <SubMenu1Skeleton/>
+                        }
+                        {navMenu && navMenu.subMenu1 &&
+                            <>
+                                <ListItem>
+                                    <ListItemAvatar>
+                                        <Avatar>
+                                            <RocketLaunchIcon />
+                                        </Avatar>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        primary="User ABC" />
+                                </ListItem>
+                                <List dense
+                                      component="nav">
+                                    {navMenu.subMenu1.map((e, i) => (
+                                        <ListItemLink
+                                            key={i}
+                                            to={e.to ?? ""}
+                                            disabled={e.disabled}
+                                            primary={e.name}
+                                            active={e.active}/>
+                                    ))}
+                                </List>
+                            </>
+                        }
                     </Grid>
                     <Grid item>
-                        <List dense
-                              component="nav"
-                              aria-label="settings upgrade-now">
-                            {/*<ListItemLink*/}
-                            {/*    to="/settings"*/}
-                            {/*    primary="Upgrade Now"*/}
-                            {/*    icon={<RocketLaunchIcon/>}/>*/}
-                            <ListItemLink
-                                to="/settings"
-                                primary="Setting"
-                                icon={<SettingsIcon/>}/>
-                        </List>
+                        {!navMenu &&
+                            <SubMenu2Skeleton/>
+                        }
+                        {navMenu && navMenu.subMenu2 &&
+                            <List dense
+                                  component="nav">
+                            {navMenu.subMenu2.map((e, i) => (
+                                <ListItemLink
+                                    key={i}
+                                    disabled={e.disabled}
+                                    to={e.to ?? ""}
+                                    primary={e.name}/>
+                            ))}
+                            </List>
+                        }
                     </Grid>
                 </Grid>
             </Drawer>

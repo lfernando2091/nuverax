@@ -12,12 +12,14 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import {MouseEvent, useState} from "react";
+import {MouseEvent, useEffect, useState} from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import {useNavigate} from "react-router-dom";
+import {useAppContext} from "../router";
+import {defaultMenu} from "../../@core";
 
 type HomeItem = {
     id: string
@@ -109,6 +111,12 @@ export const SpaceItem = (props: SpaceItemProps) => {
 }
 
 export const Home = () => {
+    const { setNavMenu } = useAppContext()
+
+    useEffect(() => {
+        setNavMenu(defaultMenu)
+    }, []);
+
     return <>
         <h3>Home</h3>
         <Grid container spacing={2}>
