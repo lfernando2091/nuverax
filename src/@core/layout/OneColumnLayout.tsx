@@ -4,16 +4,18 @@ import {Footer} from "./components/Footer";
 import {Header} from "./components/Header";
 import {
     Avatar,
-    Box,
+    Box, Button,
     CssBaseline,
     Drawer,
-    Grid, List, ListItem, ListItemAvatar, ListItemText,
-    Toolbar
+    Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListSubheader, Stack,
+    Toolbar, Typography
 } from "@mui/material";
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import {ListItemLink} from "../../components/ListItemLink";
 import {useAppContext} from "../../pages/router";
 import {SubMenu1Skeleton, SubMenu2Skeleton} from "./skeleton/Skeleton";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import {Link} from "react-router-dom";
 
 export type Props = {
     children: ReactNode
@@ -45,31 +47,50 @@ export const OneColumnLayout = ({ children }: Props) => {
                     }}
                 >
                     <Grid item>
+                        {navMenu && navMenu.back &&
+                            <Button size="small"
+                                    component={Link}
+                                    to={ navMenu.back.path }
+                                    sx={{ marginTop: "10px", marginBottom: "10px" }}
+                                    startIcon={<ArrowBackIosIcon />}>
+                                { navMenu.back.name }
+                            </Button>
+                        }
                         {!navMenu &&
                             <SubMenu1Skeleton/>
                         }
+                        {navMenu && navMenu.profile &&
+                            <ListItem sx={{ marginBottom: "10px" }}>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <RocketLaunchIcon />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={navMenu.profile.name}/>
+                            </ListItem>
+                        }
                         {navMenu && navMenu.subMenu1 &&
                             <>
-                                <ListItem>
-                                    <ListItemAvatar>
-                                        <Avatar>
-                                            <RocketLaunchIcon />
-                                        </Avatar>
-                                    </ListItemAvatar>
-                                    <ListItemText
-                                        primary="User ABC" />
-                                </ListItem>
+                            {navMenu.subMenu1.map((main, iMain) => (
                                 <List dense
-                                      component="nav">
-                                    {navMenu.subMenu1.map((e, i) => (
+                                      key={iMain}
+                                      component="nav"
+                                      subheader={
+                                          (main.header ? <ListSubheader component="div">
+                                              {main.header}
+                                          </ListSubheader>: <></>)
+                                      }>
+                                    {main.items.map((item, iItem) => (
                                         <ListItemLink
-                                            key={i}
-                                            to={e.to ?? ""}
-                                            disabled={e.disabled}
-                                            primary={e.name}
-                                            active={e.active}/>
+                                            key={iItem}
+                                            to={item.to ?? ""}
+                                            disabled={item.disabled}
+                                            primary={item.name}
+                                            active={item.active}/>
                                     ))}
                                 </List>
+                            ))}
                             </>
                         }
                     </Grid>

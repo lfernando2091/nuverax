@@ -37,7 +37,7 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
 
 export const LinkButton = (props: ButtonLinkProps) => {
     return (
-        <Button sx={{ color: "#fff", fontSize: "20px" }} color="info" component={RouterLink} to={props.to}>
+        <Button sx={{ color: "#fff", fontSize: "20px" }} component={RouterLink} to={props.to}>
             {props.text}
         </Button>
     )

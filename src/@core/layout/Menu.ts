@@ -1,23 +1,3 @@
-// import {createElement, lazy} from "react";
-// import { asyncComponent } from 'react-async-component'
-
-// export const MaterialIcon = (icon: string) => {
-//     const iconName = icon.replace(/Icon$/, '')
-//     const resolved = require(`@mui/icons-material/${iconName}`).default
-//     if (!resolved) {
-//         throw Error(`Could not find @mui/icons-material/${iconName}`)
-//     }
-//     return createElement(resolved)
-// }
-
-// const MaterialIconAsync = ({ icon }: { icon: string }) => {
-//     let iconName = icon.replace(/Icon$/, '')
-//     return createElement(asyncComponent({
-//         resolve: () => import(
-//             /* webpackMode: "eager" */
-//             `material-ui-icons/${iconName}`)
-//     }))
-// }
 
 export class MenuItem {
     name: string = "Menu A";
@@ -27,14 +7,37 @@ export class MenuItem {
     active?: boolean = false
 }
 
+export interface Profile {
+    name: string
+}
+
+export interface Back {
+    name: string
+    path: string
+}
+
+export type MainMenu = {
+    header?: string
+    items: MenuItem[]
+}
+
 export type NavMenu = {
-    subMenu1: MenuItem[]
+    profile?: Profile,
+    back?: Back,
+    subMenu1: MainMenu[]
     subMenu2?: MenuItem[]
 }
 
 export const defaultMenu: NavMenu = {
+    profile: {
+        name: "ANC 1"
+    },
     subMenu1: [
-        { name: "Home", to: "", active: true, icon: "Home" }
+        {
+            items: [
+                { name: "Home", to: "/", active: true, icon: "Home" }
+            ]
+        }
     ],
     subMenu2: [
         { name: "Upgrade Now", to: "/upgrade", icon: "RocketLaunchIcon" },

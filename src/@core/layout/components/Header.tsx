@@ -12,7 +12,7 @@ export const Header = () => {
             elevation={0}>
             <Toolbar variant="dense">
                 <div style={{ flexGrow: 1 }}>
-                    <LinkButton to="" text="NX"/>
+                    <LinkButton to="/" text="NX"/>
                 </div>
                 {/*<Typography*/}
                 {/*    component="h5"*/}

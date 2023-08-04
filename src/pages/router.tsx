@@ -3,8 +3,8 @@ import {Outlet, Route, Routes} from "react-router-dom";
 import {useContext, createContext, useState} from "react";
 import {Home} from "./home/Home";
 import {Settings} from "./settings/Settings";
-import {Space} from "./space/Space";
 import {defaultMenu, NavMenu} from "../@core/layout/Menu";
+import {spaceRouter} from "./space/router";
 
 export type AppState = {
     appVersion: string,
@@ -47,7 +47,9 @@ export const PagesRouter = () => {
                 <Route path="/" element={<PagesLayout />}>
                     <Route index element={<Home />} />
                     <Route path="settings" element={<Settings />} />
-                    <Route path="s/:id" element={<Space />} />
+                </Route>
+                <Route path="/s/:id" element={<PagesLayout />}>
+                    { spaceRouter() }
                 </Route>
             </Routes>
         </AppContext.Provider>
