@@ -5,6 +5,8 @@ import {navBar} from "./NavBar";
 import {Button, Card, Grid, Typography} from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteIcon from "@mui/icons-material/Delete";
+import UploadIcon from '@mui/icons-material/Upload';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 export const Space = () => {
     const params = useParams()
@@ -46,11 +48,23 @@ export const Space = () => {
                             paddingTop: "10px",
                             paddingBottom: "10px"
                         }}
-                        startIcon={<DeleteIcon />}>
-                    Delete
+                        startIcon={<UploadIcon />}>
+                    Upload Document
                 </Button>
             </Grid>
             <Grid item xs={6} md={4}>
+                <Button variant="outlined"
+                        color="inherit"
+                        fullWidth
+                        disableElevation
+                        sx={{
+                            borderRadius: "0px",
+                            paddingTop: "10px",
+                            paddingBottom: "10px"
+                        }}
+                        startIcon={<DriveFileRenameOutlineIcon />}>
+                    Request Sign
+                </Button>
             </Grid>
         </Grid>
     </>)
