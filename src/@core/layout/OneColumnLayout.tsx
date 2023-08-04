@@ -4,10 +4,10 @@ import {Footer} from "./components/Footer";
 import {Header} from "./components/Header";
 import {
     Avatar,
-    Box, Button,
+    Box, Button, Card,
     CssBaseline,
     Drawer,
-    Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListSubheader, Stack,
+    Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListSubheader, Paper, Stack,
     Toolbar, Typography
 } from "@mui/material";
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
@@ -16,20 +16,28 @@ import {useAppContext} from "../../pages/router";
 import {SubMenu1Skeleton, SubMenu2Skeleton} from "./skeleton/Skeleton";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import {Link} from "react-router-dom";
+import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
 
 export type Props = {
     children: ReactNode
 }
 const drawerWidth = 220;
 export const OneColumnLayout = ({ children }: Props) => {
-    const { navMenu } = useAppContext()
+    const { navMenu, toolbar } = useAppContext()
+    const [navbarOpen, setNavbarOpen] = useState(true);
+
+    const handleDrawerToggle = () => {
+        setNavbarOpen(!navbarOpen);
+    }
 
     return (<>
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <Header/>
             <Drawer
-                variant="permanent"
+                variant="persistent"
+                open={navbarOpen}
+                onClose={handleDrawerToggle}
                 sx={{
                     width: drawerWidth,
                     flexShrink: 0,
@@ -119,6 +127,13 @@ export const OneColumnLayout = ({ children }: Props) => {
                 width: "100%"
             }}>
                 <Toolbar variant="dense"/>
+                {toolbar &&
+                    <Paper variant="outlined" square >
+                        {/*<IconButton onClick={handleDrawerToggle} size="small">*/}
+                        {/*    <ChromeReaderModeIcon />*/}
+                        {/*</IconButton>*/}
+                    </Paper>
+                }
                 <Box component="div" sx={{
                     display: 'flex',
                     flexDirection: 'column',

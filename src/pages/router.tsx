@@ -10,12 +10,16 @@ export type AppState = {
     appVersion: string,
     navMenu?: NavMenu,
     setNavMenu: (value: NavMenu) => void
+    toolbar: boolean
+    showToolbar: (value: boolean) => void
 }
 
 export const AppContext = createContext<AppState>({
     appVersion: "",
     navMenu: defaultMenu,
-    setNavMenu: (_value: NavMenu) => {}
+    setNavMenu: (_value: NavMenu) => {},
+    toolbar: false,
+    showToolbar: (_value: boolean) => {}
 })
 
 export const useAppContext = () => useContext(AppContext)
@@ -30,15 +34,21 @@ const PagesLayout = () => {
 
 export const PagesRouter = () => {
     const [navMenu, setNavMenu] = useState<NavMenu>()
-
+    const [toolbar, setToolBar] = useState(false)
     const updateNavMenu = (value: NavMenu) => {
         setNavMenu(value)
+    }
+
+    const showToolbar = (value: boolean) => {
+        setToolBar(value)
     }
 
     const state: AppState = {
         appVersion: "0.0.1",
         navMenu,
-        setNavMenu: updateNavMenu
+        setNavMenu: updateNavMenu,
+        toolbar,
+        showToolbar
     }
 
     return (

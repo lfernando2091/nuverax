@@ -72,26 +72,26 @@ export const SpaceItem = (props: SpaceItemProps) => {
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        <MenuItem>
+                        <MenuItem dense>
                             <ListItemIcon>
                                 <EditIcon fontSize="small" />
                             </ListItemIcon>
                             <ListItemText>Edit</ListItemText>
                         </MenuItem>
-                        <MenuItem>
+                        <MenuItem dense>
                             <ListItemIcon>
                                 <TextFieldsIcon fontSize="small" />
                             </ListItemIcon>
                             <ListItemText>Rename</ListItemText>
                         </MenuItem>
-                        <MenuItem>
+                        <MenuItem dense>
                             <ListItemIcon>
                                 <ContentCopyIcon fontSize="small" />
                             </ListItemIcon>
                             <ListItemText>Duplicate</ListItemText>
                         </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
-                        <MenuItem>
+                        <MenuItem dense>
                             <ListItemIcon>
                                 <DeleteIcon fontSize="small" />
                             </ListItemIcon>
@@ -111,10 +111,11 @@ export const SpaceItem = (props: SpaceItemProps) => {
 }
 
 export const Home = () => {
-    const { setNavMenu } = useAppContext()
+    const { setNavMenu, showToolbar } = useAppContext()
 
     useEffect(() => {
         setNavMenu(defaultMenu)
+        showToolbar(false)
     }, []);
 
     return <>
