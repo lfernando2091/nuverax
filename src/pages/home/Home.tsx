@@ -10,7 +10,6 @@ import {
     Typography
 } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
-import GroupWorkIcon from '@mui/icons-material/GroupWork';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {MouseEvent, useEffect, useState} from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -18,8 +17,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import EditIcon from '@mui/icons-material/Edit';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import {useNavigate} from "react-router-dom";
-import {useAppContext} from "../router";
-import {defaultMenu} from "../../@core";
+import SmartButtonIcon from '@mui/icons-material/SmartButton';
 
 type HomeItem = {
     id: string
@@ -102,7 +100,7 @@ export const SpaceItem = (props: SpaceItemProps) => {
             } disablePadding>
             <ListItemButton onClick={() => onClickSpace(`${props.spaceData.id}`)}>
                 <ListItemIcon>
-                    <GroupWorkIcon />
+                    <SmartButtonIcon />
                 </ListItemIcon>
                 <ListItemText primary={props.spaceData.name} />
             </ListItemButton>
@@ -111,12 +109,6 @@ export const SpaceItem = (props: SpaceItemProps) => {
 }
 
 export const Home = () => {
-    const { setNavMenu, showToolbar } = useAppContext()
-
-    useEffect(() => {
-        setNavMenu(defaultMenu)
-        showToolbar(false)
-    }, []);
 
     return <>
         <h3>Home</h3>

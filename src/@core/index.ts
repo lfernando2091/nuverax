@@ -1,3 +1,5 @@
 export { OneColumnLayout } from './layout/OneColumnLayout';
-export { defaultMenu } from './layout/Menu';
-export type { NavMenu } from './layout/Menu';
+export { AppContext, useAppContext } from './context/AppContext';
+export type { AppState } from './context/AppContext';
+export { NavMenu } from "./layout/components/NavMenu"
+export { MainContent } from "./layout/components/MainContent"

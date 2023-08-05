@@ -1,39 +1,20 @@
 import "./OneColumnLayout.css"
-import {ReactNode, useState} from "react";
-import {Footer} from "./components/Footer";
+import {ReactNode} from "react";
 import {Header} from "./components/Header";
 import {
-    Avatar,
-    Box, Button, Card,
-    CssBaseline,
-    Drawer,
-    Grid, IconButton, List, ListItem, ListItemAvatar, ListItemText, ListSubheader, Paper, Stack,
-    Toolbar, Typography
+    Box,
+    CssBaseline
 } from "@mui/material";
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import {ListItemLink} from "../../components/ListItemLink";
-import {useAppContext} from "../../pages/router";
-import {SubMenu1Skeleton, SubMenu2Skeleton} from "./skeleton/Skeleton";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import {Link} from "react-router-dom";
-import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
 
 export type Props = {
     children: ReactNode
 }
-const drawerWidth = 220;
 export const OneColumnLayout = ({ children }: Props) => {
-    const { navMenu, toolbar } = useAppContext()
-    const [navbarOpen, setNavbarOpen] = useState(true);
-
-    const handleDrawerToggle = () => {
-        setNavbarOpen(!navbarOpen);
-    }
-
     return (<>
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <Header/>
+            {/*
             <Drawer
                 variant="persistent"
                 open={navbarOpen}
@@ -121,19 +102,13 @@ export const OneColumnLayout = ({ children }: Props) => {
                     </Grid>
                 </Grid>
             </Drawer>
+
             <Box component="main" sx={{
                 overflowX: 'hidden',
                 overflowY: "visible",
                 width: "100%"
             }}>
                 <Toolbar variant="dense"/>
-                {toolbar &&
-                    <Paper variant="outlined" square >
-                        {/*<IconButton onClick={handleDrawerToggle} size="small">*/}
-                        {/*    <ChromeReaderModeIcon />*/}
-                        {/*</IconButton>*/}
-                    </Paper>
-                }
                 <Box component="div" sx={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -145,6 +120,8 @@ export const OneColumnLayout = ({ children }: Props) => {
                 </Box>
                 <Footer/>
             </Box>
+            */}
+            {children}
         </Box>
     </>)
 }

@@ -1,6 +1,4 @@
 import {SyntheticEvent, useEffect, useState} from "react";
-import {navBar} from "../NavBar";
-import {useAppContext} from "../../router";
 import {useParams} from "react-router-dom";
 import {
     Accordion,
@@ -29,18 +27,12 @@ const pages: PageData[] = [
 export const Document = () => {
     const [expanded, setExpanded] = useState<string | false>("panel1")
     const params = useParams()
-    const { setNavMenu, showToolbar } = useAppContext()
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
 
     const handleChange =
         (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
             setExpanded(isExpanded ? panel : false);
         }
-
-    useEffect(() => {
-        setNavMenu(navBar)
-        showToolbar(true)
-    }, []);
 
     const onAiAnalyst = () => {
         setShorAiAnalyst(true)

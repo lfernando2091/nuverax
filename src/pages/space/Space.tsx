@@ -1,23 +1,14 @@
 import {useParams} from "react-router-dom";
-import {useAppContext} from "../router";
 import {useEffect, useState} from "react";
-import {navBar} from "./NavBar";
 import {Button, Card, Drawer, Grid, Typography} from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import DeleteIcon from "@mui/icons-material/Delete";
 import UploadIcon from '@mui/icons-material/Upload';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import {AIAnalyst} from "../../components/AIAnalyst";
 
 export const Space = () => {
     const params = useParams()
-    const { setNavMenu, showToolbar } = useAppContext()
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
-
-    useEffect(() => {
-        setNavMenu(navBar)
-        showToolbar(true)
-    }, []);
 
     const onAiAnalyst = () => {
         setShorAiAnalyst(true)

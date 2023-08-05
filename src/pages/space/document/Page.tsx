@@ -1,7 +1,6 @@
 import {Avatar, Card, CardHeader, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem} from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import {MouseEvent, useState} from "react";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ArticleIcon from '@mui/icons-material/Article';
