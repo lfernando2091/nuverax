@@ -5,6 +5,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ArticleIcon from '@mui/icons-material/Article';
+import {AIAnalyst} from "../../../components/AIAnalyst";
 
 export type PageProps = {
     pageNumber: number,
@@ -16,6 +17,8 @@ export const Page = ({
                          pageTitle
                      }: PageProps) => {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [showAiAnalyst, setShorAiAnalyst] = useState(false)
+
     const handleMenu = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -23,9 +26,18 @@ export const Page = ({
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const onAiAnalyst = () => {
+        setShorAiAnalyst(true)
+    }
+
+    const onClose = () => {
+        setShorAiAnalyst(false)
+    }
+
     return (
         <>
-            <Card square elevation={1} variant="outlined">
+            <Card square variant="outlined">
                 <CardHeader
                     avatar={
                         <Avatar>
@@ -54,7 +66,7 @@ export const Page = ({
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
             >
-                <MenuItem dense>
+                <MenuItem dense onClick={onAiAnalyst}>
                     <ListItemIcon>
                         <AutoAwesomeIcon fontSize="small" />
                     </ListItemIcon>
@@ -74,6 +86,15 @@ export const Page = ({
                     <ListItemText>Delete</ListItemText>
                 </MenuItem>
             </Menu>
+
+            <AIAnalyst
+                context={{
+                    title: pageTitle,
+                    type: "page",
+                    id: "0"
+                }}
+                show={showAiAnalyst}
+                onClose={onClose}/>
         </>
     )
 }

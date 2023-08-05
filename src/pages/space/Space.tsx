@@ -1,21 +1,31 @@
 import {useParams} from "react-router-dom";
 import {useAppContext} from "../router";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {navBar} from "./NavBar";
-import {Button, Card, Grid, Typography} from "@mui/material";
+import {Button, Card, Drawer, Grid, Typography} from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DeleteIcon from "@mui/icons-material/Delete";
 import UploadIcon from '@mui/icons-material/Upload';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import {AIAnalyst} from "../../components/AIAnalyst";
 
 export const Space = () => {
     const params = useParams()
     const { setNavMenu, showToolbar } = useAppContext()
+    const [showAiAnalyst, setShorAiAnalyst] = useState(false)
 
     useEffect(() => {
         setNavMenu(navBar)
         showToolbar(true)
     }, []);
+
+    const onAiAnalyst = () => {
+        setShorAiAnalyst(true)
+    }
+
+    const onClose = () => {
+        setShorAiAnalyst(false)
+    }
 
     return (<>
         <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
@@ -34,6 +44,7 @@ export const Space = () => {
                             paddingTop: "10px",
                             paddingBottom: "10px"
                         }}
+                        onClick={onAiAnalyst}
                         startIcon={<AutoAwesomeIcon />}>
                     AI Space Analyst
                 </Button>
@@ -67,5 +78,13 @@ export const Space = () => {
                 </Button>
             </Grid>
         </Grid>
+        <AIAnalyst
+            context={{
+                title: params["id"] ?? "0",
+                type: "space",
+                id: "0"
+            }}
+            show={showAiAnalyst}
+            onClose={onClose}/>
     </>)
 }
