@@ -48,7 +48,10 @@ export const AIAnalyst = ({
             // context.id
             setMessages([...messages, {
                 message: question,
-                type: "user",
+                type: "user"
+            }, {
+                message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec semper augue sit amet odio vehicula euismod vel ac leo. Sed facilisis mauris vel ex ultricies, id consequat nisi blandit. Donec nec arcu rutrum, finibus lacus quis, eleifend nunc. Pellentesque interdum porta libero non mattis. Integer elementum quis turpis non blandit.",
+                type: "ai",
                 sources: [
                     { name: "doc_abc.pdf", id: "abc1" },
                     { name: "doc_abc_cjcjc.pdf", id: "abc2" }
