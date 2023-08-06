@@ -1,4 +1,16 @@
-import {Avatar, Card, CardContent, CardHeader, Chip, Typography} from "@mui/material";
+import {
+    Avatar,
+    Card,
+    CardActions,
+    CardContent,
+    CardHeader,
+    Chip,
+    Collapse, IconButton,
+    IconButtonProps, styled,
+    Typography
+} from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import {useState} from "react";
 
 export type Source = {
     name: string,
@@ -17,11 +29,32 @@ export type MessageData = {
     sources?: Source[]
 }
 
+interface ExpandMoreProps extends IconButtonProps {
+    expand: boolean;
+}
+
+const ExpandMore = styled((props: ExpandMoreProps) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+    }),
+}))
+
 export const Message = ({
                             type,
                             message,
                             sources
                         }: MessageProps) => {
+    const [expanded, setExpanded] = useState(false)
+
+    const handleExpandClick = () => {
+        setExpanded(!expanded);
+    }
+
     const onSelectSource = () => {
 
     }
@@ -51,16 +84,32 @@ export const Message = ({
                 }
             />
             {sources &&
-                <CardContent>
-                    {sources.map((e, i) => (
-                        <Chip key={i}
-                              sx={{ mx: "3px" }}
-                              onClick={onSelectSource}
-                              label={e.name}
-                              size="small"
-                              variant="outlined"/>
-                    ))}
-                </CardContent>
+                <>
+                    <CardActions disableSpacing>
+                        <Chip
+                            sx={{ mx: "3px" }}
+                            label="3 sources"
+                            size="small"/>
+                        <ExpandMore
+                            expand={expanded}
+                            onClick={handleExpandClick}
+                        >
+                            <ExpandMoreIcon />
+                        </ExpandMore>
+                    </CardActions>
+                    <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        <CardContent>
+                            {sources.map((e, i) => (
+                                <Chip key={i}
+                                      sx={{ mx: "3px" }}
+                                      onClick={onSelectSource}
+                                      label={e.name}
+                                      size="small"
+                                      variant="outlined"/>
+                            ))}
+                        </CardContent>
+                    </Collapse>
+                </>
             }
         </Card>
     </>)

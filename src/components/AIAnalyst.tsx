@@ -177,10 +177,10 @@ export const AIAnalyst = ({
                         }
                     >
                         <ListItemButton>
-                            <ListItemText primary={"Suggestion 1"} />
+                            <ListItemText primary={"Summary"} />
                         </ListItemButton>
                         <ListItemButton>
-                            <ListItemText primary={"Suggestion 2"} />
+                            <ListItemText primary={"5 important points"} />
                         </ListItemButton>
                         <ListItemButton>
                             <ListItemText primary={"Suggestion 3"} />

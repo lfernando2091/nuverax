@@ -13,6 +13,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Page} from "./Page";
 import {AIAnalyst} from "../../../components/AIAnalyst";
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 
 type PageData = {
     text: string
@@ -77,7 +78,7 @@ export const Document = () => {
                             paddingTop: "10px",
                             paddingBottom: "10px"
                         }}
-                        startIcon={<DeleteIcon />}>
+                        startIcon={<DriveFileRenameOutlineIcon />}>
                     Add Signer
                 </Button>
             </Grid>
