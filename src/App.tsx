@@ -6,7 +6,7 @@ import {router} from "./pages/Router";
 
 function App() {
     const state: AppState = {
-        appVersion: "0.0.1"
+        appVersion: "0.0.1-experimental"
     }
 
   return (
