@@ -1,6 +1,4 @@
 import {Outlet, Route, Link} from "react-router-dom";
-import {Space} from "./Space";
-import {Document} from "./document/Document";
 import {MainContent, NavMenu, OneColumnLayout} from "../../@core";
 import {Box, Button, Grid, IconButton, List, ListSubheader, Paper} from "@mui/material";
 import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
@@ -9,13 +7,6 @@ import {ListItemLink} from "../../components/ListItemLink";
 import SmartButtonIcon from '@mui/icons-material/SmartButton';
 import ArticleIcon from '@mui/icons-material/Article';
 import {DocumentModel} from "./models/SpaceModel";
-
-export const spaceRouter = () => (
-    <>
-        <Route index element={<Space />} />
-        <Route path="d/:id" element={<Document />} />
-    </>
-)
 
 const docsList: DocumentModel[] = [
     { id: "abc1", name: "Document 1" },
@@ -43,7 +34,7 @@ export const SpaceLayout = () => {
                                 to="/"
                                 sx={{ marginTop: "10px", marginBottom: "10px" }}
                                 startIcon={<ArrowBackIosIcon />}>
-                            Back to Home
+                            Home
                         </Button>
                         <List dense
                               sx={{ marginBottom: "10px" }}

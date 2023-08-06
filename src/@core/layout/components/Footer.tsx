@@ -1,7 +1,10 @@
 import "./Footer.css"
 import {Box, Container, Typography} from "@mui/material";
+import {useAppContext} from "../../context/AppContext";
 
 export const Footer = () => {
+    const { appVersion } = useAppContext()
+
     return (
         <Box
             component="footer"
@@ -17,7 +20,7 @@ export const Footer = () => {
         >
             <Container maxWidth="sm">
                 <Typography variant="body1">
-                    NuveraX
+                    NuveraX {`v${appVersion}`}
                 </Typography>
             </Container>
         </Box>

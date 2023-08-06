@@ -83,7 +83,6 @@ export const Document = () => {
             </Grid>
         </Grid>
         <Accordion expanded={expanded === 'panel1'}
-                   elevation={1}
                    square
                    variant="outlined"
                    onChange={handleChange('panel1')}>
@@ -103,7 +102,7 @@ export const Document = () => {
                       spacing={2}>
                     {pages.map((e, i) => (
                         <Grid item xs={6} md={4}>
-                            <Page pageNumber={i + 1} pageTitle={e.text}/>
+                            <Page key={i} pageNumber={i + 1} pageTitle={e.text}/>
                         </Grid>
                     ))}
                 </Grid>

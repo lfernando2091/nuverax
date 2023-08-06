@@ -1,19 +1,10 @@
 import {MainContent, NavMenu, OneColumnLayout} from "../@core";
-import {Outlet, Route} from "react-router-dom";
-import {Home} from "./home/Home";
-import {Settings} from "./settings/Settings";
+import {Outlet} from "react-router-dom";
 import {Avatar, Box, Grid, List, ListItem, ListItemAvatar, ListItemText, ListSubheader} from "@mui/material";
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import {ListItemLink} from "../components/ListItemLink";
 import BlurOnIcon from '@mui/icons-material/BlurOn';
 import SettingsIcon from '@mui/icons-material/Settings';
-
-export const pagesRouter = () => {
-    return (<>
-        <Route index element={<Home />} />
-        <Route path="settings" element={<Settings />} />
-    </>)
-}
 export const PagesLayout = () => {
     return (<>
         <OneColumnLayout>
