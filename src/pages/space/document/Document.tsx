@@ -78,6 +78,20 @@ export const Document = () => {
                             paddingBottom: "10px"
                         }}
                         startIcon={<DeleteIcon />}>
+                    Add Signer
+                </Button>
+            </Grid>
+            <Grid item xs={6} md={4}>
+                <Button variant="outlined"
+                        color="inherit"
+                        fullWidth
+                        disableElevation
+                        sx={{
+                            borderRadius: "0px",
+                            paddingTop: "10px",
+                            paddingBottom: "10px"
+                        }}
+                        startIcon={<DeleteIcon />}>
                     Delete
                 </Button>
             </Grid>
