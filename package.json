@@ -28,8 +28,9 @@
     "react-dom": "^17.0.0 || ^18.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "env-cmd -f .env.local react-scripts start .env.local",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build:dev": "env-cmd -f .env.dev npm run build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
