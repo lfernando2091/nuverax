@@ -1,5 +1,6 @@
 import {createBrowserRouter, createRoutesFromElements, Route} from "react-router-dom";
 import {spaceRouter} from "./space/Router";
+import {requestSignRouter} from "./request-sign/Router";
 
 export const pagesRouter = () => {
     return (<>
@@ -28,6 +29,12 @@ export const router = createBrowserRouter(
                 return { Component: SpaceLayout }
             }}>
                 { spaceRouter() }
+            </Route>
+            <Route path="/request-sign/:id" lazy={async () => {
+                const { RequestSignLayout } = await import("./request-sign/RequestSignLayout")
+                return { Component: RequestSignLayout }
+            }}>
+                { requestSignRouter() }
             </Route>
         </>
     )
