@@ -79,7 +79,7 @@ export const Document = () => {
                             paddingBottom: "10px"
                         }}
                         startIcon={<DriveFileRenameOutlineIcon />}>
-                    Add Signer
+                    Edit Fields
                 </Button>
             </Grid>
             <Grid item xs={6} md={4}>
