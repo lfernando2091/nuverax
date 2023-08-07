@@ -1,5 +1,6 @@
 import {createBrowserRouter, createRoutesFromElements, Route} from "react-router-dom";
 import {spaceRouter} from "./space/Router";
+import {editorRouter} from "./editor/Router";
 
 export const pagesRouter = () => {
     return (<>
@@ -28,6 +29,12 @@ export const router = createBrowserRouter(
                 return { Component: SpaceLayout }
             }}>
                 { spaceRouter() }
+            </Route>
+            <Route path="/editor/:id" lazy={async () => {
+                const { EditorLayout } = await import("./editor/EditorLayout")
+                return { Component: EditorLayout }
+            }}>
+                { editorRouter() }
             </Route>
         </>
     )
