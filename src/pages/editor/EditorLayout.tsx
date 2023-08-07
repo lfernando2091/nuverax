@@ -5,20 +5,30 @@ import {
     Grid,
     IconButton,
     InputLabel,
-    List,
+    List, ListItemButton, ListItemIcon, ListItemText,
     ListSubheader,
     MenuItem,
     Paper,
-    Select, SelectChangeEvent,
+    Select, SelectChangeEvent, Stack, styled,
     Typography
 } from "@mui/material";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import {Link, Outlet, useParams, useSearchParams} from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {useState} from "react";
-import {ListItemLink} from "../../components/ListItemLink";
-import SmartButtonIcon from "@mui/icons-material/SmartButton";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import TextFieldsIcon from '@mui/icons-material/TextFields';
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+}));
 
 export const EditorLayout = () => {
     const [searchParams, _setSearchParams] = useSearchParams()
@@ -112,21 +122,60 @@ export const EditorLayout = () => {
                                       Fields
                                   </ListSubheader>
                               }>
-                            <ListItemLink
-                                to=""
-                                disabled={false}
-                                primary="Home"
-                                active={true}
-                                icon={<SmartButtonIcon/>}/>
+                            <ListItemButton
+                                selected={false}
+                                disabled={false}>
+                                <ListItemIcon>{<DriveFileRenameOutlineIcon/>}</ListItemIcon>
+                                <ListItemText primary="Signature"/>
+                            </ListItemButton>
+                            <ListItemButton
+                                selected={false}
+                                disabled={false}>
+                                <ListItemIcon>{<CalendarMonthIcon/>}</ListItemIcon>
+                                <ListItemText primary="Date"/>
+                            </ListItemButton>
+                            <ListItemButton
+                                selected={false}
+                                disabled={false}>
+                                <ListItemIcon>{<TextFieldsIcon/>}</ListItemIcon>
+                                <ListItemText primary="Name"/>
+                            </ListItemButton>
+                            <ListItemButton
+                                selected={false}
+                                disabled={false}>
+                                <ListItemIcon>{<AlternateEmailIcon/>}</ListItemIcon>
+                                <ListItemText primary="Email"/>
+                            </ListItemButton>
                         </List>
                     </Grid>
                 </Grid>
             </NavMenu>
             <MainContent>
                 <Paper variant="outlined" square >
-                    <IconButton size="small">
-                        <ChromeReaderModeIcon />
-                    </IconButton>
+                    <Grid
+                        container
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                    >
+                        <Grid item>
+                            <IconButton size="small">
+                                <ChromeReaderModeIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item>
+                            <Stack direction="row" spacing={2}>
+                                <Item>Item 2</Item>
+                                <Item>Item 3</Item>
+                                <Button
+                                    endIcon={<ArrowForwardIcon />}
+                                    variant="contained"
+                                    size="small">
+                                    Next
+                                </Button>
+                            </Stack>
+                        </Grid>
+                    </Grid>
                 </Paper>
                 <Box component="div" sx={{
                     display: 'flex',
