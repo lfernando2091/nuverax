@@ -31,6 +31,8 @@ Imagine a world where learning from documents becomes an effortless endeavor, an
 - Request signing.
 - And many, many more.
 
+> Note: We are still working to get a MVP [here you can see a concept](https://nuverax-dev.web.app/).
+
 ## Quick start
 
 ```
