@@ -21,6 +21,7 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import {SuccessfulModal} from "./Successful";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -35,12 +36,21 @@ export const EditorLayout = () => {
     const params = useParams()
     const [recipient, setRecipient] = useState("abc123")
     const [document, setDocument] = useState("abc123")
+    const [succesful, setSuccessful] = useState(false)
 
     const onChangeRecipient = (event: SelectChangeEvent) => {
         setRecipient(event.target.value as string)
     }
     const onChangeDocument = (event: SelectChangeEvent) => {
         setDocument(event.target.value as string)
+    }
+
+    const onSuccessful = () => {
+        setSuccessful(true)
+    }
+
+    const onCloseSuccessfulDialog = () => {
+        setSuccessful(false)
     }
 
     return (<>
@@ -169,11 +179,13 @@ export const EditorLayout = () => {
                             <Stack direction="row" spacing={2}>
                                 <TopToolbar/>
                                 <Button
+                                    onClick={onSuccessful}
                                     endIcon={<ArrowForwardIcon />}
                                     variant="contained"
                                     size="small">
                                     Next
                                 </Button>
+                                <SuccessfulModal onClose={onCloseSuccessfulDialog} open={succesful}/>
                             </Stack>
                         </Grid>
                     </Grid>
@@ -217,25 +229,6 @@ export const EditorLayout = () => {
                 </List>
             </NavMenu>
         </OneColumnLayout>
-    </>)
-}
-
-type PageButtonProps = {
-    text: string
-}
-
-const PageButton = ({ text }: PageButtonProps) => {
-
-    return (<>
-        <Card>
-            <CardActionArea>
-                <CardContent>
-                    <Typography gutterBottom variant="body1" component="h6">
-                        { text }
-                    </Typography>
-                </CardContent>
-            </CardActionArea>
-        </Card>
     </>)
 }
 
