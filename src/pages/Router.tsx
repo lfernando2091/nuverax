@@ -9,7 +9,7 @@ export const pagesRouter = () => {
             return { Component: Home }
         }}/>
         <Route path="settings" lazy={async () => {
-            const { Settings } = await import("./settings/Settings")
+            const { Settings } = await import("./home/settings/Settings")
             return { Component: Settings }
         }}/>
     </>)
@@ -19,8 +19,8 @@ export const router = createBrowserRouter(
     createRoutesFromElements(
         <>
             <Route path="/" lazy={async () => {
-                const { PagesLayout } = await import("./PagesLayout")
-                return { Component: PagesLayout }
+                const { HomeLayout } = await import("./home/HomeLayout")
+                return { Component: HomeLayout }
             }}>
                 { pagesRouter() }
             </Route>
