@@ -1,6 +1,7 @@
 import {createBrowserRouter, createRoutesFromElements, Route} from "react-router-dom";
 import {spaceRouter} from "./space/Router";
 import {editorRouter} from "./editor/Router";
+import {signRouter} from "./sign/Router";
 
 export const pagesRouter = () => {
     return (<>
@@ -35,6 +36,12 @@ export const router = createBrowserRouter(
                 return { Component: EditorLayout }
             }}>
                 { editorRouter() }
+            </Route>
+            <Route path="/sign/:id" lazy={async () => {
+                const { SignLayout } = await import("./sign/SignLayout")
+                return { Component: SignLayout }
+            }}>
+                { signRouter() }
             </Route>
         </>
     )
