@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState, ChangeEvent} from "react";
 import {
     Accordion, AccordionDetails, AccordionSummary,
@@ -28,6 +28,8 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 export const Space = () => {
     const params = useParams()
+    const navigate = useNavigate()
+    const location = useLocation()
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
     const [showFileUpload, setShowFileUpload] = useState(false)
     const [showRecipients, setShowRecipients] = useState(false)
@@ -42,6 +44,10 @@ export const Space = () => {
 
     const onOpenFileUpload = () => {
         setShowFileUpload(true)
+    }
+
+    const onStartEditor = () => {
+        navigate(`/editor/${params["id"]}?relay_state=${location.pathname}`)
     }
 
     const onCloseFileUpload = () => {
@@ -99,6 +105,7 @@ export const Space = () => {
                             paddingTop: "10px",
                             paddingBottom: "10px"
                         }}
+                        onClick={onStartEditor}
                         startIcon={<DriveFileRenameOutlineIcon />}>
                     Request Sign
                 </Button>

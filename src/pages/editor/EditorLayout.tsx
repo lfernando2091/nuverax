@@ -1,21 +1,21 @@
 import {MainContent, NavMenu, OneColumnLayout} from "../../@core";
 import {
     Box,
-    Button, Divider, FormControl,
+    Button, Card, CardActionArea, CardContent, Divider, FormControl,
     Grid,
-    IconButton,
+    IconButton, Input,
     InputLabel,
     List, ListItemButton, ListItemIcon, ListItemText,
     ListSubheader,
-    MenuItem,
+    MenuItem, OutlinedInput,
     Paper,
-    Select, SelectChangeEvent, Stack, styled,
+    Select, SelectChangeEvent, Stack, styled, TextField,
     Typography
 } from "@mui/material";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import {Link, Outlet, useParams, useSearchParams} from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import {useState} from "react";
+import {useState, ChangeEvent} from "react";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
@@ -89,7 +89,9 @@ export const EditorLayout = () => {
                                 label="Recipient"
                                 onChange={onChangeRecipient}
                             >
+                                <ListSubheader>Signature Required</ListSubheader>
                                 <MenuItem value="abc123">Luis HHHHHH HHHHHH</MenuItem>
+                                <ListSubheader>Receives a Copy</ListSubheader>
                                 <MenuItem value="abc124">Fernando MMMMM MMMMM</MenuItem>
                             </Select>
                         </FormControl>
@@ -165,8 +167,7 @@ export const EditorLayout = () => {
                         </Grid>
                         <Grid item>
                             <Stack direction="row" spacing={2}>
-                                <Item>Item 2</Item>
-                                <Item>Item 3</Item>
+                                <TopToolbar/>
                                 <Button
                                     endIcon={<ArrowForwardIcon />}
                                     variant="contained"
@@ -187,6 +188,134 @@ export const EditorLayout = () => {
                     <Outlet />
                 </Box>
             </MainContent>
+            <NavMenu
+                anchor="right"
+                width={100}>
+                <List dense
+                      sx={{ marginBottom: "10px" }}
+                      component="nav"
+                      subheader={
+                          <ListSubheader component="div">
+                              Pages
+                          </ListSubheader>
+                      }>
+                    <ListItemButton
+                        selected={false}
+                        disabled={false}>
+                        <ListItemText primary="Page 1"/>
+                    </ListItemButton>
+                    <ListItemButton
+                        selected={false}
+                        disabled={false}>
+                        <ListItemText primary="Page 2"/>
+                    </ListItemButton>
+                    <ListItemButton
+                        selected={false}
+                        disabled={false}>
+                        <ListItemText primary="Page 3"/>
+                    </ListItemButton>
+                </List>
+            </NavMenu>
         </OneColumnLayout>
+    </>)
+}
+
+type PageButtonProps = {
+    text: string
+}
+
+const PageButton = ({ text }: PageButtonProps) => {
+
+    return (<>
+        <Card>
+            <CardActionArea>
+                <CardContent>
+                    <Typography gutterBottom variant="body1" component="h6">
+                        { text }
+                    </Typography>
+                </CardContent>
+            </CardActionArea>
+        </Card>
+    </>)
+}
+
+const TopToolbar = () => {
+    return (<>
+        <LocationTool/>
+        <SizeTool/>
+    </>)
+}
+
+const LocationTool = () => {
+    const [x, setX] = useState("0")
+    const [y, setY] = useState("0")
+    const onChangeX = (e: ChangeEvent<HTMLInputElement>) => {
+        setX(e.target.value)
+    }
+    const onChangeY = (e: ChangeEvent<HTMLInputElement>) => {
+        setY(e.target.value)
+    }
+    return (<>
+        <Typography variant="h6" component="h6">
+            X
+        </Typography>
+        <FormControl size="small">
+            <Input
+                type="number"
+                id="pos-x"
+                value={x}
+                sx={{ width: "60px", height: "30px" }}
+                onChange={onChangeX}
+            />
+        </FormControl>
+        <Typography variant="h6" component="h6">
+            Y
+        </Typography>
+        <FormControl size="small">
+            <Input
+                type="number"
+                id="pos-y"
+                value={y}
+                sx={{ width: "60px", height: "30px" }}
+                onChange={onChangeY}
+            />
+        </FormControl>
+    </>)
+}
+
+const SizeTool = () => {
+    const [w, setW] = useState("0")
+    const [h, setH] = useState("0")
+    const onChangeW = (e: ChangeEvent<HTMLInputElement>) => {
+        setW(e.target.value)
+    }
+    const onChangeH = (e: ChangeEvent<HTMLInputElement>) => {
+        setH(e.target.value)
+    }
+    return (<>
+        <Typography variant="h6" component="h6">
+            W
+        </Typography>
+        <FormControl size="small">
+            <Input
+                type="number"
+                id="pos-w"
+                value={w}
+                sx={{ width: "60px", height: "30px" }}
+                onChange={onChangeW}
+            />
+        </FormControl>
+        <Typography variant="h6" component="h6">
+            H
+        </Typography>
+        <FormControl size="small">
+            <Input
+                type="number"
+                id="pos-h"
+                value={h}
+                sx={{ width: "60px", height: "30px" }}
+                onChange={onChangeH}
+            />
+        </FormControl>
     </>)
 }
