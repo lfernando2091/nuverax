@@ -4,21 +4,29 @@ import homeEnNameSpace from './locales/en/home/home.json';
 import homeEsNameSpace from './locales/es/home/home.json';
 import spaceEnNameSpace from './locales/en/space/space.json';
 import spaceEsNameSpace from './locales/es/space/space.json';
+import spaceDocEnNameSpace from './locales/en/space/document.json';
+import spaceDocEsNameSpace from './locales/es/space/document.json';
+import {aiAnalystEnNameSpace, aiAnalystEsNameSpace} from "../../components/ai-analyst";
 
 export const defaultNS = 'homeNS';
 
 i18next.use(initReactI18next).init({
-    debug: true,
+    debug: false,
     fallbackLng: 'es',
     defaultNS,
     resources: {
         en: {
             homeNS: homeEnNameSpace,
-            spaceNS: spaceEnNameSpace
+            spaceNS: spaceEnNameSpace,
+            spaceDocNS: spaceDocEnNameSpace,
+            aiAnalystNS: aiAnalystEnNameSpace
         },
         es: {
             homeNS: homeEsNameSpace,
-            spaceNS: spaceEsNameSpace
+            spaceNS: spaceEsNameSpace,
+            spaceDocNS: spaceDocEsNameSpace,
+            aiAnalystNS: aiAnalystEsNameSpace
+
         },
     },
 }).then(r => { });

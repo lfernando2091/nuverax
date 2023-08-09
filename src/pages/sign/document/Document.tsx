@@ -2,7 +2,7 @@ import {Box, Button, Grid, IconButton, Paper, Stack, Typography} from "@mui/mate
 import {useParams} from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import {useState} from "react";
-import {AIAnalyst} from "../../../components/AIAnalyst";
+import {AIAnalyst} from "../../../components/ai-analyst/AIAnalyst";
 
 export const Document = () => {
     const params = useParams()

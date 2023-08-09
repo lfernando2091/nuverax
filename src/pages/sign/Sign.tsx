@@ -4,7 +4,7 @@ import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import UploadIcon from "@mui/icons-material/Upload";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import {useState} from "react";
-import {AIAnalyst} from "../../components/AIAnalyst";
+import {AIAnalyst} from "../../components/ai-analyst/AIAnalyst";
 
 export const Sign = () => {
     const params = useParams()

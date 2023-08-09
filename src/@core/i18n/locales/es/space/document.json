@@ -1,0 +1,12 @@
+{
+  "title": "Documento",
+  "aiDocumentAnalystBtn": "IA Analista (Documento)",
+  "editFieldsBtn": "Modificar Campos",
+  "deleteBtn": "Borrar",
+  "pagesHeader": "Páginas",
+  "pageMenu": {
+    "aiPageAnalystOpt": "IA Analista (Página)",
+    "pageContentOpt": "Contenido",
+    "deleteOpt": "Borrar"
+  }
+}

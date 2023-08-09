@@ -12,8 +12,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Page} from "./Page";
-import {AIAnalyst} from "../../../components/AIAnalyst";
+import {AIAnalyst} from "../../../components/ai-analyst/AIAnalyst";
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import {useTranslation} from "react-i18next";
 
 type PageData = {
     text: string
@@ -26,6 +27,7 @@ const pages: PageData[] = [
 ]
 
 export const Document = () => {
+    const { t } = useTranslation("spaceDocNS");
     const [expanded, setExpanded] = useState<string | false>("panel1")
     const params = useParams()
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
@@ -45,7 +47,7 @@ export const Document = () => {
 
     return (<>
         <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
-            Document {params["id"]}
+            { t("title") } {params["id"]}
         </Typography>
         <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
             file-abc.txt
@@ -65,7 +67,7 @@ export const Document = () => {
                             paddingBottom: "10px"
                         }}
                         startIcon={<AutoAwesomeIcon />}>
-                    AI Document Analyst
+                    { t("aiDocumentAnalystBtn") }
                 </Button>
             </Grid>
             <Grid item xs={6} md={4}>
@@ -79,7 +81,7 @@ export const Document = () => {
                             paddingBottom: "10px"
                         }}
                         startIcon={<DriveFileRenameOutlineIcon />}>
-                    Edit Fields
+                    { t("editFieldsBtn") }
                 </Button>
             </Grid>
             <Grid item xs={6} md={4}>
@@ -93,7 +95,7 @@ export const Document = () => {
                             paddingBottom: "10px"
                         }}
                         startIcon={<DeleteIcon />}>
-                    Delete
+                    { t("deleteBtn") }
                 </Button>
             </Grid>
         </Grid>
@@ -105,7 +107,7 @@ export const Document = () => {
                 expandIcon={<ExpandMoreIcon />}
             >
                 <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                    Pages
+                    { t("pagesHeader") }
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
                     {pages.length}

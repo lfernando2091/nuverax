@@ -1,0 +1,23 @@
+{
+  "title": "IA Analista",
+  "context": {
+    "space": "Espacio •",
+    "document": "Documento •",
+    "page": "Página •"
+  },
+  "questionPlaceholder": "Pregunta cualquier cosa de tus datos...",
+  "suggestedHdr": "Sugerido",
+  "suggested": {
+    "summaryOpt": "Resumen",
+    "fiveImpPointsOpt": "5 puntos importantes",
+    "suggestion": "Sugerido"
+  },
+  "note": "IA Analista esta en fase experimental.",
+  "message": {
+    "avatarAI": "IA",
+    "avatarUser": "U",
+    "titleAI": "Asistente",
+    "titleUser": "Usuario",
+    "sources": "Fuente(s)"
+  }
+}

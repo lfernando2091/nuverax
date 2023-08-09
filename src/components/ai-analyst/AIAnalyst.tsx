@@ -16,6 +16,7 @@ import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import SendIcon from '@mui/icons-material/Send';
 import {Message, MessageData} from "./Message";
+import {useTranslation} from "react-i18next";
 
 export type ContextProps = {
     id: string,
@@ -27,13 +28,16 @@ export type AIAnalystProps = {
     context: ContextProps,
     show: boolean,
     onClose: () => void
+    nameSpace?: string
 }
 
 export const AIAnalyst = ({
                               context,
                               show,
-                              onClose
+                              onClose,
+                              nameSpace
                           }: AIAnalystProps) => {
+    const { t } = useTranslation(nameSpace ?? "aiAnalystNS");
     const [question, setQuestion] = useState("")
     const [messages, setMessages] = useState<MessageData[]>([])
 
@@ -106,7 +110,7 @@ export const AIAnalyst = ({
                                 sx={{ marginTop: "10px", marginBottom: "10px" }}
                                 variant="h6"
                                 component="h3">
-                                AI Analyst
+                                { t("title") }
                             </Typography>
                         </Grid>
                     </Grid>
@@ -119,8 +123,8 @@ export const AIAnalyst = ({
                         <Grid item>
                             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                                 { `${
-                                    context.type === "space" ? "Space •":
-                                        context.type === "document" ? "Document •": "Page •"
+                                    context.type === "space" ? t("context.space"):
+                                        context.type === "document" ? t("context.document"): t("context.page")
                                 } ${context.title}` }
                             </Typography>
                         </Grid>
@@ -142,6 +146,7 @@ export const AIAnalyst = ({
                 }}>
                     {messages.map((e, i) => (
                         <Message
+                            nameSpace={nameSpace ?? "aiAnalystNS"}
                             key={i}
                             sources={e.sources}
                             type={e.type}
@@ -165,7 +170,7 @@ export const AIAnalyst = ({
                         }}
                         sx={{ mt: 3 }}
                         fullWidth
-                        placeholder="Ask any question related to your data..."/>
+                        placeholder={t("questionPlaceholder")}/>
 
                     <List
                         sx={{
@@ -175,26 +180,26 @@ export const AIAnalyst = ({
                         component="nav"
                         subheader={
                             <ListSubheader component="div" id="nested-list-subheader">
-                                Suggested
+                                { t("suggestedHdr") }
                             </ListSubheader>
                         }
                     >
                         <ListItemButton>
-                            <ListItemText primary={"Summary"} />
+                            <ListItemText primary={t("suggested.summaryOpt")} />
                         </ListItemButton>
                         <ListItemButton>
-                            <ListItemText primary={"5 important points"} />
+                            <ListItemText primary={t("suggested.fiveImpPointsOpt")} />
                         </ListItemButton>
                         <ListItemButton>
-                            <ListItemText primary={"Suggestion 3"} />
+                            <ListItemText primary={`${t("suggested.suggestion")} 3`} />
                         </ListItemButton>
                         <ListItemButton>
-                            <ListItemText primary={"Suggestion 4"} />
+                            <ListItemText primary={`${t("suggested.suggestion")} 4`} />
                         </ListItemButton>
                     </List>
 
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                        AI Analyst is currently in alpa version.
+                        { t("note") }
                     </Typography>
                 </Box>
             </Drawer>

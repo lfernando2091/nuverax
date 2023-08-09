@@ -1,0 +1,23 @@
+{
+  "title": "AI Analyst",
+  "context": {
+    "space": "Space •",
+    "document": "Document •",
+    "page": "Page •"
+  },
+  "questionPlaceholder": "Ask any question related to your data...",
+  "suggestedHdr": "Suggested",
+  "suggested": {
+    "summaryOpt": "Summary",
+    "fiveImpPointsOpt": "5 important points",
+    "suggestion": "Suggestion"
+  },
+  "note": "AI Analyst is currently in experimental version.",
+  "message": {
+    "avatarAI": "AI",
+    "avatarUser": "U",
+    "titleAI": "Assistant",
+    "titleUser": "User",
+    "sources": "Source(s)"
+  }
+}

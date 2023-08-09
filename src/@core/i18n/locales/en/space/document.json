@@ -1,0 +1,12 @@
+{
+  "title": "Document",
+  "aiDocumentAnalystBtn": "AI Document Analyst",
+  "editFieldsBtn": "Edit Fields",
+  "deleteBtn": "Delete",
+  "pagesHeader": "Pages",
+  "pageMenu": {
+    "aiPageAnalystOpt": "AI Page Analyst",
+    "pageContentOpt": "Page Content",
+    "deleteOpt": "Delete"
+  }
+}

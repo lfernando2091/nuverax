@@ -17,7 +17,7 @@ import {
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import UploadIcon from '@mui/icons-material/Upload';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import {AIAnalyst} from "../../components/AIAnalyst";
+import {AIAnalyst} from "../../components/ai-analyst/AIAnalyst";
 import AddToDriveIcon from '@mui/icons-material/AddToDrive';
 import CloudIcon from '@mui/icons-material/Cloud';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';

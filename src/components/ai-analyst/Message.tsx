@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {useState} from "react";
+import {useTranslation} from "react-i18next";
 
 export type Source = {
     name: string,
@@ -20,6 +21,7 @@ export type Source = {
 export type MessageProps = {
     type: "ai" | "user"
     message: string
+    nameSpace: string
     sources?: Source[]
 }
 
@@ -47,8 +49,10 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 export const Message = ({
                             type,
                             message,
-                            sources
+                            sources,
+                            nameSpace
                         }: MessageProps) => {
+    const { t } = useTranslation(nameSpace);
     const [expanded, setExpanded] = useState(false)
 
     const handleExpandClick = () => {
@@ -65,7 +69,7 @@ export const Message = ({
             <CardHeader
                 avatar={
                     <Avatar>
-                        { type === "ai" ? "AI": "U" }
+                        { type === "ai" ? t("message.avatarAI"): t("message.avatarUser") }
                     </Avatar>
                 }
                 subheader={<Typography
@@ -79,7 +83,7 @@ export const Message = ({
                 </Typography>}
                 title={
                     <Typography variant="body1" component="h3">
-                        {type === "ai" ? "Assistant": "User"}
+                        {type === "ai" ? t("message.titleAI"): t("message.titleUser")}
                     </Typography>
                 }
             />
@@ -88,7 +92,7 @@ export const Message = ({
                     <CardActions disableSpacing>
                         <Chip
                             sx={{ mx: "3px" }}
-                            label="3 sources"
+                            label={`3 ${t("message.sources")}`}
                             size="small"/>
                         <ExpandMore
                             expand={expanded}

@@ -4,7 +4,8 @@ import {MouseEvent, useState} from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ArticleIcon from '@mui/icons-material/Article';
-import {AIAnalyst} from "../../../components/AIAnalyst";
+import {AIAnalyst} from "../../../components/ai-analyst/AIAnalyst";
+import {useTranslation} from "react-i18next";
 
 export type PageProps = {
     pageNumber: number,
@@ -15,6 +16,7 @@ export const Page = ({
                          pageNumber,
                          pageTitle
                      }: PageProps) => {
+    const { t } = useTranslation("spaceDocNS");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
 
@@ -69,20 +71,20 @@ export const Page = ({
                     <ListItemIcon>
                         <AutoAwesomeIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>AI Page Analyst</ListItemText>
+                    <ListItemText>{ t("pageMenu.aiPageAnalystOpt") }</ListItemText>
                 </MenuItem>
                 <MenuItem dense>
                     <ListItemIcon>
                         <ArticleIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Page Content</ListItemText>
+                    <ListItemText>{ t("pageMenu.pageContentOpt") }</ListItemText>
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem dense>
                     <ListItemIcon>
                         <DeleteIcon fontSize="small" />
                     </ListItemIcon>
-                    <ListItemText>Delete</ListItemText>
+                    <ListItemText>{ t("pageMenu.deleteOpt") }</ListItemText>
                 </MenuItem>
             </Menu>
 
