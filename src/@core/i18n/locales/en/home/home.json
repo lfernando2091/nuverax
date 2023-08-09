@@ -1,0 +1,14 @@
+{
+  "title": "Home",
+  "createSpaceBtn": "Create Space",
+  "lastSpaceLbl": "Last Space",
+  "editBtn": "Edit",
+  "renameBtn": "Rename",
+  "duplicateBtn": "Duplicate",
+  "deleteBtn": "Delete",
+  "nav": {
+    "mainHeader": "Main",
+    "homeBtn": "Home",
+    "settingsBtn": "Settings"
+  }
+}

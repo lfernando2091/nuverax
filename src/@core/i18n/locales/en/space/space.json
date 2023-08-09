@@ -1,0 +1,21 @@
+{
+  "title": "Space",
+  "aiSpaceAnalystBtn": "AI Space Analyst",
+  "uploadDocBtn": "Upload Document",
+  "requestSign": "Request Sign",
+  "recipientsHeader": "Recipients",
+  "addRecipientBtn": "Add Recipient",
+  "recipientLbl": "Recipient",
+  "emailLbl": "Email",
+  "emailPlaceholder": "example-email@domain.com",
+  "fullNameLbl": "Full Name",
+  "recipientType": "Recipient Type",
+  "signatureRequiredOpt": "Signature Required",
+  "ccOpt": "CC",
+  "nav": {
+    "backBtn": "Home",
+    "spaceHeader": "Space",
+    "docsHeader": "Documents",
+    "homeBtn": "Home"
+  }
+}

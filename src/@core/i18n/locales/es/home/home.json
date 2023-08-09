@@ -1,0 +1,14 @@
+{
+  "title": "Inicio",
+  "createSpaceBtn": "Crear Espacio",
+  "lastSpaceLbl": "Espacios Recientes",
+  "editBtn": "Editar",
+  "renameBtn": "Cambiar Nombre",
+  "duplicateBtn": "Duplicar",
+  "deleteBtn": "Borrar",
+  "nav": {
+    "mainHeader": "Principal",
+    "homeBtn": "Inicio",
+    "settingsBtn": "Configuración"
+  }
+}

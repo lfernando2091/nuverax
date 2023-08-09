@@ -1,0 +1,21 @@
+{
+  "title": "Espacio",
+  "aiSpaceAnalystBtn": "IA Analista (Espacio)",
+  "uploadDocBtn": "Cargar Documento",
+  "requestSign": "Solicitar Firma",
+  "recipientsHeader": "Destinatarios",
+  "addRecipientBtn": "Agregar Destinatario",
+  "recipientLbl": "Destinatario",
+  "emailLbl": "Correo Electronico",
+  "emailPlaceholder": "correoelectronico@dominio.com",
+  "fullNameLbl": "Nombre Completo",
+  "recipientType": "Tipo",
+  "signatureRequiredOpt": "Firma Requerida",
+  "ccOpt": "Recibe Copia",
+  "nav": {
+    "backBtn": "Inicio",
+    "spaceHeader": "Espacio",
+    "docsHeader": "Documentos",
+    "homeBtn": "Inicio"
+  }
+}

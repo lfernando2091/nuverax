@@ -25,8 +25,10 @@ import ComputerIcon from '@mui/icons-material/Computer';
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import {useTranslation} from "react-i18next";
 
 export const Space = () => {
+    const { t } = useTranslation("spaceNS");
     const params = useParams()
     const navigate = useNavigate()
     const location = useLocation()
@@ -60,7 +62,7 @@ export const Space = () => {
 
     return (<>
         <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
-            Space {params["id"]}
+            { t("title") } {params["id"]}
         </Typography>
         <Grid container
               sx={{ marginTop: "10px", marginBottom: "10px" }}
@@ -77,7 +79,7 @@ export const Space = () => {
                         }}
                         onClick={onAiAnalyst}
                         startIcon={<AutoAwesomeIcon />}>
-                    AI Space Analyst
+                    { t("aiSpaceAnalystBtn") }
                 </Button>
             </Grid>
             <Grid item xs={6} md={4}>
@@ -92,7 +94,7 @@ export const Space = () => {
                         }}
                         onClick={onOpenFileUpload}
                         startIcon={<UploadIcon />}>
-                    Upload Document
+                    { t("uploadDocBtn") }
                 </Button>
             </Grid>
             <Grid item xs={6} md={4}>
@@ -107,7 +109,7 @@ export const Space = () => {
                         }}
                         onClick={onStartEditor}
                         startIcon={<DriveFileRenameOutlineIcon />}>
-                    Request Sign
+                    { t("requestSign") }
                 </Button>
             </Grid>
         </Grid>
@@ -119,7 +121,7 @@ export const Space = () => {
                 expandIcon={<ExpandMoreIcon />}
             >
                 <Typography sx={{ width: '33%', flexShrink: 0 }}>
-                    Recipients
+                    { t("recipientsHeader") }
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
                     0
@@ -131,7 +133,7 @@ export const Space = () => {
                       spacing={2}>
                     <RecipientInput/>
                     <Button size="small" fullWidth startIcon={<PersonAddIcon />}>
-                        Add Recipient
+                        { t("addRecipientBtn") }
                     </Button>
                 </Grid>
             </AccordionDetails>
@@ -150,6 +152,7 @@ export const Space = () => {
 }
 
 export const RecipientInput = () => {
+    const { t } = useTranslation("spaceNS");
     const [type, setType] = useState("required-signature")
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
@@ -169,34 +172,34 @@ export const RecipientInput = () => {
         <Grid item xs={12}>
             <Paper variant="outlined" square>
                 <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h4">
-                    Recipient 1
+                    {t("recipientLbl")} 1
                 </Typography>
                 <Grid container rowSpacing={1}>
                     <Grid item xs={8}>
                         <FormControl fullWidth size="small">
-                            <InputLabel htmlFor="input-email">Email</InputLabel>
+                            <InputLabel htmlFor="input-email">{t("emailLbl")}</InputLabel>
                             <OutlinedInput
                                 type="email"
                                 id="input-email"
                                 value={email}
                                 onChange={onChangeEmail}
-                                placeholder="example-email@domain.com"
-                                label="Email"
+                                placeholder={t("emailPlaceholder")}
+                                label={t("emailLbl")}
                             />
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl fullWidth size="small">
-                            <InputLabel id="lbl-recipient-type">Recipient type</InputLabel>
+                            <InputLabel id="lbl-recipient-type">{t("recipientType")}</InputLabel>
                             <Select
                                 labelId="lbl-recipient-type"
                                 id="input-recipient-type"
                                 value={type}
-                                label="Recipient type"
+                                label={t("recipientType")}
                                 onChange={onChangeType}
                             >
-                                <MenuItem value="required-signature">Required Signature</MenuItem>
-                                <MenuItem value="carbon-copy">Carbon Copy</MenuItem>
+                                <MenuItem value="required-signature">{t("signatureRequiredOpt")}</MenuItem>
+                                <MenuItem value="carbon-copy">{t("ccOpt")}</MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
@@ -204,12 +207,12 @@ export const RecipientInput = () => {
                 <Grid container rowSpacing={1}>
                     <Grid item xs={8}>
                         <FormControl fullWidth size="small">
-                            <InputLabel htmlFor="input-name">Full Name</InputLabel>
+                            <InputLabel htmlFor="input-name">{t("fullNameLbl")}</InputLabel>
                             <OutlinedInput
                                 type="text"
                                 id="input-name"
                                 placeholder="Fernando Abc Xyz"
-                                label="Full Name"
+                                label={t("fullNameLbl")}
                                 value={name}
                                 onChange={onChangeName}
                             />

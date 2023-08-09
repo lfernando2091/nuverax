@@ -18,6 +18,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import {useNavigate} from "react-router-dom";
 import SmartButtonIcon from '@mui/icons-material/SmartButton';
+import {useTranslation} from "react-i18next";
 
 type HomeItem = {
     id: string
@@ -35,6 +36,7 @@ const items: HomeItem[] = [
 ]
 
 export const SpaceItem = (props: SpaceItemProps) => {
+    const { t } = useTranslation("homeNS");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const navigate = useNavigate()
 
@@ -74,26 +76,26 @@ export const SpaceItem = (props: SpaceItemProps) => {
                             <ListItemIcon>
                                 <EditIcon fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText>Edit</ListItemText>
+                            <ListItemText>{t("editBtn")}</ListItemText>
                         </MenuItem>
                         <MenuItem dense>
                             <ListItemIcon>
                                 <TextFieldsIcon fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText>Rename</ListItemText>
+                            <ListItemText>{t("renameBtn")}</ListItemText>
                         </MenuItem>
                         <MenuItem dense>
                             <ListItemIcon>
                                 <ContentCopyIcon fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText>Duplicate</ListItemText>
+                            <ListItemText>{t("duplicateBtn")}</ListItemText>
                         </MenuItem>
                         <Divider sx={{ my: 0.5 }} />
                         <MenuItem dense>
                             <ListItemIcon>
                                 <DeleteIcon fontSize="small" />
                             </ListItemIcon>
-                            <ListItemText>Delete</ListItemText>
+                            <ListItemText>{t("deleteBtn")}</ListItemText>
                         </MenuItem>
                     </Menu>
                 </>
@@ -109,9 +111,10 @@ export const SpaceItem = (props: SpaceItemProps) => {
 }
 
 export const Home = () => {
+    const { t } = useTranslation("homeNS");
 
     return <>
-        <h3>Home</h3>
+        <h3>{ t("title") }</h3>
         <Grid container spacing={2}>
             <Grid item xs={6} md={4}>
                 <Button variant="outlined"
@@ -122,7 +125,7 @@ export const Home = () => {
                             width: "100%"
                 }}
                         startIcon={<AddIcon />}>
-                    Create space
+                    { t("createSpaceBtn") }
                 </Button>
             </Grid>
             <Grid item xs={6} md={4}>
@@ -140,7 +143,7 @@ export const Home = () => {
             component="nav"
             subheader={
                 <ListSubheader component="div" id="nested-list-subheader">
-                    Last Space
+                    { t("lastSpaceLbl") }
                 </ListSubheader>
             }
         >

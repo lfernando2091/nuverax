@@ -7,6 +7,7 @@ import {ListItemLink} from "../../components/ListItemLink";
 import SmartButtonIcon from '@mui/icons-material/SmartButton';
 import ArticleIcon from '@mui/icons-material/Article';
 import {DocumentModel} from "./models/SpaceModel";
+import {useTranslation} from "react-i18next";
 
 const docsList: DocumentModel[] = [
     { id: "abc1", name: "Document 1" },
@@ -16,6 +17,7 @@ const docsList: DocumentModel[] = [
     { id: "abc5", name: "Document 5" }
 ]
 export const SpaceLayout = () => {
+    const { t } = useTranslation("spaceNS");
     return (<>
         <OneColumnLayout>
             <NavMenu>
@@ -34,20 +36,20 @@ export const SpaceLayout = () => {
                                 to="/"
                                 sx={{ marginTop: "10px", marginBottom: "10px" }}
                                 startIcon={<ArrowBackIosIcon />}>
-                            Home
+                            { t("nav.backBtn") }
                         </Button>
                         <List dense
                               sx={{ marginBottom: "10px" }}
                               component="nav"
                               subheader={
                                   <ListSubheader component="div">
-                                      Space
+                                      { t("nav.spaceHeader") }
                                   </ListSubheader>
                               }>
                             <ListItemLink
                                 to=""
                                 disabled={false}
-                                primary="Home"
+                                primary={ t("nav.homeBtn") }
                                 active={true}
                                 icon={<SmartButtonIcon/>}/>
                         </List>
@@ -56,7 +58,7 @@ export const SpaceLayout = () => {
                               component="nav"
                               subheader={
                                   <ListSubheader component="div">
-                                      Documents
+                                      { t("nav.docsHeader") }
                                   </ListSubheader>
                               }>
                             {docsList.map((e, i) => (

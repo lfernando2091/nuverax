@@ -5,7 +5,9 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import {ListItemLink} from "../../components/ListItemLink";
 import BlurOnIcon from '@mui/icons-material/BlurOn';
 import SettingsIcon from '@mui/icons-material/Settings';
+import {useTranslation} from "react-i18next";
 export const HomeLayout = () => {
+    const { t } = useTranslation("homeNS");
     return (<>
         <OneColumnLayout>
             <NavMenu>
@@ -32,13 +34,13 @@ export const HomeLayout = () => {
                               component="nav"
                               subheader={
                                   <ListSubheader component="div">
-                                      Main
+                                      {t("nav.mainHeader")}
                                   </ListSubheader>
                               }>
                             <ListItemLink
                                 to="/"
                                 disabled={false}
-                                primary="Home"
+                                primary={t("nav.homeBtn")}
                                 active={true}
                                 icon={<BlurOnIcon/>}/>
                         </List>
@@ -54,7 +56,7 @@ export const HomeLayout = () => {
                             <ListItemLink
                                 disabled={false}
                                 to="/settings"
-                                primary="Setting"
+                                primary={t("nav.settingsBtn")}
                                 icon={<SettingsIcon/>}/>
                         </List>
                     </Grid>
