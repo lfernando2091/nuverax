@@ -1,7 +1,8 @@
-import {Box, Grid, IconButton, LinearProgress, Tab, Tabs, Typography} from "@mui/material";
+import {Box, Grid, IconButton, LinearProgress, Tab, Tabs, Tooltip, Typography} from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {useNavigate, useParams} from "react-router-dom";
 import {useState, SyntheticEvent, ReactNode, Suspense, lazy} from "react";
+import LockIcon from '@mui/icons-material/Lock';
 
 const DrawSignature =
     lazy(() => import('./option/DrawSignature')
@@ -9,6 +10,12 @@ const DrawSignature =
 const FontSignature =
     lazy(() => import('./option/FontSignature')
         .then(({ FontSignature }) => ({ default: FontSignature })))
+const UploadSignature =
+    lazy(() => import('./option/UploadSignature')
+        .then(({ UploadSignature }) => ({ default: UploadSignature })))
+const OtherSignature =
+    lazy(() => import('./option/OtherSignature')
+        .then(({ OtherSignature }) => ({ default: OtherSignature })))
 
 interface TabPanelProps {
     children?: ReactNode;
@@ -92,9 +99,27 @@ export const SignOptions = () => {
             <Box sx={{ fontSize: "10px", borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={tab} onChange={onChangeTab}>
                     <Tab label="Draw Signature" {...a11yProps(0)}/>
-                    <Tab label="Fonts" {...a11yProps(1)}/>
-                    <Tab label="Upload File" {...a11yProps(2)}/>
-                    <Tab label="Others" {...a11yProps(3)}/>
+                    <Tooltip arrow
+                             title={<>
+                                 <Typography color="inherit">Tab under development</Typography>
+                             </>}>
+                        <span>
+                            <Tab label="Fonts"
+                                 disabled
+                                 icon={<LockIcon />}
+                                 iconPosition="start"
+                                 {...a11yProps(1)}/>
+                        </span>
+                    </Tooltip>
+                    <Tab label="Upload File"
+                         disabled
+                         icon={<LockIcon />}
+                         iconPosition="start"
+                         {...a11yProps(2)}/>
+                    <Tab label="Others"
+                         disabled
+                         icon={<LockIcon />}
+                         iconPosition="start" {...a11yProps(3)}/>
                 </Tabs>
             </Box>
             <SuspenseTabPanel value={tab} index={0}>
@@ -104,10 +129,10 @@ export const SignOptions = () => {
                 <FontSignature/>
             </SuspenseTabPanel>
             <SuspenseTabPanel value={tab} index={2}>
-                Item 3
+                <UploadSignature/>
             </SuspenseTabPanel>
             <SuspenseTabPanel value={tab} index={3}>
-                Item 4
+                <OtherSignature/>
             </SuspenseTabPanel>
         </Box>
     </>)
