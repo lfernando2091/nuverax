@@ -1,11 +1,11 @@
-import {MainContent, NavMenu, OneColumnLayout} from "../@core";
+import {MainContent, NavMenu, OneColumnLayout} from "../../@core";
 import {Outlet} from "react-router-dom";
 import {Avatar, Box, Grid, List, ListItem, ListItemAvatar, ListItemText, ListSubheader} from "@mui/material";
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import {ListItemLink} from "../components/ListItemLink";
+import {ListItemLink} from "../../components/ListItemLink";
 import BlurOnIcon from '@mui/icons-material/BlurOn';
 import SettingsIcon from '@mui/icons-material/Settings';
-export const PagesLayout = () => {
+export const HomeLayout = () => {
     return (<>
         <OneColumnLayout>
             <NavMenu>

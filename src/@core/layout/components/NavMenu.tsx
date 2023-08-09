@@ -1,12 +1,17 @@
 import {ReactNode, useState} from "react";
 import {Drawer, Toolbar} from "@mui/material";
 
-const drawerWidth = 220;
 export type NavMenuProps = {
-    children: ReactNode
+    children: ReactNode,
+    anchor?: 'left' | 'top' | 'right' | 'bottom',
+    width?: number
 }
 
-export const NavMenu = ({ children }: NavMenuProps) => {
+export const NavMenu = ({
+                            children,
+                            anchor,
+                            width
+}: NavMenuProps) => {
     const [navbarOpen, setNavbarOpen] = useState(true);
 
     const handleDrawerToggle = () => {
@@ -18,10 +23,11 @@ export const NavMenu = ({ children }: NavMenuProps) => {
             variant="persistent"
             open={navbarOpen}
             onClose={handleDrawerToggle}
+            anchor={anchor ?? "left"}
             sx={{
-                width: drawerWidth,
+                width: width ?? 220,
                 flexShrink: 0,
-                [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+                [`& .MuiDrawer-paper`]: { width: width ?? 220, boxSizing: 'border-box' },
             }}
         >
             <Toolbar variant="dense"/>
