@@ -10,5 +10,7 @@
     "mainHeader": "Principal",
     "homeBtn": "Inicio",
     "settingsBtn": "Configuración"
-  }
+  },
+  "recentSpacesApiError": "No pudimos cargar los espacios recientes.",
+  "createSpaceApiError": "Algo salio mal con tu solicitud!"
 }

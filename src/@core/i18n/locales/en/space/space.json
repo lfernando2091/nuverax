@@ -17,5 +17,7 @@
     "spaceHeader": "Space",
     "docsHeader": "Documents",
     "homeBtn": "Home"
-  }
+  },
+  "spaceDocsApiError": "Unable to load Documents from Space!",
+  "emptySpaceDocsList": "No Documents uploaded into Space yet!"
 }

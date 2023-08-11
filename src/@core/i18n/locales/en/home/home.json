@@ -10,5 +10,7 @@
     "mainHeader": "Main",
     "homeBtn": "Home",
     "settingsBtn": "Settings"
-  }
+  },
+  "recentSpacesApiError": "Unable to load recent spaces.",
+  "createSpaceApiError": "Something went wrong with your request!"
 }

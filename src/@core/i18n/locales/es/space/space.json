@@ -17,5 +17,7 @@
     "spaceHeader": "Espacio",
     "docsHeader": "Documentos",
     "homeBtn": "Inicio"
-  }
+  },
+  "spaceDocsApiError": "No pudimos cargar los Documentos del Espacio",
+  "emptySpaceDocsList": "No hay Documentos cargados en este Espacio todavia."
 }

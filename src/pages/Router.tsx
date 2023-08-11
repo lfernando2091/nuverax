@@ -6,8 +6,11 @@ import {signRouter} from "./sign/Router";
 export const pagesRouter = () => {
     return (<>
         <Route index lazy={async () => {
-            const { Home } = await import("./home/Home")
-            return { Component: Home }
+            const { Home, homeLoader } = await import("./home/Home")
+            return {
+                loader: homeLoader,
+                Component: Home
+            }
         }}/>
         <Route path="settings" lazy={async () => {
             const { Settings } = await import("./home/settings/Settings")
@@ -26,8 +29,8 @@ export const router = createBrowserRouter(
                 { pagesRouter() }
             </Route>
             <Route path="/s/:id" lazy={async () => {
-                const { SpaceLayout } = await import("./space/SpaceLayout")
-                return { Component: SpaceLayout }
+                const { SpaceLayout, spaceLoader } = await import("./space/SpaceLayout")
+                return { Component: SpaceLayout, loader: spaceLoader}
             }}>
                 { spaceRouter() }
             </Route>

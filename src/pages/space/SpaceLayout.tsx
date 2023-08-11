@@ -1,13 +1,17 @@
-import {Outlet, Route, Link} from "react-router-dom";
+import {Outlet, Route, Link, useParams, defer, useLoaderData} from "react-router-dom";
 import {MainContent, NavMenu, OneColumnLayout} from "../../@core";
-import {Box, Button, Grid, IconButton, List, ListSubheader, Paper} from "@mui/material";
+import {Alert, Box, Button, Grid, IconButton, List, ListSubheader, Paper} from "@mui/material";
 import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import {ListItemLink} from "../../components/ListItemLink";
 import SmartButtonIcon from '@mui/icons-material/SmartButton';
 import ArticleIcon from '@mui/icons-material/Article';
-import {DocumentModel} from "./models/SpaceModel";
+import {DocumentModel, SpaceDocument} from "./models/SpaceModel";
 import {useTranslation} from "react-i18next";
+import {spaceService} from "./services/SpaceService";
+import {Suspend} from "../../components/load/Suspend";
+import {ApiError} from "../../components/error/Error";
+import {NavDocumentsList} from "./skeleton/Skeleton";
 
 const docsList: DocumentModel[] = [
     { id: "abc1", name: "Document 1" },
@@ -16,8 +20,19 @@ const docsList: DocumentModel[] = [
     { id: "abc4", name: "Document 4" },
     { id: "abc5", name: "Document 5" }
 ]
+
+export const spaceLoader = async ({ params }: { params: any }) => {
+    const { documents } = spaceService()
+    return defer({
+        documentsPromise: documents(params.id)
+    })
+}
+
 export const SpaceLayout = () => {
     const { t } = useTranslation("spaceNS");
+    // const params = useParams()
+    const apiService = useLoaderData() as any
+
     return (<>
         <OneColumnLayout>
             <NavMenu>
@@ -61,15 +76,30 @@ export const SpaceLayout = () => {
                                       { t("nav.docsHeader") }
                                   </ListSubheader>
                               }>
-                            {docsList.map((e, i) => (
-                                <ListItemLink
-                                    key={i}
-                                    to={`d/${e.id}`}
-                                    disabled={false}
-                                    primary={e.name}
-                                    active={false}
-                                    icon={<ArticleIcon/>}/>
-                            ))}
+                            <Suspend
+                                resolve={apiService.documentsPromise}
+                                error={(_error) => <>
+                                    <ApiError title={ t("spaceDocsApiError") }/>
+                                </>}
+                                fallback={<NavDocumentsList/>}>
+                                { (data) => <>
+                                    {(data as SpaceDocument[]).length === 0 &&
+                                        <>
+                                            <Alert severity="info">{ t("emptySpaceDocsList") }</Alert>
+                                        </>
+                                    }
+                                    {(data as SpaceDocument[]).map((e, i) => (
+                                        <ListItemLink
+                                            key={i}
+                                            to={`d/${e.shortId}`}
+                                            disabled={false}
+                                            primary={e.name}
+                                            active={false}
+                                            icon={<ArticleIcon/>}/>
+                                    ))}
+                                </>
+                                }
+                            </Suspend>
                         </List>
                     </Grid>
                 </Grid>
