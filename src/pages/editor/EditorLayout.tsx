@@ -84,7 +84,7 @@ export const EditorLayout = () => {
                             fontSize: 14,
                             px: "16px"
                         }} color="text.secondary" gutterBottom>
-                            Space {params["id"]}
+                            Space {params["idSpace"]}
                         </Typography>
                         <FormControl sx={{
                             marginTop: "20px",

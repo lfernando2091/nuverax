@@ -32,7 +32,7 @@ export const Sign = () => {
             p: 3
         }}>
             <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
-                Space {params["id"]}
+                Space {params["idSpace"]}
             </Typography>
             <Grid container
                   sx={{ marginTop: "10px", marginBottom: "10px" }}
@@ -70,7 +70,7 @@ export const Sign = () => {
             </Grid>
             <AIAnalyst
                 context={{
-                    title: params["id"] ?? "0",
+                    title: params["idSpace"] ?? "0",
                     type: "space",
                     id: "0"
                 }}

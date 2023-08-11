@@ -8,5 +8,8 @@
     "aiPageAnalystOpt": "IA Analista (Página)",
     "pageContentOpt": "Contenido",
     "deleteOpt": "Borrar"
-  }
+  },
+  "documentNotFound": "No pudimos encontrar el Documento con ID ",
+  "pageName": "Página",
+  "pageContentTitle": "Contenido Página {NUMBER}"
 }

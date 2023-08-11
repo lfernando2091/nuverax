@@ -9,12 +9,14 @@ import {useTranslation} from "react-i18next";
 
 export type PageProps = {
     pageNumber: number,
-    pageTitle: string
+    pageTitle?: string
+    onViewContent: (page: number) => void
 }
 
 export const Page = ({
                          pageNumber,
-                         pageTitle
+                         pageTitle,
+                         onViewContent
                      }: PageProps) => {
     const { t } = useTranslation("spaceDocNS");
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -29,7 +31,13 @@ export const Page = ({
     };
 
     const onAiAnalyst = () => {
+        handleClose()
         setShorAiAnalyst(true)
+    }
+
+    const onViewContentPage = () => {
+        handleClose()
+        onViewContent(pageNumber)
     }
 
     const onClose = () => {
@@ -50,7 +58,7 @@ export const Page = ({
                             <MoreVertIcon />
                         </IconButton>
                     }
-                    title={pageTitle}
+                    title={pageTitle ?? t("pageName")}
                 />
             </Card>
             <Menu
@@ -73,7 +81,7 @@ export const Page = ({
                     </ListItemIcon>
                     <ListItemText>{ t("pageMenu.aiPageAnalystOpt") }</ListItemText>
                 </MenuItem>
-                <MenuItem dense>
+                <MenuItem dense onClick={onViewContentPage}>
                     <ListItemIcon>
                         <ArticleIcon fontSize="small" />
                     </ListItemIcon>
@@ -90,7 +98,7 @@ export const Page = ({
 
             <AIAnalyst
                 context={{
-                    title: pageTitle,
+                    title: pageTitle ?? t("pageName"),
                     type: "page",
                     id: "0"
                 }}

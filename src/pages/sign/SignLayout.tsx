@@ -38,7 +38,6 @@ export const SignLayout = () => {
                                 to=""
                                 disabled={false}
                                 primary="Home"
-                                active={true}
                                 icon={<SmartButtonIcon/>}/>
                         </List>
                         <List dense
@@ -55,7 +54,6 @@ export const SignLayout = () => {
                                     to={`d/${e.id}`}
                                     disabled={false}
                                     primary={e.name}
-                                    active={false}
                                     icon={<ArticleIcon/>}/>
                             ))}
                         </List>

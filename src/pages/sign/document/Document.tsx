@@ -54,12 +54,12 @@ export const Document = () => {
             p: 3
         }}>
             <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
-                Document {params["id"]}
+                Document {params["idDocument"]}
             </Typography>
         </Box>
         <AIAnalyst
             context={{
-                title: params["id"] ?? "0",
+                title: params["idDocument"] ?? "0",
                 type: "document",
                 id: "0"
             }}

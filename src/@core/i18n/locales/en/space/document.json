@@ -8,5 +8,8 @@
     "aiPageAnalystOpt": "AI Page Analyst",
     "pageContentOpt": "Page Content",
     "deleteOpt": "Delete"
-  }
+  },
+  "documentNotFound": "We are unable to find Document with ID ",
+  "pageName": "Page",
+  "pageContentTitle": "Page {NUMBER} Content"
 }

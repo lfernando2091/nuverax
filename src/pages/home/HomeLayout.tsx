@@ -41,7 +41,6 @@ export const HomeLayout = () => {
                                 to="/"
                                 disabled={false}
                                 primary={t("nav.homeBtn")}
-                                active={true}
                                 icon={<BlurOnIcon/>}/>
                         </List>
                     </Grid>

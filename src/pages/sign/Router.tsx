@@ -10,7 +10,7 @@ export const signRouter = () => (
             const { SignOptions } = await import("./sign-options/SignOptions")
             return { Component: SignOptions }
         }}/>
-        <Route path="d/:id" lazy={async () => {
+        <Route path="d/:idDocument" lazy={async () => {
             const { Document } = await import("./document/Document")
             return { Component: Document }
         }}/>

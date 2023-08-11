@@ -6,9 +6,9 @@ export const spaceRouter = () => (
             const { Space } = await import("./Space")
             return { Component: Space }
         }}/>
-        <Route path="d/:id" lazy={async () => {
-            const { Document } = await import("./document/Document")
-            return { Component: Document }
+        <Route path="d/:idDocument" lazy={async () => {
+            const { Document, documentLoader, OnError } = await import("./document/Document")
+            return { Component: Document, ErrorBoundary: OnError, loader: documentLoader }
         }}/>
     </>
 )

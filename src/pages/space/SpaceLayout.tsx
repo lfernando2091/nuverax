@@ -6,31 +6,23 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import {ListItemLink} from "../../components/ListItemLink";
 import SmartButtonIcon from '@mui/icons-material/SmartButton';
 import ArticleIcon from '@mui/icons-material/Article';
-import {DocumentModel, SpaceDocument} from "./models/SpaceModel";
+import {SpaceDocument} from "./models/SpaceModel";
 import {useTranslation} from "react-i18next";
 import {spaceService} from "./services/SpaceService";
 import {Suspend} from "../../components/load/Suspend";
 import {ApiError} from "../../components/error/Error";
 import {NavDocumentsList} from "./skeleton/Skeleton";
 
-const docsList: DocumentModel[] = [
-    { id: "abc1", name: "Document 1" },
-    { id: "abc2", name: "Document 2" },
-    { id: "abc3", name: "Document 3" },
-    { id: "abc4", name: "Document 4" },
-    { id: "abc5", name: "Document 5" }
-]
-
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { documents } = spaceService()
     return defer({
-        documentsPromise: documents(params.id)
+        documentsPromise: documents(params.idSpace)
     })
 }
 
 export const SpaceLayout = () => {
     const { t } = useTranslation("spaceNS");
-    // const params = useParams()
+    const params = useParams()
     const apiService = useLoaderData() as any
 
     return (<>
@@ -63,9 +55,9 @@ export const SpaceLayout = () => {
                               }>
                             <ListItemLink
                                 to=""
+                                end
                                 disabled={false}
                                 primary={ t("nav.homeBtn") }
-                                active={true}
                                 icon={<SmartButtonIcon/>}/>
                         </List>
                         <List dense
@@ -94,7 +86,6 @@ export const SpaceLayout = () => {
                                             to={`d/${e.shortId}`}
                                             disabled={false}
                                             primary={e.name}
-                                            active={false}
                                             icon={<ArticleIcon/>}/>
                                     ))}
                                 </>

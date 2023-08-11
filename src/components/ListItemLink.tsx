@@ -1,7 +1,7 @@
 import {Button, ButtonProps, ListItemButton, ListItemIcon, ListItemText, styled} from "@mui/material";
 import {
-    Link as RouterLink,
-    LinkProps as RouterLinkProps,
+    NavLink as NavLinkBase,
+    NavLinkProps,
 } from 'react-router-dom';
 import {forwardRef, ReactElement} from "react";
 import {purple} from "@mui/material/colors";
@@ -11,7 +11,7 @@ interface ListItemLinkProps {
     primary: string;
     secondary?: string;
     to: string;
-    active?: boolean;
+    end?: boolean;
     disabled?: boolean
 }
 
@@ -20,11 +20,26 @@ interface ButtonLinkProps {
     to: string;
 }
 
-const Link = forwardRef<HTMLAnchorElement, RouterLinkProps>(function Link(
+/*
+className={({ isActive, isPending }) =>
+        isPending ? "" : isActive ? "Mui-selected" : ""
+    }
+ */
+
+interface CustomNavLinkProps extends NavLinkProps {
+    activeClassName?: string
+}
+
+const Link = forwardRef<HTMLAnchorElement, CustomNavLinkProps>(function Link(
     itemProps,
     ref,
 ) {
-    return <RouterLink ref={ref} {...itemProps} role={undefined} />;
+    return <NavLinkBase ref={ref} {...itemProps} role={undefined} className={
+        ({isActive, isPending}) =>
+            isPending ? `${itemProps.className}` :
+                isActive ? `${itemProps.className} Mui-selected ${itemProps.activeClassName ? itemProps.activeClassName: ""}`:
+                `${itemProps.className}`
+    }/>;
 })
 
 const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
@@ -37,7 +52,8 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
 
 export const LinkButton = (props: ButtonLinkProps) => {
     return (
-        <Button sx={{ color: "#fff", fontSize: "20px" }} component={RouterLink} to={props.to}>
+        <Button sx={{ color: "#fff", fontSize: "20px" }}
+                component={NavLinkBase} to={props.to}>
             {props.text}
         </Button>
     )
@@ -49,12 +65,13 @@ export const ListItemLink = (props: ListItemLinkProps) => {
         primary,
         to ,
         secondary,
-        active,
+        end,
         disabled
     } = props;
 
     return (
-        <ListItemButton selected={active} disabled={disabled} component={Link} to={to}>
+        <ListItemButton disabled={disabled}
+                        component={Link} to={to} end={end}>
             {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
             <ListItemText primary={primary} secondary={secondary}/>
         </ListItemButton>

@@ -28,19 +28,19 @@ export const router = createBrowserRouter(
             }}>
                 { pagesRouter() }
             </Route>
-            <Route path="/s/:id" lazy={async () => {
+            <Route path="/s/:idSpace" lazy={async () => {
                 const { SpaceLayout, spaceLoader } = await import("./space/SpaceLayout")
                 return { Component: SpaceLayout, loader: spaceLoader}
             }}>
                 { spaceRouter() }
             </Route>
-            <Route path="/editor/:id" lazy={async () => {
+            <Route path="/editor/:idSpace" lazy={async () => {
                 const { EditorLayout } = await import("./editor/EditorLayout")
                 return { Component: EditorLayout }
             }}>
                 { editorRouter() }
             </Route>
-            <Route path="/sign/:id" lazy={async () => {
+            <Route path="/sign/:idSpace" lazy={async () => {
                 const { SignLayout } = await import("./sign/SignLayout")
                 return { Component: SignLayout }
             }}>

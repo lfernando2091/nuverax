@@ -49,7 +49,7 @@ export const Space = () => {
     }
 
     const onStartEditor = () => {
-        navigate(`/editor/${params["id"]}?relay_state=${location.pathname}`)
+        navigate(`/editor/${params["idSpace"]}?relay_state=${location.pathname}`)
     }
 
     const onCloseFileUpload = () => {
@@ -62,7 +62,7 @@ export const Space = () => {
 
     return (<>
         <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
-            { t("title") } {params["id"]}
+            { t("title") } {params["idSpace"]}
         </Typography>
         <Grid container
               sx={{ marginTop: "10px", marginBottom: "10px" }}
@@ -140,7 +140,7 @@ export const Space = () => {
         </Accordion>
         <AIAnalyst
             context={{
-                title: params["id"] ?? "0",
+                title: params["idSpace"] ?? "0",
                 type: "space",
                 id: "0"
             }}
