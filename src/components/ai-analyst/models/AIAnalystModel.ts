@@ -16,6 +16,7 @@ export type Chat = {
     historyId: string
     role: string
     message: string
+    chunks?: string[]
     goodFeedback: boolean
     createdUnix: number
     id: string
