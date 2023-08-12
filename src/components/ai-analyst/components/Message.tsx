@@ -12,23 +12,20 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {useState} from "react";
 import {useTranslation} from "react-i18next";
-
-export type Source = {
-    name: string,
-    id: string
-}
+import PersonIcon from '@mui/icons-material/Person';
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 export type MessageProps = {
     type: "ai" | "user"
     message: string
     nameSpace: string
-    sources?: Source[]
+    sources?: string[]
 }
 
 export type MessageData = {
     type: "ai" | "user"
     message: string
-    sources?: Source[]
+    sources?: string[]
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -68,8 +65,8 @@ export const Message = ({
         sx={{ overflow: "unset", mt: 3 }}>
             <CardHeader
                 avatar={
-                    <Avatar>
-                        { type === "ai" ? t("message.avatarAI"): t("message.avatarUser") }
+                    <Avatar variant="square" color="primary">
+                        { type === "ai" ? <AutoAwesomeIcon/>: <PersonIcon/> }
                     </Avatar>
                 }
                 subheader={<Typography
@@ -92,7 +89,7 @@ export const Message = ({
                     <CardActions disableSpacing>
                         <Chip
                             sx={{ mx: "3px" }}
-                            label={`3 ${t("message.sources")}`}
+                            label={`${sources.length} ${t("message.sources")}`}
                             size="small"/>
                         <ExpandMore
                             expand={expanded}
@@ -107,7 +104,7 @@ export const Message = ({
                                 <Chip key={i}
                                       sx={{ mx: "3px" }}
                                       onClick={onSelectSource}
-                                      label={e.name}
+                                      label={e}
                                       size="small"
                                       variant="outlined"/>
                             ))}

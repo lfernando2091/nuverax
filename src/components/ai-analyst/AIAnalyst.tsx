@@ -15,12 +15,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import SendIcon from '@mui/icons-material/Send';
-import {Message, MessageData} from "./Message";
+import {Message, MessageData} from "./components/Message";
 import {useTranslation} from "react-i18next";
 import {useApiHelper} from "../../utils/ApiHelper";
 import {aiAnalystService} from "./service/AIAnalystService";
-import {ChatSkeleton} from "./skeleton/Skeleton";
+import {AIWaitingSkeleton, ChatSkeleton} from "./skeleton/Skeleton";
 import {ApiError} from "../error/Error";
+import ChatIcon from '@mui/icons-material/Chat';
 
 export type ContextProps = {
     id: string,
@@ -111,7 +112,8 @@ export const AIAnalyst = ({
         if (aiResponse !== null) {
             setMessages([...messages, {
                 message: aiResponse.message,
-                type: "ai"
+                type: "ai",
+                sources: aiResponse.chunks
             }])
             setQuestion("")
             setAsk(false)
@@ -123,7 +125,7 @@ export const AIAnalyst = ({
             setMessages(chatHistory.messages.map((e) => ({
                 type: e.role === "assistant" ? "ai": "user",
                 message: e.message,
-                // sources
+                sources: e.chunks
             })))
         }
     }, [chatHistory]);
@@ -159,6 +161,10 @@ export const AIAnalyst = ({
     const onCloseDrawer = () => {
         onReset()
         onClose()
+    }
+
+    const onShowHistory = () => {
+
     }
 
     const onKeyEnter = async (ev: KeyboardEvent<HTMLImageElement>) => {
@@ -204,6 +210,11 @@ export const AIAnalyst = ({
                                 component="h3">
                                 { t("title") }
                             </Typography>
+                        </Grid>
+                        <Grid item>
+                            <IconButton size="small" onClick={onShowHistory} >
+                                <ChatIcon />
+                            </IconButton>
                         </Grid>
                     </Grid>
                     <Grid
@@ -252,6 +263,11 @@ export const AIAnalyst = ({
                                     type={e.type}
                                     message={e.message}/>
                             ))}
+                            {loadingAiResponse &&
+                                <>
+                                    <AIWaitingSkeleton/>
+                                </>
+                            }
                         </>
                     }
                     <TextField
