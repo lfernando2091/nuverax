@@ -6,6 +6,7 @@ import {Suspend} from "../../../components/load/Suspend";
 import {PageContent as PageContentModel} from "./models/DocumentModel";
 import {PageContentSkeleton} from "./skeleton/Skeleton";
 import {useEffect, useState} from "react";
+import {useApiHelper} from "../../../utils/ApiHelper";
 
 type PageContentProps = {
     documentId: string
@@ -23,15 +24,23 @@ export const PageContent = ({
     const { get } = documentService()
     const { t } = useTranslation("spaceDocNS");
     const [load, setLoad] = useState(false)
-    const getPromise = Promise.all([get(documentId, { page: page })])
+
+    const { loading, data, error } = useApiHelper(
+        () => get(documentId, { page: page }),
+        { enabled: load }
+    )
 
     const handleClose = () => {
         onClose()
     }
 
     useEffect(() => {
-        // setLoad(true)
-    }, []);
+        if (open) {
+            setLoad(true)
+        } else {
+            setLoad(false)
+        }
+    }, [open]);
 
     return (<>
         <Dialog
@@ -42,24 +51,20 @@ export const PageContent = ({
                 .replace("{NUMBER}", page)
             }</DialogTitle>
             <DialogContent dividers>
-                <DialogContentText>
-                    <Suspend
-                        render={load}
-                        resolve={getPromise}
-                        error={(_error) => <>
-                            <ApiError title={ t("spaceDocsApiError") }/>
-                        </>}
-                        fallback={<PageContentSkeleton/>}>
-                        {(data) => <>
-                            <Typography>
-                                { (data as PageContentModel).text }
-                            </Typography>
-                        </>}
-                    </Suspend>
-                </DialogContentText>
+                {loading &&
+                    <PageContentSkeleton/>
+                }
+                {!loading && error &&
+                    <ApiError title={ t("pageContentNotFound") }/>
+                }
+                {!loading && data &&
+                    <DialogContentText>
+                        { (data as PageContentModel).text }
+                    </DialogContentText>
+                }
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose}>Close</Button>
+                <Button onClick={handleClose}>{ t("closeBtn") }</Button>
             </DialogActions>
         </Dialog>
     </>)

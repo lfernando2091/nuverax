@@ -11,5 +11,7 @@
   },
   "documentNotFound": "We are unable to find Document with ID ",
   "pageName": "Page",
-  "pageContentTitle": "Page {NUMBER} Content"
+  "pageContentTitle": "Page {NUMBER} Content",
+  "closeBtn": "Close",
+  "pageContentNotFound": "Unable to load page content."
 }
