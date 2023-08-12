@@ -23,13 +23,13 @@ import {useTranslation} from "react-i18next";
 import {spaceService} from "../space";
 import {ApiError} from "../../components/error/Error";
 import {RecentSpacesSkeleton} from "./skeleton/Skeleton";
-import {SpaceListRes} from "../space/models/SpaceModel";
+import {SpaceRes} from "../space/models/SpaceModel";
 import {green} from "@mui/material/colors";
 import {useApiHelper} from "../../utils/ApiHelper";
 import {LoadingButtonArea} from "../../components/loading/LoadingArea";
 
 type SpaceItemProps = {
-    spaceData: SpaceListRes,
+    spaceData: SpaceRes,
     onDeleteItem: (id: string) => void
 }
 
@@ -241,7 +241,7 @@ export const Home = () => {
                         resolve={apiService.spaceList}
                         errorElement={<ApiError title={ t("recentSpacesApiError") }/>}
                     >
-                        {(spaces: SpaceListRes[]) => <>
+                        {(spaces: SpaceRes[]) => <>
                             {spaces.map((e, i) => (
                                 <SpaceItem
                                     key={i}

@@ -1,4 +1,4 @@
-import {useLocation, useNavigate, useParams} from "react-router-dom";
+import {defer, useLoaderData, useLocation, useNavigate, useParams} from "react-router-dom";
 import {useEffect, useState, ChangeEvent} from "react";
 import {
     Accordion, AccordionDetails, AccordionSummary,
@@ -26,10 +26,23 @@ import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {useTranslation} from "react-i18next";
+import {Suspend} from "../../components/load/Suspend";
+import {ApiError} from "../../components/error/Error";
+import {SpaceSkeleton} from "./skeleton/Skeleton";
+import {spaceService} from "./services/SpaceService";
+import {SpaceRes} from "./models/SpaceModel";
+
+export const spaceLoader = async ({ params }: { params: any }) => {
+    const { get } = spaceService()
+    return defer({
+        getPromise: get(params.idSpace)
+    })
+}
 
 export const Space = () => {
     const { t } = useTranslation("spaceNS");
     const params = useParams()
+    const apiService = useLoaderData() as any
     const navigate = useNavigate()
     const location = useLocation()
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
@@ -61,9 +74,21 @@ export const Space = () => {
     }
 
     return (<>
-        <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
-            { t("title") } {params["idSpace"]}
-        </Typography>
+        <Suspend
+            error={(_error) => <>
+                <ApiError title={ t("spaceDocsApiError") }/>
+            </>}
+            fallback={<SpaceSkeleton/>}
+            resolve={apiService.getPromise}>
+            { (data: SpaceRes) => <>
+                <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
+                    { t("title") } {data.name}
+                </Typography>
+                <Typography sx={{ marginTop: "10px", marginBottom: "10px" }}>
+                    {data.description}
+                </Typography>
+            </>}
+        </Suspend>
         <Grid container
               sx={{ marginTop: "10px", marginBottom: "10px" }}
               spacing={2}>

@@ -9,7 +9,7 @@ export type SpaceCreateReq = {
     questions?: string[]
 }
 
-export type SpaceListRes = {
+export type SpaceRes = {
     id: string
     shortId: string
     name: string

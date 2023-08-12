@@ -11,7 +11,7 @@ import {useTranslation} from "react-i18next";
 import {spaceService} from "./services/SpaceService";
 import {Suspend} from "../../components/load/Suspend";
 import {ApiError} from "../../components/error/Error";
-import {NavDocumentsList} from "./skeleton/Skeleton";
+import {NavDocumentsListSkeleton} from "./skeleton/Skeleton";
 
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { documents } = spaceService()
@@ -73,7 +73,7 @@ export const SpaceLayout = () => {
                                 error={(_error) => <>
                                     <ApiError title={ t("spaceDocsApiError") }/>
                                 </>}
-                                fallback={<NavDocumentsList/>}>
+                                fallback={<NavDocumentsListSkeleton/>}>
                                 { (data) => <>
                                     {(data as SpaceDocument[]).length === 0 &&
                                         <>
