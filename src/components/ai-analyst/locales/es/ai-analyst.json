@@ -19,5 +19,6 @@
     "titleAI": "Asistente",
     "titleUser": "Usuario",
     "sources": "Fuente(s)"
-  }
+  },
+  "chatLoadingError": "No pudimos cargar la conversacion."
 }

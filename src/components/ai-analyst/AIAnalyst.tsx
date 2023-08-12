@@ -10,13 +10,17 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
-import {ChangeEvent, KeyboardEvent, useState} from "react";
+import {ChangeEvent, KeyboardEvent, useEffect, useState} from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import SendIcon from '@mui/icons-material/Send';
 import {Message, MessageData} from "./Message";
 import {useTranslation} from "react-i18next";
+import {useApiHelper} from "../../utils/ApiHelper";
+import {aiAnalystService} from "./service/AIAnalystService";
+import {ChatSkeleton} from "./skeleton/Skeleton";
+import {ApiError} from "../error/Error";
 
 export type ContextProps = {
     id: string,
@@ -37,30 +41,118 @@ export const AIAnalyst = ({
                               onClose,
                               nameSpace
                           }: AIAnalystProps) => {
+    const [historyId, setHistoryId] = useState<string | null>(null)
     const { t } = useTranslation(nameSpace ?? "aiAnalystNS");
     const [question, setQuestion] = useState("")
+    const [ask, setAsk] = useState(false)
     const [messages, setMessages] = useState<MessageData[]>([])
+    const [initChatState, setInitChatState] = useState(false)
+    const {
+        history,
+        conversations,
+        init,
+        chat
+    } = aiAnalystService()
+
+    const {
+        loading: loadingInitChat,
+        data: initResponse,
+        error: initResponseError
+    } = useApiHelper(
+        () => init(context.id),
+        {
+            enabled: initChatState
+        }
+    )
+
+    const {
+        loading: loadingAiResponse,
+        data: aiResponse,
+        error: aiResponseError
+    } = useApiHelper(
+        () => chat({
+            historyId: historyId!!,
+            message: question!!
+        }),
+        {
+            enabled: question !== "" && ask && historyId !== null
+        }
+    )
+
+    const {
+        loading: loadingConversations,
+        data: conversationsList,
+        error: conversationError
+    } = useApiHelper(
+        () => conversations(context.id),
+        {
+            enabled: show
+        }
+    )
+
+    const {
+        loading: loadingChatHistory,
+        data: chatHistory,
+        error: chatHistoryError
+    } = useApiHelper(
+        () => history(historyId!!),
+        {
+            enabled: historyId !== null
+        }
+    )
+
+    useEffect(() => {
+        if (conversationsList !== null && conversationsList.length > 0) {
+            setHistoryId(conversationsList[0].shortId)
+        }
+    }, [conversationsList]);
+
+    useEffect(() => {
+        if (aiResponse !== null) {
+            setMessages([...messages, {
+                message: aiResponse.message,
+                type: "ai"
+            }])
+            setQuestion("")
+            setAsk(false)
+        }
+    }, [aiResponse]);
+
+    useEffect(() => {
+        if(chatHistory !== null) {
+            setMessages(chatHistory.messages.map((e) => ({
+                type: e.role === "assistant" ? "ai": "user",
+                message: e.message,
+                // sources
+            })))
+        }
+    }, [chatHistory]);
+
+    useEffect(() => {
+        if (initResponse !== null) {
+            setHistoryId(initResponse.id)
+            setInitChatState(false)
+        }
+    }, [initResponse]);
 
     const onReset = () => {
         setMessages([])
         setQuestion("")
+        setHistoryId(null)
+        setAsk(false)
+        setInitChatState(false)
     }
 
     const onSent = async () => {
         if (question.length > 0) {
-            setQuestion("")
-            // context.id
+            setAsk(true)
             setMessages([...messages, {
                 message: question,
                 type: "user"
-            }, {
-                message: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec semper augue sit amet odio vehicula euismod vel ac leo. Sed facilisis mauris vel ex ultricies, id consequat nisi blandit. Donec nec arcu rutrum, finibus lacus quis, eleifend nunc. Pellentesque interdum porta libero non mattis. Integer elementum quis turpis non blandit.",
-                type: "ai",
-                sources: [
-                    { name: "doc_abc.pdf", id: "abc1" },
-                    { name: "doc_abc_cjcjc.pdf", id: "abc2" }
-                ]
             }])
+            if (historyId === null) {
+                setInitChatState(true)
+            }
         }
     }
 
@@ -144,14 +236,24 @@ export const AIAnalyst = ({
                     px: 3,
                     pb: 3
                 }}>
-                    {messages.map((e, i) => (
-                        <Message
-                            nameSpace={nameSpace ?? "aiAnalystNS"}
-                            key={i}
-                            sources={e.sources}
-                            type={e.type}
-                            message={e.message}/>
-                    ))}
+                    {loadingChatHistory &&
+                        <ChatSkeleton/>
+                    }
+                    {chatHistoryError &&
+                        <ApiError title={t("chatLoadingError")}/>
+                    }
+                    {chatHistory &&
+                        <>
+                            {messages.map((e, i) => (
+                                <Message
+                                    nameSpace={nameSpace ?? "aiAnalystNS"}
+                                    key={i}
+                                    sources={e.sources}
+                                    type={e.type}
+                                    message={e.message}/>
+                            ))}
+                        </>
+                    }
                     <TextField
                         InputProps={{
                             startAdornment: <InputAdornment position="start">
@@ -168,6 +270,7 @@ export const AIAnalyst = ({
                         onChange={(event: ChangeEvent<HTMLInputElement>) => {
                             setQuestion(event.target.value);
                         }}
+                        disabled={loadingAiResponse}
                         sx={{ mt: 3 }}
                         fullWidth
                         placeholder={t("questionPlaceholder")}/>
@@ -184,20 +287,19 @@ export const AIAnalyst = ({
                             </ListSubheader>
                         }
                     >
-                        <ListItemButton>
+                        <ListItemButton disabled={loadingAiResponse}>
                             <ListItemText primary={t("suggested.summaryOpt")} />
                         </ListItemButton>
-                        <ListItemButton>
+                        <ListItemButton disabled={loadingAiResponse}>
                             <ListItemText primary={t("suggested.fiveImpPointsOpt")} />
                         </ListItemButton>
-                        <ListItemButton>
+                        <ListItemButton disabled={loadingAiResponse}>
                             <ListItemText primary={`${t("suggested.suggestion")} 3`} />
                         </ListItemButton>
-                        <ListItemButton>
+                        <ListItemButton disabled={loadingAiResponse}>
                             <ListItemText primary={`${t("suggested.suggestion")} 4`} />
                         </ListItemButton>
                     </List>
-
                     <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                         { t("note") }
                     </Typography>

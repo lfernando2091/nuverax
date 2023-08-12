@@ -167,7 +167,7 @@ export const Space = () => {
             context={{
                 title: params["idSpace"] ?? "0",
                 type: "space",
-                id: "0"
+                id: params["idSpace"] ?? "0"
             }}
             show={showAiAnalyst}
             onClose={onClose}/>
