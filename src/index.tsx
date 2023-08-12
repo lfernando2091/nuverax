@@ -3,15 +3,14 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import {createTheme, ThemeProvider} from "@mui/material";
-
-const defaultTheme = createTheme();
+import {ThemeProvider} from "@mui/material";
+import {customTheme} from "./@theme/colors";
 
 const root = ReactDOM.createRoot(
   document.getElementById('nuverax-app') as HTMLElement
 );
 root.render(
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={customTheme}>
         <React.StrictMode>
             <App />
         </React.StrictMode>

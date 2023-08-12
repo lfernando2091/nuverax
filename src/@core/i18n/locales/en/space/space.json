@@ -19,5 +19,10 @@
     "homeBtn": "Home"
   },
   "spaceDocsApiError": "Unable to load Documents from Space!",
-  "emptySpaceDocsList": "No Documents uploaded into Space yet!"
+  "emptySpaceDocsList": "No Documents uploaded into Space yet!",
+  "localfileTitle": "Upload File",
+  "localfileDescription": "Select files to upload from your device.",
+  "cancelBtn": "Cancel",
+  "uploadBtn": "Upload File",
+  "dragAndDropFilesTitle": "Drag and drop your file here or"
 }

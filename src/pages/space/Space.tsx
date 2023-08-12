@@ -1,28 +1,24 @@
 import {defer, useLoaderData, useLocation, useNavigate, useParams} from "react-router-dom";
-import {useEffect, useState, ChangeEvent} from "react";
+import {ChangeEvent, useState} from "react";
 import {
-    Accordion, AccordionDetails, AccordionSummary,
-    Box,
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Button,
-    Card, Divider,
-    Drawer, FormControl,
-    Grid, IconButton, InputLabel,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText, MenuItem, OutlinedInput, Paper, Select, SelectChangeEvent, TextField,
+    FormControl,
+    Grid,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Paper,
+    Select,
+    SelectChangeEvent,
     Typography
 } from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import UploadIcon from '@mui/icons-material/Upload';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import {AIAnalyst} from "../../components/ai-analyst/AIAnalyst";
-import AddToDriveIcon from '@mui/icons-material/AddToDrive';
-import CloudIcon from '@mui/icons-material/Cloud';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import ComputerIcon from '@mui/icons-material/Computer';
-import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {useTranslation} from "react-i18next";
@@ -31,6 +27,8 @@ import {ApiError} from "../../components/error/Error";
 import {SpaceSkeleton} from "./skeleton/Skeleton";
 import {spaceService} from "./services/SpaceService";
 import {SpaceRes} from "./models/SpaceModel";
+import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
+import {LocalUpload} from "../components/LocalUpload";
 
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { get } = spaceService()
@@ -48,6 +46,7 @@ export const Space = () => {
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
     const [showFileUpload, setShowFileUpload] = useState(false)
     const [showRecipients, setShowRecipients] = useState(false)
+    const [uploadOption, setUploadOption] = useState<UploadOption | null>(null)
 
     const onAiAnalyst = () => {
         setShorAiAnalyst(true)
@@ -59,18 +58,26 @@ export const Space = () => {
 
     const onOpenFileUpload = () => {
         setShowFileUpload(true)
+        setUploadOption(null)
     }
 
     const onStartEditor = () => {
         navigate(`/editor/${params["idSpace"]}?relay_state=${location.pathname}`)
     }
 
-    const onCloseFileUpload = () => {
+    const onCloseFileUpload = (option?: UploadOption) => {
         setShowFileUpload(false)
+        if (option) {
+            setUploadOption(option)
+        }
     }
 
     const onShowRecipients = () => {
         setShowRecipients(!showRecipients)
+    }
+
+    const onCloseUploadFile = () => {
+        setUploadOption(null)
     }
 
     return (<>
@@ -171,7 +178,10 @@ export const Space = () => {
             }}
             show={showAiAnalyst}
             onClose={onClose}/>
-        <FileUpload open={showFileUpload}
+        <LocalUpload
+            show={uploadOption === UploadOption.LocalFile}
+            onClose={onCloseUploadFile}/>
+        <FileUploadOptions open={showFileUpload}
                     onClose={onCloseFileUpload}/>
     </>)
 }
@@ -246,98 +256,5 @@ export const RecipientInput = () => {
                 </Grid>
             </Paper>
         </Grid>
-    </>)
-}
-
-export type FileUploadProps = {
-    open: boolean
-    onClose: () => void
-}
-export const FileUpload  = ({
-                                open,
-                                onClose
-                            }: FileUploadProps) => {
-    const toggleDrawer = () => {
-        onClose()
-    }
-
-    return (<>
-        <Drawer
-            anchor="bottom"
-            open={open}
-            onClose={toggleDrawer}
-        >
-            <Box
-                sx={{ width: 'auto' }}
-                role="presentation"
-            >
-                <Grid
-                    container
-                    direction="row"
-                    justifyContent="flex-start"
-                    alignItems="center"
-                    spacing={1}
-                >
-                    <Grid item>
-                        <IconButton size="small" onClick={toggleDrawer} >
-                            <CloseIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item>
-                        <Typography
-                            sx={{ marginTop: "10px", marginBottom: "10px" }}
-                            variant="h6"
-                            component="h3">
-                            Upload options
-                        </Typography>
-                    </Grid>
-                </Grid>
-                <List dense>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <ComputerIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Local File" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-                <Divider />
-                <List dense>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <WhatsAppIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="WhatsApp" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <AddToDriveIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Google Drive" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <CloudIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="DropBox" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <CloudIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="OneDrive" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </Box>
-        </Drawer>
     </>)
 }
