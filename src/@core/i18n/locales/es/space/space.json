@@ -20,9 +20,9 @@
   },
   "spaceDocsApiError": "No pudimos cargar los Documentos del Espacio",
   "emptySpaceDocsList": "No hay Documentos cargados en este Espacio todavia.",
-  "localfileTitle": "Subir Archivo",
-  "localfileDescription": "Selecciona los archivos a subir desde tu dispositivo.",
+  "localfileTitle": "Subir Archivo(s)",
+  "localfileDescription": "Selecciona archivo(s) a subir desde tu dispositivo.",
   "cancelBtn": "Cancelar",
-  "uploadBtn": "Subir Archivo",
-  "dragAndDropFilesTitle": "Jala y suelta tus archivos aqui"
+  "uploadBtn": "Subir Archivo(s)",
+  "dragAndDropFilesTitle": "Jala y suelta tus archivo(s) aqui"
 }

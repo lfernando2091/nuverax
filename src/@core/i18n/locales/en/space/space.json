@@ -21,8 +21,8 @@
   "spaceDocsApiError": "Unable to load Documents from Space!",
   "emptySpaceDocsList": "No Documents uploaded into Space yet!",
   "localfileTitle": "Upload File",
-  "localfileDescription": "Select files to upload from your device.",
+  "localfileDescription": "Select file(s) to upload from your device.",
   "cancelBtn": "Cancel",
-  "uploadBtn": "Upload File",
+  "uploadBtn": "Upload File(s)",
   "dragAndDropFilesTitle": "Drag and drop your file here or"
 }
