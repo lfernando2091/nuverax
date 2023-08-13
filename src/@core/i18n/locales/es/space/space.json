@@ -23,6 +23,7 @@
   "localfileTitle": "Subir Archivo(s)",
   "localfileDescription": "Selecciona archivo(s) a subir desde tu dispositivo.",
   "cancelBtn": "Cancelar",
+  "closeBtn": "Salir",
   "uploadBtn": "Subir Archivo(s)",
   "dragAndDropFilesTitle": "Jala y suelta tus archivo(s) aqui"
 }

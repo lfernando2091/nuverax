@@ -28,7 +28,7 @@ import {SpaceSkeleton} from "./skeleton/Skeleton";
 import {spaceService} from "./services/SpaceService";
 import {SpaceRes} from "./models/SpaceModel";
 import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
-import {LocalUpload} from "../components/LocalUpload";
+import {CloseResult, LocalUpload} from "../components/LocalUpload";
 
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { get } = spaceService()
@@ -76,7 +76,7 @@ export const Space = () => {
         setShowRecipients(!showRecipients)
     }
 
-    const onCloseUploadFile = () => {
+    const onCloseUploadFile = (res?: CloseResult) => {
         setUploadOption(null)
     }
 
@@ -180,6 +180,11 @@ export const Space = () => {
             onClose={onClose}/>
         <LocalUpload
             show={uploadOption === UploadOption.LocalFile}
+            accept={["application/pdf"]}
+            service={spaceService()}
+            extra={{
+                spaceId: params["idSpace"] ?? "0"
+            }}
             onClose={onCloseUploadFile}/>
         <FileUploadOptions open={showFileUpload}
                     onClose={onCloseFileUpload}/>

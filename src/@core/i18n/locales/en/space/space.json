@@ -23,6 +23,7 @@
   "localfileTitle": "Upload File",
   "localfileDescription": "Select file(s) to upload from your device.",
   "cancelBtn": "Cancel",
+  "closeBtn": "Close",
   "uploadBtn": "Upload File(s)",
   "dragAndDropFilesTitle": "Drag and drop your file here or"
 }

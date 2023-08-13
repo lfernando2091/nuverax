@@ -14,11 +14,14 @@ import UploadIcon from "@mui/icons-material/Upload";
 import {useTranslation} from "react-i18next";
 import {useState, DragEvent, useRef, ChangeEvent, useEffect} from "react";
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 export type DragAndDropInputProps = {
     multi?: boolean
     accept?: string[]
     service?: UploadService
+    extra: ExtraProps
+    onShouldUpdate?: () => void
 }
 
 type FileData = {
@@ -26,20 +29,28 @@ type FileData = {
     size: number
 }
 
-type UploadTask = {
+export type UploadTask = {
     id: number
-    file: File | FileData
-    loading?: boolean
+    file: File
+}
+
+export type UploadElement = {
+    id: number
+    file: FileData
+    loading: boolean
+    error: boolean
+}
+
+export type ExtraProps = {
+    [key: string]: string
 }
 
 export interface UploadService {
-    upload: (data: UploadTask) => Promise<number>
+    upload: (data: UploadTask, props: ExtraProps) => Promise<number>
 }
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms))
 const defaultService = (): UploadService => {
-
-    const upload = async (data: UploadTask) => {
-        console.log("Echo " + data)
+    const upload = async (data: UploadTask, props: ExtraProps) => {
         await delay(5000)
         return data.id
     }
@@ -53,12 +64,14 @@ const maxTask = 4
 export const DragAndDropInput = ({
                                      multi = true,
                                      accept = ["application/pdf"],
-                                     service = defaultService()
+                                     service = defaultService(),
+                                     extra,
+                                     onShouldUpdate
                                  }: DragAndDropInputProps) => {
 
     const [dragActive, setDragActive] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
-    const [files, setFiles] = useState<UploadTask[]>([])
+    const [files, setFiles] = useState<UploadElement[]>([])
     const fileQueue = useRef<UploadTask[]>([])
     const acceptedTypes = useRef<Set<string>>(new Set(accept))
 
@@ -73,26 +86,43 @@ export const DragAndDropInput = ({
     }
 
     const runUpload = async () => {
+        let shoulUpdateOnlyWhenSomeSuccess = false
         while (fileQueue.current.length > 0) {
             const chunk = fileQueue.current.splice(0, maxTask)
             const taskToDo = chunk
-                .map((e, i) => service?.upload(e))
-            const res = await Promise.all(taskToDo)
-            const setRes = new Set(res)
-            const filesRemain = files.map((e) => {
-                if (setRes.has(e.id)) {
-                    e.loading = false
-                }
-                return e
-            })
-            setFiles(filesRemain)
+                .map((e, i) => service?.upload(e, extra))
+            try {
+                const res = await Promise.all(taskToDo)
+                const setRes = new Set(res)
+                const filesRemain = files.map((e) => {
+                    if (setRes.has(e.id)) {
+                        e.loading = false
+                    }
+                    return e
+                })
+                setFiles(filesRemain)
+                shoulUpdateOnlyWhenSomeSuccess = true
+            } catch (e) {
+                const setRes = new Set(chunk.map(e => e.id))
+                const filesRemain = files.map((e) => {
+                    if (setRes.has(e.id)) {
+                        e.loading = false
+                        e.error = true
+                    }
+                    return e
+                })
+                setFiles(filesRemain)
+            }
+        }
+        if (shoulUpdateOnlyWhenSomeSuccess && onShouldUpdate) {
+            onShouldUpdate()
         }
     }
 
     const onUploadFiles = (files: FileList) => {
         setFiles([])
         fileQueue.current = []
-        let fileArray: UploadTask[] = []
+        let fileArray: UploadElement[] = []
         let fileQueueArray: UploadTask[] = []
         for (let i = 0; i < files.length; i++) {
             const file = files.item(i)
@@ -103,7 +133,8 @@ export const DragAndDropInput = ({
                         name: file.name,
                         size: file.size
                     },
-                    loading: true
+                    loading: true,
+                    error: false
                 })
                 fileQueueArray.push({
                     id: i,
@@ -205,11 +236,10 @@ export const DragAndDropInput = ({
         {files && files.length > 0 &&
             <>
                 <Grid container spacing={2}>
-                    {/* @ts-ignore */}
                     {files.map(
                         (e, i) => (
                             <Grid key={i} item xs={12} md={6}>
-                                <FileInfo file={e.file} uploading={e.loading}/>
+                                <FileInfo file={e.file} uploading={e.loading} error={e.error}/>
                             </Grid>
                         ))
                     }
@@ -221,10 +251,11 @@ export const DragAndDropInput = ({
 
 type FileInfoProps = {
     file: FileData,
-    uploading?: boolean
+    uploading: boolean
+    error: boolean
 }
 
-const FileInfo = ({ file, uploading }: FileInfoProps) => {
+const FileInfo = ({ file, uploading, error }: FileInfoProps) => {
     const theme = useTheme()
     const fileSize = (size: number): string => {
         if (size < 1024) {
@@ -241,8 +272,20 @@ const FileInfo = ({ file, uploading }: FileInfoProps) => {
             <CardHeader
                 avatar={
                     <Box sx={{ position: 'relative' }}>
-                        <Avatar sx={{ bgcolor: uploading ? theme.palette.secondary.main: theme.palette.primary.main }}>
-                            {uploading ? <UploadIcon/>: <InsertDriveFileIcon/>}
+                        <Avatar sx={{
+                            bgcolor:
+                                uploading ? theme.palette.secondary.main:
+                                    error ? theme.palette.error.main :
+                                    theme.palette.primary.main
+                        }}>
+                            {uploading &&
+                                <UploadIcon/>}
+                            {error &&
+                                <ErrorOutlineIcon/>
+                            }
+                            {!uploading && !error &&
+                                <InsertDriveFileIcon/>
+                            }
                         </Avatar>
                         {uploading &&
                             <CircularProgress

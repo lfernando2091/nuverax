@@ -7,22 +7,40 @@ import {
     DialogTitle
 } from "@mui/material";
 import {useTranslation} from "react-i18next";
-import {DragAndDropInput} from "./DragAndDropInput";
+import {DragAndDropInput, ExtraProps, UploadService} from "./DragAndDropInput";
+import {useState} from "react";
+
+export type CloseResult = {
+    shouldUpdate: boolean
+}
 
 export type LocalUploadProps = {
     show: boolean
     multi?: boolean
-    onClose: () => void
+    accept?: string[]
+    service?: UploadService,
+    extra: ExtraProps
+    onClose: (res?: CloseResult) => void
 }
 
 export const LocalUpload = ({
                                 show,
                                 multi = true,
-                                onClose
+                                onClose,
+                                accept,
+                                service,
+                                extra
                             }: LocalUploadProps) => {
     const { t } = useTranslation("spaceNS");
+    const [shouldUpdate, setShouldUpdate] = useState(false)
     const onCloseDialog = () => {
-        onClose()
+        onClose({
+            shouldUpdate
+        })
+    }
+
+    const onShouldUpdate = () => {
+        setShouldUpdate(true)
     }
 
     return (<>
@@ -34,11 +52,16 @@ export const LocalUpload = ({
                 <DialogContentText>
                     { t("localfileDescription") }
                 </DialogContentText>
-                <DragAndDropInput multi={multi}/>
+                <DragAndDropInput
+                    onShouldUpdate={onShouldUpdate}
+                    extra={extra}
+                    service={service}
+                    accept={accept}
+                    multi={multi}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onCloseDialog}>
-                    { t("cancelBtn") }
+                    { t("closeBtn") }
                 </Button>
             </DialogActions>
         </Dialog>

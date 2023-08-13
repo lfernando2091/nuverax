@@ -1,8 +1,9 @@
 import {SpaceCreateReq, SpaceDocument, SpaceRes} from "../models/SpaceModel";
 import {IdResponse} from "../../../models/ResponseModel";
 import {authHeaders} from "../../../@auth/SharedHeaders";
+import {ExtraProps, UploadService, UploadTask} from "../../components/DragAndDropInput";
 
-type SpaceServiceDef = {
+interface SpaceServiceDef extends UploadService{
     create: (data?: SpaceCreateReq) => Promise<IdResponse>
     list: () => Promise<SpaceRes[]>
     del: (id: string) => Promise<IdResponse>,
@@ -85,12 +86,30 @@ export const spaceService = (): SpaceServiceDef => {
         }
         return Promise.reject(new Error("Error"))
     }
+    const upload = async (data: UploadTask, props: ExtraProps) => {
+        const formData = new FormData()
+        formData.append("file", data.file)
+        formData.append("spaceId", props["spaceId"])
+        const res = await fetch("http://localhost:5000/upload-file", {
+            method: "POST",
+            headers: {
+                ...authHeaders()
+            },
+            body: formData,
+        })
+        if (res.ok) {
+            return data.id
+        }
+        return Promise.reject(new Error("Error"))
+    }
+
 
     return {
         create,
         list,
         del,
         documents,
-        get
+        get,
+        upload
     }
 }
