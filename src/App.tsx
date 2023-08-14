@@ -7,15 +7,22 @@ import {router} from "./pages/Router";
 
 function App() {
     const [language, setLanguage] = useState("es")
+    const [updateNavBar, setUpdateNavBar] = useState(true)
 
     const updateLanguage = (value: string) => {
         setLanguage(value)
     }
 
+    const onUpdateNavbar = (value: boolean) => {
+        setUpdateNavBar(value)
+    }
+
     const state: AppState = {
         appVersion: "0.0.1-experimental",
         language: language,
-        setLanguage: updateLanguage
+        setLanguage: updateLanguage,
+        onUpdateNavbar,
+        updateNavbar: updateNavBar
     }
 
   return (

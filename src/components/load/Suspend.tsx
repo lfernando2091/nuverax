@@ -11,19 +11,25 @@ interface ErrorRenderFunction<E = any> {
 
 type SuspendProps<R = any, E = any> = {
     render?: boolean
+    update?: boolean
     fallback: ReactNode,
     idle?: ReactNode,
-    resolve: Promise<R>,
+    resolve?: Promise<R>,
+    resolve2?: () => Promise<R>,
     error?: ErrorRenderFunction<E>,
+    onReady?: () => void
     children: ResolveRenderFunction<R>
 }
 
 export const Suspend = <R = any, E = any>({
                                      render = true,
+                                              update = false,
                                               idle,
                             fallback,
                                               error: errorComponent,
                                      resolve,
+                                              resolve2,
+                                              onReady,
                                      children
                         }: SuspendProps<R, E>) => {
     const [loading, setLoading] = useState(true)
@@ -35,12 +41,19 @@ export const Suspend = <R = any, E = any>({
         setData(null)
         setError(null)
         try {
-            const res = await resolve
-            setData(res)
-            setLoading(false)
+            if (resolve) {
+                const res = await resolve
+                setData(res)
+            } else if(resolve2){
+                const res = await resolve2()
+                setData(res)
+            }
         } catch (e) {
             setError(e as E)
-            setLoading(false)
+        }
+        setLoading(false)
+        if (onReady) {
+            onReady()
         }
     }
     useEffect(() => {
@@ -49,6 +62,13 @@ export const Suspend = <R = any, E = any>({
             invokeResolve().then()
         }
     }, [render]);
+
+    useEffect(() => {
+        if (update) {
+            setIdleState(false)
+            invokeResolve().then()
+        }
+    }, [update]);
 
     return (<>
         {idle && idleState &&

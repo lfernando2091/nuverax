@@ -89,8 +89,9 @@ export const spaceService = (): SpaceServiceDef => {
     const upload = async (data: UploadTask, props: ExtraProps) => {
         const formData = new FormData()
         formData.append("file", data.file)
-        formData.append("spaceId", props["spaceId"])
-        const res = await fetch("http://localhost:5000/upload-file", {
+        const res = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/space/${props["spaceId"]}/upload`,
+            {
             method: "POST",
             headers: {
                 ...authHeaders()

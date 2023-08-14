@@ -29,6 +29,8 @@ import {spaceService} from "./services/SpaceService";
 import {SpaceRes} from "./models/SpaceModel";
 import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
 import {CloseResult, LocalUpload} from "../components/LocalUpload";
+import {useSpaceContext} from "./SpaceContext";
+import {useAppContext} from "../../@core";
 
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { get } = spaceService()
@@ -39,6 +41,7 @@ export const spaceLoader = async ({ params }: { params: any }) => {
 
 export const Space = () => {
     const { t } = useTranslation("spaceNS");
+    const { onUpdateNavbar } = useAppContext()
     const params = useParams()
     const apiService = useLoaderData() as any
     const navigate = useNavigate()
@@ -73,11 +76,15 @@ export const Space = () => {
     }
 
     const onShowRecipients = () => {
+        onUpdateNavbar(true)
         setShowRecipients(!showRecipients)
     }
 
     const onCloseUploadFile = (res?: CloseResult) => {
         setUploadOption(null)
+        if (res && res.shouldUpdate) {
+            onUpdateNavbar(true)
+        }
     }
 
     return (<>
