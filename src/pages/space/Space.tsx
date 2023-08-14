@@ -76,7 +76,6 @@ export const Space = () => {
     }
 
     const onShowRecipients = () => {
-        onUpdateNavbar(true)
         setShowRecipients(!showRecipients)
     }
 

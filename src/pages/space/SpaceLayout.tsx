@@ -31,7 +31,6 @@ export const SpaceLayout = () => {
     const [getDocuments, setGetDocuments] = useState(false)
 
     const onReadyDocsList = () => {
-        console.log("onReadyDocsList")
         onUpdateNavbar(false)
         setGetDocuments(false)
     }
