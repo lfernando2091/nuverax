@@ -28,5 +28,6 @@
   "dragAndDropFilesTitle": "Drag and drop your file here or",
   "emailInputHelper": "Input a valid email.",
   "recipientInputHelper": "Choose recipient type.",
-  "fullNameInputHelper": "Input full name."
+  "fullNameInputHelper": "Input full name.",
+  "emptyRecipients": "No Recipients registered yet."
 }

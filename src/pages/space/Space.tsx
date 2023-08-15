@@ -3,11 +3,11 @@ import {ChangeEvent, useState} from "react";
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary,
+    AccordionSummary, Alert,
     Button,
     FormControl,
     FormHelperText,
-    Grid,
+    Grid, IconButton,
     InputLabel,
     MenuItem,
     OutlinedInput,
@@ -30,8 +30,9 @@ import {spaceService} from "./services/SpaceService";
 import {SpaceRes} from "./models/SpaceModel";
 import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
 import {CloseResult, LocalUpload} from "../components/LocalUpload";
-import {useSpaceContext} from "./SpaceContext";
+import DeleteIcon from '@mui/icons-material/Delete';
 import {useAppContext} from "../../@core";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
 enum RecipientType {
     REQUIRED_SIGNATURE = "required-signature",
@@ -41,13 +42,20 @@ type SelectOption = {
     name: string
     value: RecipientType
 }
-
+type RecipientItem = {
+    email: string
+    name: string
+    type: RecipientType
+}
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { get } = spaceService()
     return defer({
         getPromise: get(params.idSpace)
     })
 }
+
+const newEmptyRecipient: RecipientItem =
+    { name: "", email: "", type: RecipientType.REQUIRED_SIGNATURE }
 
 export const Space = () => {
     const { t } = useTranslation("spaceNS");
@@ -60,6 +68,9 @@ export const Space = () => {
     const [showFileUpload, setShowFileUpload] = useState(false)
     const [showRecipients, setShowRecipients] = useState(false)
     const [uploadOption, setUploadOption] = useState<UploadOption | null>(null)
+    const [recipients, setRecipients] =
+        useState<RecipientItem[]>([ newEmptyRecipient ])
+    const MAX_RECIPIENTS = 5
 
     const onAiAnalyst = () => {
         setShorAiAnalyst(true)
@@ -93,6 +104,20 @@ export const Space = () => {
         setUploadOption(null)
         if (res && res.shouldUpdate) {
             onUpdateNavbar(true)
+        }
+    }
+
+    const onUpdateRecipient = (index: number, newValue: RecipientItem) => {
+        setRecipients(recipients.map((e, i) => i === index ? newValue : e))
+    }
+
+    const onRemoveItem = (index: number) => {
+        setRecipients(recipients.filter((_e, i) => i !== index))
+    }
+
+    const addNewRecipient = () => {
+        if (recipients.length < MAX_RECIPIENTS) {
+            setRecipients([...recipients, newEmptyRecipient])
         }
     }
 
@@ -172,7 +197,7 @@ export const Space = () => {
                     { t("recipientsHeader") }
                 </Typography>
                 <Typography sx={{ color: 'text.secondary' }}>
-                    0
+                    { recipients.length }
                 </Typography>
             </AccordionSummary>
             <AccordionDetails>
@@ -180,13 +205,23 @@ export const Space = () => {
                       sx={{ marginTop: "10px", marginBottom: "10px" }}
                       spacing={2}>
                     <Grid item xs={12}>
-                        <RecipientInput
-                            type={RecipientType.COPY}
-                            name={""}
-                            email={""}/>
+                        {recipients.length === 0 &&
+                            <Alert severity="info">
+                                {t("emptyRecipients")}
+                            </Alert>
+                        }
+                        {recipients.map((e, i) => (
+                            <RecipientInput
+                                key={i}
+                                index={i}
+                                value={e}
+                                onRemove={onRemoveItem}
+                                onUpdateRecipient={onUpdateRecipient}/>
+                        ))}
                     </Grid>
                     <Grid item xs={12}>
-                        <Button size="small" fullWidth startIcon={<PersonAddIcon />}>
+                        <Button size="small" fullWidth startIcon={<PersonAddIcon />}
+                                onClick={addNewRecipient}>
                             { t("addRecipientBtn") }
                         </Button>
                     </Grid>
@@ -215,9 +250,10 @@ export const Space = () => {
 }
 
 type RecipientInputProps = {
-    type: RecipientType
-    name: string
-    email: string
+    index: number
+    value: RecipientItem
+    onUpdateRecipient: (index: number, value: RecipientItem) => void
+    onRemove: (index: number) => void
 }
 
 const listOptions: SelectOption[] = [
@@ -226,79 +262,100 @@ const listOptions: SelectOption[] = [
 ]
 
 const RecipientInput = ({
-                                   type: typeInput = RecipientType.REQUIRED_SIGNATURE,
-                                   name: nameInput,
-                                   email: emailInput
-                               }: RecipientInputProps) => {
+                            index,
+                            value,
+                            onUpdateRecipient,
+                            onRemove
+}: RecipientInputProps) => {
     const { t } = useTranslation("spaceNS");
-    const [type, setType] = useState(typeInput.valueOf())
-    const [name, setName] = useState(nameInput)
-    const [email, setEmail] = useState(emailInput)
     const onChangeType = (event: SelectChangeEvent) => {
-        setType(event.target.value as string);
+        const strVal = event.target.value as string
+        onUpdateRecipient(index, {
+            ...value,
+            type: strVal as RecipientType
+        })
     }
 
     const onChangeName = (event: ChangeEvent<HTMLInputElement>) => {
-        setName(event.target.value)
+        onUpdateRecipient(index, {
+            ...value,
+            name: event.target.value
+        })
     }
 
     const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-        setEmail(event.target.value)
+        onUpdateRecipient(index, {
+            ...value,
+            email: event.target.value
+        })
     }
 
     return (<>
             <Paper sx={{ p: "10px" }} variant="outlined" square>
-                <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h4">
-                    {t("recipientLbl")} 1
-                </Typography>
+                <Grid
+                    container
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                >
+                    <Grid item>
+                        <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h4">
+                            {t("recipientLbl")}{" " + (index + 1)}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <IconButton size="small" onClick={() => onRemove(index)} >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Grid>
+                </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={8}>
                         <FormControl fullWidth size="small">
-                            <InputLabel htmlFor="input-email">{t("emailLbl")}</InputLabel>
+                            <InputLabel htmlFor={`input-email-${index}`}>{t("emailLbl")}</InputLabel>
                             <OutlinedInput
                                 type="email"
-                                id="input-email"
-                                value={email}
+                                id={`input-email-${index}`}
+                                value={value.email}
                                 onChange={onChangeEmail}
                                 placeholder={t("emailPlaceholder")}
                                 label={t("emailLbl")}
                             />
-                            <FormHelperText id="input-email-helper-text">
+                            <FormHelperText>
                                 { t("emailInputHelper")}
                             </FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl fullWidth size="small">
-                            <InputLabel id="lbl-recipient-type">{t("recipientType")}</InputLabel>
+                            <InputLabel id={`lbl-recipient-type-${index}`}>{t("recipientType")}</InputLabel>
                             <Select
-                                labelId="lbl-recipient-type"
-                                id="input-recipient-type"
-                                value={type}
+                                labelId={`lbl-recipient-type-${index}`}
+                                value={value.type}
                                 label={t("recipientType")}
                                 onChange={onChangeType}
                             >
                                 {listOptions.map((e, i) => (
-                                    <MenuItem value={e.value.valueOf()}>{t(e.name)}</MenuItem>
+                                    <MenuItem key={i} value={e.value}>{t(e.name)}</MenuItem>
                                 ))}
                             </Select>
-                            <FormHelperText id="input-name-helper-text">
+                            <FormHelperText>
                                 { t("recipientInputHelper")}
                             </FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={8}>
                         <FormControl fullWidth size="small">
-                            <InputLabel htmlFor="input-name">{t("fullNameLbl")}</InputLabel>
+                            <InputLabel htmlFor={`input-name-${index}`}>{t("fullNameLbl")}</InputLabel>
                             <OutlinedInput
                                 type="text"
-                                id="input-name"
+                                id={`input-name-${index}`}
                                 placeholder="Fernando Abc Xyz"
                                 label={t("fullNameLbl")}
-                                value={name}
+                                value={value.name}
                                 onChange={onChangeName}
                             />
-                            <FormHelperText id="input-name-helper-text">
+                            <FormHelperText>
                                 { t("fullNameInputHelper")}
                             </FormHelperText>
                         </FormControl>

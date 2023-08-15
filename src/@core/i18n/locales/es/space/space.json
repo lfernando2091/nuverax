@@ -28,5 +28,6 @@
   "dragAndDropFilesTitle": "Jala y suelta tus archivo(s) aqui",
   "emailInputHelper": "Ingresa un correo electronico valido.",
   "recipientInputHelper": "Selecciona el tipo de destinatario.",
-  "fullNameInputHelper": "Ingresa el nombre completo."
+  "fullNameInputHelper": "Ingresa el nombre completo.",
+  "emptyRecipients": "Sin destinatarios registrados todavia."
 }
