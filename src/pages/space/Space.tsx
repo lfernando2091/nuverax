@@ -175,6 +175,7 @@ export const Space = () => {
                         color="inherit"
                         fullWidth
                         disableElevation
+                        disabled={recipients.length === 0}
                         sx={{
                             borderRadius: "0px",
                             paddingTop: "10px",
