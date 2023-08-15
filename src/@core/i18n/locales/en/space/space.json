@@ -25,5 +25,8 @@
   "cancelBtn": "Cancel",
   "closeBtn": "Close",
   "uploadBtn": "Upload File(s)",
-  "dragAndDropFilesTitle": "Drag and drop your file here or"
+  "dragAndDropFilesTitle": "Drag and drop your file here or",
+  "emailInputHelper": "Input a valid email.",
+  "recipientInputHelper": "Choose recipient type.",
+  "fullNameInputHelper": "Input full name."
 }

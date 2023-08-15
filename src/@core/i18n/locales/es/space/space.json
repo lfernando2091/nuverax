@@ -25,5 +25,8 @@
   "cancelBtn": "Cancelar",
   "closeBtn": "Salir",
   "uploadBtn": "Subir Archivo(s)",
-  "dragAndDropFilesTitle": "Jala y suelta tus archivo(s) aqui"
+  "dragAndDropFilesTitle": "Jala y suelta tus archivo(s) aqui",
+  "emailInputHelper": "Ingresa un correo electronico valido.",
+  "recipientInputHelper": "Selecciona el tipo de destinatario.",
+  "fullNameInputHelper": "Ingresa el nombre completo."
 }

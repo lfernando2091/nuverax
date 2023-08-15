@@ -6,6 +6,7 @@ import {
     AccordionSummary,
     Button,
     FormControl,
+    FormHelperText,
     Grid,
     InputLabel,
     MenuItem,
@@ -31,6 +32,15 @@ import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
 import {CloseResult, LocalUpload} from "../components/LocalUpload";
 import {useSpaceContext} from "./SpaceContext";
 import {useAppContext} from "../../@core";
+
+enum RecipientType {
+    REQUIRED_SIGNATURE = "required-signature",
+    COPY = "copy"
+}
+type SelectOption = {
+    name: string
+    value: RecipientType
+}
 
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { get } = spaceService()
@@ -169,10 +179,17 @@ export const Space = () => {
                 <Grid container
                       sx={{ marginTop: "10px", marginBottom: "10px" }}
                       spacing={2}>
-                    <RecipientInput/>
-                    <Button size="small" fullWidth startIcon={<PersonAddIcon />}>
-                        { t("addRecipientBtn") }
-                    </Button>
+                    <Grid item xs={12}>
+                        <RecipientInput
+                            type={RecipientType.COPY}
+                            name={""}
+                            email={""}/>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Button size="small" fullWidth startIcon={<PersonAddIcon />}>
+                            { t("addRecipientBtn") }
+                        </Button>
+                    </Grid>
                 </Grid>
             </AccordionDetails>
         </Accordion>
@@ -197,11 +214,26 @@ export const Space = () => {
     </>)
 }
 
-export const RecipientInput = () => {
+type RecipientInputProps = {
+    type: RecipientType
+    name: string
+    email: string
+}
+
+const listOptions: SelectOption[] = [
+    { name: "signatureRequiredOpt", value: RecipientType.REQUIRED_SIGNATURE },
+    { name: "ccOpt", value: RecipientType.COPY }
+]
+
+const RecipientInput = ({
+                                   type: typeInput = RecipientType.REQUIRED_SIGNATURE,
+                                   name: nameInput,
+                                   email: emailInput
+                               }: RecipientInputProps) => {
     const { t } = useTranslation("spaceNS");
-    const [type, setType] = useState("required-signature")
-    const [name, setName] = useState("")
-    const [email, setEmail] = useState("")
+    const [type, setType] = useState(typeInput.valueOf())
+    const [name, setName] = useState(nameInput)
+    const [email, setEmail] = useState(emailInput)
     const onChangeType = (event: SelectChangeEvent) => {
         setType(event.target.value as string);
     }
@@ -215,12 +247,11 @@ export const RecipientInput = () => {
     }
 
     return (<>
-        <Grid item xs={12}>
-            <Paper variant="outlined" square>
+            <Paper sx={{ p: "10px" }} variant="outlined" square>
                 <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h4">
                     {t("recipientLbl")} 1
                 </Typography>
-                <Grid container rowSpacing={1}>
+                <Grid container spacing={2}>
                     <Grid item xs={8}>
                         <FormControl fullWidth size="small">
                             <InputLabel htmlFor="input-email">{t("emailLbl")}</InputLabel>
@@ -232,6 +263,9 @@ export const RecipientInput = () => {
                                 placeholder={t("emailPlaceholder")}
                                 label={t("emailLbl")}
                             />
+                            <FormHelperText id="input-email-helper-text">
+                                { t("emailInputHelper")}
+                            </FormHelperText>
                         </FormControl>
                     </Grid>
                     <Grid item xs={4}>
@@ -244,13 +278,15 @@ export const RecipientInput = () => {
                                 label={t("recipientType")}
                                 onChange={onChangeType}
                             >
-                                <MenuItem value="required-signature">{t("signatureRequiredOpt")}</MenuItem>
-                                <MenuItem value="carbon-copy">{t("ccOpt")}</MenuItem>
+                                {listOptions.map((e, i) => (
+                                    <MenuItem value={e.value.valueOf()}>{t(e.name)}</MenuItem>
+                                ))}
                             </Select>
+                            <FormHelperText id="input-name-helper-text">
+                                { t("recipientInputHelper")}
+                            </FormHelperText>
                         </FormControl>
                     </Grid>
-                </Grid>
-                <Grid container rowSpacing={1}>
                     <Grid item xs={8}>
                         <FormControl fullWidth size="small">
                             <InputLabel htmlFor="input-name">{t("fullNameLbl")}</InputLabel>
@@ -262,10 +298,12 @@ export const RecipientInput = () => {
                                 value={name}
                                 onChange={onChangeName}
                             />
+                            <FormHelperText id="input-name-helper-text">
+                                { t("fullNameInputHelper")}
+                            </FormHelperText>
                         </FormControl>
                     </Grid>
                 </Grid>
             </Paper>
-        </Grid>
     </>)
 }
