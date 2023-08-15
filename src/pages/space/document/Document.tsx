@@ -1,11 +1,12 @@
 import {SyntheticEvent, useEffect, useState} from "react";
-import {defer, useLoaderData, useParams, useRouteError} from "react-router-dom";
+import {defer, useLoaderData, useNavigate, useParams, useRouteError} from "react-router-dom";
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary,
-    Button,
+    AccordionSummary, Alert,
+    Button, Dialog, DialogActions, DialogContent, DialogTitle,
     Grid,
+    LinearProgress,
     Typography
 } from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -20,6 +21,9 @@ import {Suspend} from "../../../components/load/Suspend";
 import {ApiError} from "../../../components/error/Error";
 import {DocumentResponse} from "./models/DocumentModel";
 import {PageContent} from "./PageContent";
+import {useApiHelper} from "../../../utils/ApiHelper";
+import {waitUntil} from "../../../utils/Utils";
+import {useAppContext} from "../../../@core";
 
 export const documentLoader = async ({ params }: { params: any }) => {
     const { get } = documentService()
@@ -29,13 +33,18 @@ export const documentLoader = async ({ params }: { params: any }) => {
 }
 
 export const Document = () => {
+    const { onUpdateNavbar } = useAppContext()
+    const { del } = documentService()
+    const navigate = useNavigate()
     const { t } = useTranslation("spaceDocNS");
     const [expanded, setExpanded] = useState<string | false>("panel1")
     const params = useParams()
+    const deletePromise = () => del(params["idDocument"]!!)
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
     const apiService = useLoaderData() as any
     const documentInfo = apiService.documentInfo as DocumentResponse
     const [viewPageContent, setViewPageContent] = useState<number | null>(null)
+    const [showDeleteConfirm, setShorDeleteConfirm] = useState(false)
 
     const handleChange =
         (panel: string) => (event: SyntheticEvent, isExpanded: boolean) => {
@@ -55,6 +64,18 @@ export const Document = () => {
 
     const onClose = () => {
         setShorAiAnalyst(false)
+    }
+
+    const onDelete = () => {
+        setShorDeleteConfirm(true)
+    }
+
+    const onCloseDelete = (shouldUpdate?: boolean) => {
+        setShorDeleteConfirm(false)
+        if (shouldUpdate) {
+            onUpdateNavbar(true)
+            navigate(`/s/${params["idSpace"]}`)
+        }
     }
 
     return (<>
@@ -101,6 +122,7 @@ export const Document = () => {
                         color="inherit"
                         fullWidth
                         disableElevation
+                        onClick={onDelete}
                         sx={{
                             borderRadius: "0px",
                             paddingTop: "10px",
@@ -137,6 +159,17 @@ export const Document = () => {
                 </Grid>
             </AccordionDetails>
         </Accordion>
+        <ConfirmDialog
+            fun={deletePromise}
+            show={showDeleteConfirm}
+            title={t("confirmDeleteTitle")}
+            description={t("confirmDeleteDesc")}
+            cancelText={t("cancelBtn")}
+            confirmText={t("confirmBtn")}
+            closeText={t("closeBtn")}
+            errorText={t("errorDelete")}
+            successText={t("successDelete")}
+            onClose={onCloseDelete}/>
         <PageContent
             documentId={params["idDocument"] ?? "0"}
             open={viewPageContent !== null}
@@ -150,6 +183,112 @@ export const Document = () => {
             }}
             show={showAiAnalyst}
             onClose={onClose}/>
+    </>)
+}
+
+type DeleteDialogProps<R = any> = {
+    show: boolean
+    title: string
+    description: string
+    errorText?: string
+    successText?: string
+    cancelText?: string
+    confirmText?: string
+    closeText?: string
+    onClose: (shouldUpdate?: boolean) => void
+    fun:() => Promise<R>
+}
+
+export const ConfirmDialog = <R = any, E = any>({
+                                   show,
+                                  onClose,
+                                  title,
+                                  description,
+                                                    errorText = "Error",
+                                                    successText = "Success",
+                                  cancelText = "Cancel",
+                                  confirmText = "Confirm",
+                                                    closeText = "Close",
+                                       fun
+                               }: DeleteDialogProps<R>) => {
+    const [start, setStart] = useState(false)
+
+    const {
+        loading,
+        data,
+        error
+    } = useApiHelper<R, E>(
+        fun,
+        {
+            enabled: start
+        }
+    )
+
+    const onCloseDialog = (e: any, reason: "backdropClick" | "escapeKeyDown") => {
+        if (loading) {
+            if (reason !== "backdropClick") {
+                onNormalClose()
+            }
+        } else if (data){
+            onSuccessClose()
+        } else {
+            onNormalClose()
+        }
+    }
+
+    const onConfirmAction = () => {
+        setStart(true)
+    }
+
+    const onNormalClose = () => {
+        setStart(false)
+        onClose()
+    }
+
+    const onSuccessClose = () => {
+        setStart(false)
+        onClose(true)
+    }
+
+    return (<>
+        <Dialog keepMounted={true} disableEscapeKeyDown={loading} open={show} onClose={onCloseDialog}>
+            <DialogTitle>
+                { title }
+            </DialogTitle>
+            <DialogContent>
+                { description }
+                {loading &&
+                    <LinearProgress />
+                }
+                {data &&
+                    <Alert severity="success">{ successText }</Alert>
+                }
+                {error &&
+                    <>
+                        <ApiError title={ errorText }/>
+                    </>
+                }
+            </DialogContent>
+            <DialogActions>
+                {data &&
+                    <Button onClick={onSuccessClose}>
+                        { closeText }
+                    </Button>
+                }
+                {data === null &&
+                    <>
+                        <Button disabled={loading} onClick={() => onNormalClose()}>
+                            { cancelText }
+                        </Button>
+                        {error === undefined &&
+                            <Button disabled={loading} variant="outlined" onClick={onConfirmAction}>
+                                { confirmText }
+                            </Button>
+                        }
+                    </>
+                }
+            </DialogActions>
+        </Dialog>
     </>)
 }
 

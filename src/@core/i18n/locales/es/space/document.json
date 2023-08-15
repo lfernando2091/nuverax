@@ -13,5 +13,11 @@
   "pageName": "Página",
   "pageContentTitle": "Contenido Página {NUMBER}",
   "closeBtn": "Salir",
-  "pageContentNotFound": "No pudimos cargar el contenido de la página."
+  "pageContentNotFound": "No pudimos cargar el contenido de la página.",
+  "confirmDeleteTitle": "Confirma Eliminado",
+  "confirmDeleteDesc": "Esta accion no puede ser revertido una vez confirmado.",
+  "cancelBtn": "Cancelar",
+  "confirmBtn": "Confirmar",
+  "errorDelete": "Algo salio mal eliminando el elemento.",
+  "successDelete": "Eliminado exitoso."
 }

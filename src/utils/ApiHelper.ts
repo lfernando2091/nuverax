@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
 
 export type ApiHelperOptions = {
-    enabled: boolean
+    enabled: boolean,
+    reset?: boolean
 }
 
 
@@ -31,11 +32,26 @@ export const useApiHelper = <R = any, E = any>(
         setLoading(false)
     }
 
+    const onReset = () => {
+        setData(null)
+        setError(undefined)
+        setLoading(false)
+    }
+
     useEffect(() => {
         if (options.enabled) {
             invokeFun().then()
         }
+        return () => {
+            onReset()
+        }
     }, [options.enabled]);
+
+    useEffect(() => {
+        if (options.reset) {
+            onReset()
+        }
+    }, [options.reset]);
 
     return {
         loading,

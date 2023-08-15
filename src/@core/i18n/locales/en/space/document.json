@@ -13,5 +13,11 @@
   "pageName": "Page",
   "pageContentTitle": "Page {NUMBER} Content",
   "closeBtn": "Close",
-  "pageContentNotFound": "Unable to load page content."
+  "pageContentNotFound": "Unable to load page content.",
+  "confirmDeleteTitle": "Confirm Deletion",
+  "confirmDeleteDesc": "This action can't be reverted after confirm.",
+  "cancelBtn": "Cancel",
+  "confirmBtn": "Confirm",
+  "errorDelete": "Something went wrong on item deletion.",
+  "successDelete": "Success item deletion."
 }

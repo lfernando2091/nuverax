@@ -1,8 +1,10 @@
 import {authHeaders} from "../../../../@auth/SharedHeaders";
 import {DocumentResponse, PageContent} from "../models/DocumentModel";
+import {IdResponse} from "../../../../models/ResponseModel";
 
 type DocumentServiceDef = {
     get: (id: string, options?: { page: number }) => Promise<DocumentResponse | PageContent>
+    del: (id: string) => Promise<IdResponse>,
 }
 
 export const documentService = (): DocumentServiceDef => {
@@ -23,7 +25,23 @@ export const documentService = (): DocumentServiceDef => {
         return Promise.reject(new Error("Error"))
     }
 
+    const del = async (id: string): Promise<IdResponse> => {
+        const res = await fetch(
+            `${process.env.REACT_APP_BACKEND_URL}/doc/${id}`,
+            {
+                headers: {
+                    ...authHeaders()
+                },
+                method: "DELETE"
+            })
+        if (res.ok) {
+            return await res.json()
+        }
+        return Promise.reject(new Error("Error"))
+    }
+
     return {
-        get
+        get,
+        del
     }
 }
