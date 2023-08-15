@@ -1,15 +1,15 @@
 import {MainContent, NavMenu, OneColumnLayout} from "../../@core";
 import {
     Box,
-    Button, Card, CardActionArea, CardContent, Divider, FormControl,
+    Button, Divider, FormControl,
     Grid,
     IconButton, Input,
     InputLabel,
     List, ListItemButton, ListItemIcon, ListItemText,
     ListSubheader,
-    MenuItem, OutlinedInput,
+    MenuItem,
     Paper,
-    Select, SelectChangeEvent, Stack, styled, TextField,
+    Select, SelectChangeEvent, Stack, styled,
     Typography
 } from "@mui/material";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
@@ -22,6 +22,7 @@ import TextFieldsIcon from '@mui/icons-material/TextFields';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {SuccessfulModal} from "./Successful";
+import {EditorContextProvider, useEditorContext} from "./EditorContext";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -31,7 +32,8 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-export const EditorLayout = () => {
+export const EditorView = () => {
+    const { pages, setPage, page } = useEditorContext()
     const [searchParams, _setSearchParams] = useSearchParams()
     const params = useParams()
     const [recipient, setRecipient] = useState("abc123")
@@ -51,6 +53,10 @@ export const EditorLayout = () => {
 
     const onCloseSuccessfulDialog = () => {
         setSuccessful(false)
+    }
+
+    const onSelectPage = (value: number) => {
+        setPage(value)
     }
 
     return (<>
@@ -208,27 +214,30 @@ export const EditorLayout = () => {
                       component="nav"
                       subheader={
                           <ListSubheader component="div">
-                              Pages
+                              Pages { `(${pages})` }
                           </ListSubheader>
                       }>
-                    <ListItemButton
-                        selected={false}
-                        disabled={false}>
-                        <ListItemText primary="Page 1"/>
-                    </ListItemButton>
-                    <ListItemButton
-                        selected={false}
-                        disabled={false}>
-                        <ListItemText primary="Page 2"/>
-                    </ListItemButton>
-                    <ListItemButton
-                        selected={false}
-                        disabled={false}>
-                        <ListItemText primary="Page 3"/>
-                    </ListItemButton>
+                    {Array(pages).fill({ }).map((_e, i) => (
+                        <>
+                            <ListItemButton
+                                onClick={() => onSelectPage(i + 1)}
+                                selected={(i + 1) === page}
+                                disabled={false}>
+                                <ListItemText primary={`Page ${i + 1}`}/>
+                            </ListItemButton>
+                        </>
+                    ))}
                 </List>
             </NavMenu>
         </OneColumnLayout>
+    </>)
+}
+
+export const EditorLayout = () => {
+    return (<>
+        <EditorContextProvider>
+            <EditorView/>
+        </EditorContextProvider>
     </>)
 }
 

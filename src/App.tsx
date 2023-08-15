@@ -5,6 +5,15 @@ import {AppState, AppContext} from "./@core";
 import {RouterProvider} from "react-router-dom";
 import {router} from "./pages/Router";
 
+import {pdfjs} from "react-pdf";
+
+const url = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+    url,
+    import.meta.url,
+).toString();
+
 function App() {
     const [language, setLanguage] = useState("es")
     const [updateNavBar, setUpdateNavBar] = useState(true)

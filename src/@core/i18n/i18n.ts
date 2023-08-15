@@ -7,6 +7,7 @@ import spaceEsNameSpace from './locales/es/space/space.json';
 import spaceDocEnNameSpace from './locales/en/space/document.json';
 import spaceDocEsNameSpace from './locales/es/space/document.json';
 import {aiAnalystEnNameSpace, aiAnalystEsNameSpace} from "../../components/ai-analyst";
+import {pdfViewerEnNameSpace, pdfViewerEsNameSpace} from "../../components/pdf-viewer";
 
 export const defaultNS = 'homeNS';
 
@@ -19,14 +20,15 @@ i18next.use(initReactI18next).init({
             homeNS: homeEnNameSpace,
             spaceNS: spaceEnNameSpace,
             spaceDocNS: spaceDocEnNameSpace,
-            aiAnalystNS: aiAnalystEnNameSpace
+            aiAnalystNS: aiAnalystEnNameSpace,
+            pdfViewerNS: pdfViewerEnNameSpace
         },
         es: {
             homeNS: homeEsNameSpace,
             spaceNS: spaceEsNameSpace,
             spaceDocNS: spaceDocEsNameSpace,
-            aiAnalystNS: aiAnalystEsNameSpace
-
+            aiAnalystNS: aiAnalystEsNameSpace,
+            pdfViewerNS: pdfViewerEsNameSpace
         },
     },
 }).then(r => { });

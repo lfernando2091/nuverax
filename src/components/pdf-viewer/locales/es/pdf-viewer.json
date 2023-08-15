@@ -1,0 +1,8 @@
+{
+  "pdfError": "No pudimos cargar el archivo PDF solicitado.",
+  "pdfLoading": "Estamos cargando el archivo PDF.",
+  "pdfNoData": "Archivo PDF vacio.",
+  "pdfPageError": "Error al cargar pagina.",
+  "pdfPageLoading": "Cargando Pagina.",
+  "pdfPageNoData": "Pagina no especificada."
+}
