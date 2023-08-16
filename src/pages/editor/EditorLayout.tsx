@@ -1,21 +1,30 @@
 import {MainContent, NavMenu, OneColumnLayout} from "../../@core";
 import {
     Box,
-    Button, Divider, FormControl,
+    Button,
+    Divider,
+    FormControl,
     Grid,
-    IconButton, Input,
+    IconButton,
+    Input,
     InputLabel,
-    List, ListItemButton, ListItemIcon, ListItemText,
+    List,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
     ListSubheader,
     MenuItem,
     Paper,
-    Select, SelectChangeEvent, Stack, styled,
+    Select,
+    SelectChangeEvent,
+    Stack,
+    styled,
     Typography
 } from "@mui/material";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
 import {Link, Outlet, useParams, useSearchParams} from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import {useState, ChangeEvent} from "react";
+import {ChangeEvent, useState} from "react";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
 import TextFieldsIcon from '@mui/icons-material/TextFields';
@@ -25,6 +34,7 @@ import {SuccessfulModal} from "./Successful";
 import {EditorContextProvider, useEditorContext} from "./EditorContext";
 import {FieldType} from "../../components/pdf-viewer";
 import {v4 as uuidv4} from 'uuid'
+import {RecipientType} from "../space";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -34,12 +44,44 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
+interface Option {
+    name: string,
+    value: string
+}
+
+interface RecipientOption extends Option {
+    type: RecipientType
+}
+
+const recipients: RecipientOption[] = [
+    { name: "ABC 1", value: "abc-a123", type: RecipientType.REQUIRED_SIGNATURE },
+    { name: "ABC 2", value: "abc-a124", type: RecipientType.REQUIRED_SIGNATURE },
+    { name: "ABC 3", value: "abc-a125", type: RecipientType.COPY },
+    { name: "ABC 4", value: "abc-a126", type: RecipientType.COPY },
+    { name: "ABC 5", value: "abc-a127", type: RecipientType.REQUIRED_SIGNATURE },
+    { name: "ABC 6", value: "abc-a128", type: RecipientType.COPY }
+]
+
+const documents: Option[] = [
+    { name: "Document 1", value: "abc-a123" },
+    { name: "Document 2", value: "abc-a124" },
+    { name: "Document 3", value: "abc-a125" },
+    { name: "Document 4", value: "abc-a126" }
+]
+
 export const EditorView = () => {
-    const { pages, setPage, page, setNewField } = useEditorContext()
+    const {
+        pages,
+        setPage,
+        page,
+        setNewField,
+        setRecipient,
+        setDocument,
+        document,
+        recipient
+    } = useEditorContext()
     const [searchParams, _setSearchParams] = useSearchParams()
     const params = useParams()
-    const [recipient, setRecipient] = useState("abc123")
-    const [document, setDocument] = useState("abc123")
     const [succesful, setSuccessful] = useState(false)
 
     const onChangeRecipient = (event: SelectChangeEvent) => {
@@ -74,8 +116,8 @@ export const EditorView = () => {
                 x: 0
             },
             page,
-            recipientId: "1",
-            documentId: "1"
+            recipientId: recipient,
+            documentId: document
         })
     }
 
@@ -119,6 +161,7 @@ export const EditorView = () => {
                         }} size="small">
                             <InputLabel id="lbl-recipient-id">Recipient</InputLabel>
                             <Select
+                                variant="standard"
                                 labelId="lbl-recipient-id"
                                 id="input-recipient-id"
                                 value={recipient}
@@ -126,9 +169,17 @@ export const EditorView = () => {
                                 onChange={onChangeRecipient}
                             >
                                 <ListSubheader>Signature Required</ListSubheader>
-                                <MenuItem value="abc123">Luis HHHHHH HHHHHH</MenuItem>
+                                {recipients
+                                    .filter((e, i) => e.type === RecipientType.REQUIRED_SIGNATURE)
+                                    .map((e, i) => (
+                                        <MenuItem key={i} value={ e.value }>{ e.name }</MenuItem>
+                                    ))}
                                 <ListSubheader>Receives a Copy</ListSubheader>
-                                <MenuItem value="abc124">Fernando MMMMM MMMMM</MenuItem>
+                                {recipients
+                                    .filter((e, i) => e.type === RecipientType.COPY)
+                                    .map((e, i) => (
+                                        <MenuItem key={i} disabled value={ e.value }>{ e.name }</MenuItem>
+                                    ))}
                             </Select>
                         </FormControl>
                         <FormControl sx={{
@@ -136,17 +187,20 @@ export const EditorView = () => {
                             marginBottom: "20px",
                             width: "210px",
                             px: "16px"
-                        }} size="small">
+                        }} size="small" disabled={recipient === ""}>
                             <InputLabel id="lbl-document-id">Document</InputLabel>
                             <Select
+                                variant="standard"
                                 labelId="lbl-document-id"
                                 id="input-document-id"
                                 value={document}
                                 label="Document"
                                 onChange={onChangeDocument}
                             >
-                                <MenuItem value="abc123">Document ABC1234</MenuItem>
-                                <MenuItem value="abc124">Document XYZ0987</MenuItem>
+                                {documents.map((e, i) => (
+                                    <MenuItem key={i} value={ e.value }>{ e.name }</MenuItem>
+                                ))
+                                }
                             </Select>
                         </FormControl>
 
@@ -163,25 +217,25 @@ export const EditorView = () => {
                             <ListItemButton
                                 onClick={onAddNewSignatureField}
                                 selected={false}
-                                disabled={false}>
+                                disabled={document === ""}>
                                 <ListItemIcon>{<DriveFileRenameOutlineIcon/>}</ListItemIcon>
                                 <ListItemText primary="Signature"/>
                             </ListItemButton>
                             <ListItemButton
                                 selected={false}
-                                disabled={false}>
+                                disabled={true}>
                                 <ListItemIcon>{<CalendarMonthIcon/>}</ListItemIcon>
                                 <ListItemText primary="Date"/>
                             </ListItemButton>
                             <ListItemButton
                                 selected={false}
-                                disabled={false}>
+                                disabled={true}>
                                 <ListItemIcon>{<TextFieldsIcon/>}</ListItemIcon>
                                 <ListItemText primary="Name"/>
                             </ListItemButton>
                             <ListItemButton
                                 selected={false}
-                                disabled={false}>
+                                disabled={true}>
                                 <ListItemIcon>{<AlternateEmailIcon/>}</ListItemIcon>
                                 <ListItemText primary="Email"/>
                             </ListItemButton>

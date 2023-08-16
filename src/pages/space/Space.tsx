@@ -27,17 +27,12 @@ import {Suspend} from "../../components/load/Suspend";
 import {ApiError} from "../../components/error/Error";
 import {SpaceSkeleton} from "./skeleton/Skeleton";
 import {spaceService} from "./services/SpaceService";
-import {SpaceRes} from "./models/SpaceModel";
+import {RecipientType, SpaceRes} from "./models/SpaceModel";
 import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
 import {CloseResult, LocalUpload} from "../components/LocalUpload";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useAppContext} from "../../@core";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
 
-enum RecipientType {
-    REQUIRED_SIGNATURE = "required-signature",
-    COPY = "copy"
-}
 type SelectOption = {
     name: string
     value: RecipientType

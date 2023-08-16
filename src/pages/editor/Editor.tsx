@@ -6,7 +6,14 @@ import {useEffect, useState} from "react";
 const url = "http://localhost:3000/assets/example-file.pdf"
 
 export const Editor = () => {
-    const { setPages, page, newField, setNewField } = useEditorContext()
+    const {
+        setPages,
+        page,
+        newField,
+        setNewField,
+        recipient,
+        document
+    } = useEditorContext()
     const [fields, setFields] =
         useState<Field[]>([])
     const onLoadSuccess = (page: PDFDocumentProxy) => {
@@ -18,19 +25,31 @@ export const Editor = () => {
             .map((e) => e.id === value.id ? value: e))
     }
 
+    const loadRecipientDocumentField = async () => {
+        setFields([])
+    }
+
     useEffect(() => {
         if (newField !== null) {
             setFields([...fields, newField])
             setNewField(null)
         }
-    }, [newField]);
+    }, [newField])
+
+    useEffect(() => {
+        if (recipient !== "" && document !== "") {
+            loadRecipientDocumentField().then()
+        }
+    }, [recipient, document]);
 
     return (<>
         <PDFViewer page={page}
                    file={url}
                    onLoadSuccess={onLoadSuccess}>
             <>
-                {fields.map((e, i) => {
+                {fields
+                    .filter((e) => e.page === page)
+                    .map((e, i) => {
                     switch (e.type) {
                         case FieldType.SIGNATURE:
                             return (<Signature

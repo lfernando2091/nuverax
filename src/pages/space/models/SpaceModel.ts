@@ -25,3 +25,8 @@ export type SpaceDocument = {
     shortId: string
     name: string
 }
+
+export enum RecipientType {
+    REQUIRED_SIGNATURE = "required-signature",
+    COPY = "copy"
+}
