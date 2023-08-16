@@ -1,17 +1,15 @@
 import {Stage, Layer} from "react-konva";
 import {PageSize} from "../models/PDFViewerModel";
+import {ReactNode} from "react";
 
 export type FieldsLayerProps = {
-    pageNumber: number
-    // parent?: HTMLDivElement
     pageSize: PageSize
-    onUpdate: () => void
+    children: ReactNode
 }
 
 export const FieldsLayer = ({
                                 pageSize,
-                                pageNumber,
-                                onUpdate
+                                children
                             }: FieldsLayerProps) => {
     return (<>
         <Stage className="stage-fields-layer" style={{
@@ -20,7 +18,7 @@ export const FieldsLayer = ({
         }} width={pageSize.current.w}
                height={pageSize.current.h}>
             <Layer>
-
+                { children }
             </Layer>
         </Stage>
     </>)

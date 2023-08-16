@@ -6,9 +6,10 @@ import {PDFDocumentProxy} from "pdfjs-dist";
 import {Alert, LinearProgress} from "@mui/material";
 import {Document, Page} from "react-pdf";
 import {useTranslation} from "react-i18next";
-import {useEffect, useRef, useState} from "react";
-import {FieldsLayer} from "./Fields/FieldsLayer";
-import {PageSize} from "./models/PDFViewerModel";
+import {ReactNode, useState} from "react";
+import {FieldsLayer} from "./fields/FieldsLayer";
+import {Field, FieldType, PageSize} from "./models/PDFViewerModel";
+import {Signature} from "./fields/Signature";
 
 const options: Options = {
     cMapUrl: 'cmaps/',
@@ -20,13 +21,14 @@ export type PDFViewerProps = {
     file: PDFFile,
     onLoadSuccess?: (page: PDFDocumentProxy) => void
     page?: number
+    children: ReactNode
 }
 export const PDFViewer = ({
                               file,
                               onLoadSuccess,
-                              page = 1
+                              page = 1,
+                              children
                           }: PDFViewerProps) => {
-    const refDiv = useRef<HTMLDivElement>(null)
     const [pageSize, setPageSize] = useState<PageSize | null>(null)
     const { t } = useTranslation("pdfViewerNS");
     const onDocumentLoadSuccess = (proxy: PDFDocumentProxy) => {
@@ -46,10 +48,6 @@ export const PDFViewer = ({
                 w: page.originalWidth
             }
         })
-    }
-
-    const onUpdate = () => {
-
     }
 
     return (<div className="pdf-viewer-container">
@@ -83,9 +81,9 @@ export const PDFViewer = ({
             {pageSize !== null &&
                 <>
                     <FieldsLayer
-                        pageSize={pageSize}
-                        pageNumber={page}
-                        onUpdate={onUpdate}/>
+                        pageSize={pageSize}>
+                        { children }
+                    </FieldsLayer>
                 </>
             }
         </Document>

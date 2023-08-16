@@ -23,6 +23,8 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {SuccessfulModal} from "./Successful";
 import {EditorContextProvider, useEditorContext} from "./EditorContext";
+import {FieldType} from "../../components/pdf-viewer";
+import {v4 as uuidv4} from 'uuid'
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -33,7 +35,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export const EditorView = () => {
-    const { pages, setPage, page } = useEditorContext()
+    const { pages, setPage, page, setNewField } = useEditorContext()
     const [searchParams, _setSearchParams] = useSearchParams()
     const params = useParams()
     const [recipient, setRecipient] = useState("abc123")
@@ -57,6 +59,24 @@ export const EditorView = () => {
 
     const onSelectPage = (value: number) => {
         setPage(value)
+    }
+
+    const onAddNewSignatureField = () => {
+        setNewField({
+            type: FieldType.SIGNATURE,
+            id: uuidv4(),
+            size: {
+                h: 30,
+                w: 100
+            },
+            position: {
+                y: 0,
+                x: 0
+            },
+            page,
+            recipientId: "1",
+            documentId: "1"
+        })
     }
 
     return (<>
@@ -141,6 +161,7 @@ export const EditorView = () => {
                                   </ListSubheader>
                               }>
                             <ListItemButton
+                                onClick={onAddNewSignatureField}
                                 selected={false}
                                 disabled={false}>
                                 <ListItemIcon>{<DriveFileRenameOutlineIcon/>}</ListItemIcon>
