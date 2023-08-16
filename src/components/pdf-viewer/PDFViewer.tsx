@@ -22,12 +22,14 @@ export type PDFViewerProps = {
     onLoadSuccess?: (page: PDFDocumentProxy) => void
     page?: number
     children: ReactNode
+    onFieldsLayerReady?: () => void
 }
 export const PDFViewer = ({
                               file,
                               onLoadSuccess,
                               page = 1,
-                              children
+                              children,
+                              onFieldsLayerReady
                           }: PDFViewerProps) => {
     const [pageSize, setPageSize] = useState<PageSize | null>(null)
     const { t } = useTranslation("pdfViewerNS");
@@ -35,6 +37,14 @@ export const PDFViewer = ({
         if (onLoadSuccess) {
             onLoadSuccess(proxy)
         }
+    }
+
+    const onPageLoadStart = () => {
+        setPageSize(null)
+    }
+
+    const onPageError = (_error: Error) => {
+        setPageSize(null)
     }
 
     const onPageReady = (page: PageCallback) => {
@@ -48,6 +58,12 @@ export const PDFViewer = ({
                 w: page.originalWidth
             }
         })
+    }
+
+    const onFieldsLayerReadyEvent = () => {
+        if (onFieldsLayerReady) {
+            onFieldsLayerReady()
+        }
     }
 
     return (<div className="pdf-viewer-container">
@@ -73,6 +89,8 @@ export const PDFViewer = ({
                     <LinearProgress />
                     <Alert severity="info">{ t("pdfPageLoading") }</Alert>
                 </>}
+                onLoadError={onPageError}
+                onLoadStart={onPageLoadStart}
                 onLoadSuccess={onPageReady}
                 noData={<>
                     <Alert severity="info">{ t("pdfPageNoData")}</Alert>
@@ -81,6 +99,7 @@ export const PDFViewer = ({
             {pageSize !== null &&
                 <>
                     <FieldsLayer
+                        onReady={onFieldsLayerReadyEvent}
                         pageSize={pageSize}>
                         { children }
                     </FieldsLayer>

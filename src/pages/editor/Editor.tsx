@@ -16,6 +16,7 @@ export const Editor = () => {
     } = useEditorContext()
     const [fields, setFields] =
         useState<Field[]>([])
+    const [loadFields, setLoadFields] = useState(false)
     const onLoadSuccess = (page: PDFDocumentProxy) => {
         setPages(page.numPages)
     }
@@ -26,7 +27,13 @@ export const Editor = () => {
     }
 
     const loadRecipientDocumentField = async () => {
+        // TODO CALL API TO GET CURRENT FIELDS
         setFields([])
+        setLoadFields(false)
+    }
+
+    const onFieldsLayerReady = () => {
+        setLoadFields(true)
     }
 
     useEffect(() => {
@@ -37,14 +44,15 @@ export const Editor = () => {
     }, [newField])
 
     useEffect(() => {
-        if (recipient !== "" && document !== "") {
+        if (recipient !== "" && document !== "" && loadFields) {
             loadRecipientDocumentField().then()
         }
-    }, [recipient, document]);
+    }, [recipient, document, loadFields]);
 
     return (<>
         <PDFViewer page={page}
                    file={url}
+                   onFieldsLayerReady={onFieldsLayerReady}
                    onLoadSuccess={onLoadSuccess}>
             <>
                 {fields
