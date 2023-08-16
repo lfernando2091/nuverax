@@ -169,7 +169,9 @@ export const EditorView = () => {
                 </Grid>
             </NavMenu>
             <MainContent>
-                <Paper variant="outlined" square >
+                <Paper
+                    sx={{ position: "sticky" }}
+                    variant="outlined" square>
                     <Grid
                         container
                         direction="row"
@@ -214,18 +216,17 @@ export const EditorView = () => {
                       component="nav"
                       subheader={
                           <ListSubheader component="div">
-                              Pages { `(${pages})` }
+                              Pages
                           </ListSubheader>
                       }>
                     {Array(pages).fill({ }).map((_e, i) => (
-                        <>
                             <ListItemButton
+                                key={i}
                                 onClick={() => onSelectPage(i + 1)}
                                 selected={(i + 1) === page}
                                 disabled={false}>
                                 <ListItemText primary={`Page ${i + 1}`}/>
                             </ListItemButton>
-                        </>
                     ))}
                 </List>
             </NavMenu>
