@@ -43,6 +43,7 @@ type SelectOption = {
     value: RecipientType
 }
 type RecipientItem = {
+    id: string
     email: string
     name: string
     type: RecipientType
@@ -56,7 +57,9 @@ export const spaceLoader = async ({ params }: { params: any }) => {
 }
 
 const newEmptyRecipient: RecipientItem =
-    { name: "", email: "", type: RecipientType.REQUIRED_SIGNATURE, isNew: true }
+    { id: "", name: "", email: "", type: RecipientType.REQUIRED_SIGNATURE, isNew: true }
+
+const randomChars = (size: number = 7) => (Math.random() + 1).toString(36).substring(size)
 
 export const Space = () => {
     const { t } = useTranslation("spaceNS");
@@ -108,17 +111,20 @@ export const Space = () => {
         }
     }
 
-    const onUpdateRecipient = (index: number, newValue: RecipientItem) => {
-        setRecipients(recipients.map((e, i) => i === index ? newValue : e))
+    const onUpdateRecipient = (newValue: RecipientItem) => {
+        setRecipients(recipients.map((e) => e.id === newValue.id ? newValue : e))
     }
 
-    const onRemoveItem = (index: number) => {
-        setRecipients(recipients.filter((_e, i) => i !== index))
+    const onRemoveItem = (value: RecipientItem) => {
+        setRecipients(recipients.filter((e) => e.id !== value.id))
     }
 
     const addNewRecipient = () => {
         if (recipients.length < MAX_RECIPIENTS) {
-            setRecipients([...recipients, newEmptyRecipient])
+            setRecipients([...recipients, {
+                ...newEmptyRecipient,
+                id: randomChars()
+            }])
         }
     }
 
@@ -212,10 +218,10 @@ export const Space = () => {
                                 {t("emptyRecipients")}
                             </Alert>
                         }
-                        {recipients.map((e, i) => (
+                        { JSON.stringify(recipients) }
+                        {recipients.map((e) => (
                             <RecipientInput
-                                key={i}
-                                index={i}
+                                key={e.id}
                                 value={e}
                                 isEditingContent={e.isNew}
                                 onRemove={onRemoveItem}
@@ -253,11 +259,10 @@ export const Space = () => {
 }
 
 type RecipientInputProps = {
-    index: number
     isEditingContent?: boolean
     value: RecipientItem
-    onUpdateRecipient: (index: number, value: RecipientItem) => void
-    onRemove: (index: number) => void
+    onUpdateRecipient: (value: RecipientItem) => void
+    onRemove: (value: RecipientItem) => void
 }
 
 const listOptions: SelectOption[] = [
@@ -266,13 +271,11 @@ const listOptions: SelectOption[] = [
 ]
 
 const RecipientInput = ({
-                            index,
                             value,
                             onUpdateRecipient,
                             onRemove,
                             isEditingContent = false
 }: RecipientInputProps) => {
-    const [original, setOriginal] = useState<RecipientItem | null>(null)
     const [content, setContent] = useState<RecipientItem>(value)
     const [isEditing, setIsEditing] = useState(isEditingContent)
     const { t } = useTranslation("spaceNS");
@@ -283,54 +286,44 @@ const RecipientInput = ({
             type: strVal as RecipientType
         })
     }
-
     const onChangeName = (event: ChangeEvent<HTMLInputElement>) => {
         setContent({
             ...content,
             name: event.target.value
         })
     }
-
     const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
         setContent({
             ...content,
             email: event.target.value
         })
     }
-
     const onEdit = () => {
         setIsEditing(true)
-        setOriginal(content)
     }
-
     const onCancelEdit = () => {
         if (content.isNew) {
-            onRemove(index)
+            onRemove(content)
         } else {
-            if (original) {
-                setContent(original)
-            }
+            setContent(value)
             setIsEditing(false)
-            setOriginal(null)
         }
     }
-
     const onSaveChanges = () => {
         if (content.name !== "" && content.email !== "") {
             setIsEditing(false)
-            if (content.name !== original?.name || content.email !== original.email) {
+            if (content.name !== value.name || content.email !== value.email) {
                 setContent({
                     ...content,
                     isNew: false
                 })
-                onUpdateRecipient(index, {
+                onUpdateRecipient({
                     ...content,
                     isNew: false
                 })
             }
         }
     }
-
     return (<>
             <Paper sx={{ p: "10px" }} variant={isEditing ? "elevation": "outlined"} square>
                 <Grid
@@ -342,13 +335,13 @@ const RecipientInput = ({
                 >
                     <Grid item>
                         <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h4">
-                            {t("recipientLbl")}{" " + (index + 1)} {isEditing ? "*": ""}
+                            {t("recipientLbl")}{" " + (content.id + 1)} {isEditing ? "*": ""}
                         </Typography>
                     </Grid>
                     <Grid item>
                         {!isEditing &&
                             <>
-                                <IconButton size="small" onClick={() => onRemove(index)} >
+                                <IconButton size="small" onClick={() => onRemove(content)} >
                                     <DeleteIcon />
                                 </IconButton>
                                 <IconButton size="small" onClick={onEdit} >
@@ -371,11 +364,11 @@ const RecipientInput = ({
                 <Grid container spacing={2}>
                     <Grid item xs={8}>
                         <FormControl fullWidth size="small">
-                            <InputLabel htmlFor={`input-email-${index}`}>{t("emailLbl")}</InputLabel>
+                            <InputLabel htmlFor={`input-email-${content.id}`}>{t("emailLbl")}</InputLabel>
                             <OutlinedInput
                                 disabled={!isEditing}
                                 type="email"
-                                id={`input-email-${index}`}
+                                id={`input-email-${content.id}`}
                                 value={content.email}
                                 autoComplete="email"
                                 onChange={onChangeEmail}
@@ -389,10 +382,10 @@ const RecipientInput = ({
                     </Grid>
                     <Grid item xs={4}>
                         <FormControl fullWidth size="small">
-                            <InputLabel id={`lbl-recipient-type-${index}`}>{t("recipientType")}</InputLabel>
+                            <InputLabel id={`lbl-recipient-type-${content.id}`}>{t("recipientType")}</InputLabel>
                             <Select
                                 disabled={!isEditing}
-                                labelId={`lbl-recipient-type-${index}`}
+                                labelId={`lbl-recipient-type-${content.id}`}
                                 value={content.type}
                                 label={t("recipientType")}
                                 onChange={onChangeType}
@@ -408,12 +401,12 @@ const RecipientInput = ({
                     </Grid>
                     <Grid item xs={8}>
                         <FormControl fullWidth size="small">
-                            <InputLabel htmlFor={`input-name-${index}`}>{t("fullNameLbl")}</InputLabel>
+                            <InputLabel htmlFor={`input-name-${content.id}`}>{t("fullNameLbl")}</InputLabel>
                             <OutlinedInput
                                 disabled={!isEditing}
                                 type="text"
                                 autoComplete="name"
-                                id={`input-name-${index}`}
+                                id={`input-name-${content.id}`}
                                 placeholder="Fernando Abc Xyz"
                                 label={t("fullNameLbl")}
                                 value={content.name}
