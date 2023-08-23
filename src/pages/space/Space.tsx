@@ -1,13 +1,15 @@
 import {defer, useLoaderData, useLocation, useNavigate, useParams} from "react-router-dom";
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary, Alert,
+    AccordionSummary,
+    Alert,
     Button,
     FormControl,
     FormHelperText,
-    Grid, IconButton,
+    Grid,
+    IconButton,
     InputLabel,
     MenuItem,
     OutlinedInput,
@@ -32,6 +34,9 @@ import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
 import {CloseResult, LocalUpload} from "../components/LocalUpload";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {useAppContext} from "../../@core";
+import EditIcon from '@mui/icons-material/Edit';
+import CloseIcon from '@mui/icons-material/Close';
+import SaveIcon from '@mui/icons-material/Save';
 
 type SelectOption = {
     name: string
@@ -41,6 +46,7 @@ type RecipientItem = {
     email: string
     name: string
     type: RecipientType
+    isNew?: boolean
 }
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { get } = spaceService()
@@ -50,7 +56,7 @@ export const spaceLoader = async ({ params }: { params: any }) => {
 }
 
 const newEmptyRecipient: RecipientItem =
-    { name: "", email: "", type: RecipientType.REQUIRED_SIGNATURE }
+    { name: "", email: "", type: RecipientType.REQUIRED_SIGNATURE, isNew: true }
 
 export const Space = () => {
     const { t } = useTranslation("spaceNS");
@@ -64,7 +70,7 @@ export const Space = () => {
     const [showRecipients, setShowRecipients] = useState(false)
     const [uploadOption, setUploadOption] = useState<UploadOption | null>(null)
     const [recipients, setRecipients] =
-        useState<RecipientItem[]>([ newEmptyRecipient ])
+        useState<RecipientItem[]>([ ])
     const MAX_RECIPIENTS = 5
 
     const onAiAnalyst = () => {
@@ -211,6 +217,7 @@ export const Space = () => {
                                 key={i}
                                 index={i}
                                 value={e}
+                                isEditingContent={e.isNew}
                                 onRemove={onRemoveItem}
                                 onUpdateRecipient={onUpdateRecipient}/>
                         ))}
@@ -247,6 +254,7 @@ export const Space = () => {
 
 type RecipientInputProps = {
     index: number
+    isEditingContent?: boolean
     value: RecipientItem
     onUpdateRecipient: (index: number, value: RecipientItem) => void
     onRemove: (index: number) => void
@@ -261,34 +269,72 @@ const RecipientInput = ({
                             index,
                             value,
                             onUpdateRecipient,
-                            onRemove
+                            onRemove,
+                            isEditingContent = false
 }: RecipientInputProps) => {
+    const [original, setOriginal] = useState<RecipientItem | null>(null)
+    const [content, setContent] = useState<RecipientItem>(value)
+    const [isEditing, setIsEditing] = useState(isEditingContent)
     const { t } = useTranslation("spaceNS");
     const onChangeType = (event: SelectChangeEvent) => {
         const strVal = event.target.value as string
-        onUpdateRecipient(index, {
-            ...value,
+        setContent({
+            ...content,
             type: strVal as RecipientType
         })
     }
 
     const onChangeName = (event: ChangeEvent<HTMLInputElement>) => {
-        onUpdateRecipient(index, {
-            ...value,
+        setContent({
+            ...content,
             name: event.target.value
         })
     }
 
     const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-        onUpdateRecipient(index, {
-            ...value,
+        setContent({
+            ...content,
             email: event.target.value
         })
     }
 
+    const onEdit = () => {
+        setIsEditing(true)
+        setOriginal(content)
+    }
+
+    const onCancelEdit = () => {
+        if (content.isNew) {
+            onRemove(index)
+        } else {
+            if (original) {
+                setContent(original)
+            }
+            setIsEditing(false)
+            setOriginal(null)
+        }
+    }
+
+    const onSaveChanges = () => {
+        if (content.name !== "" && content.email !== "") {
+            setIsEditing(false)
+            if (content.name !== original?.name || content.email !== original.email) {
+                setContent({
+                    ...content,
+                    isNew: false
+                })
+                onUpdateRecipient(index, {
+                    ...content,
+                    isNew: false
+                })
+            }
+        }
+    }
+
     return (<>
-            <Paper sx={{ p: "10px" }} variant="outlined" square>
+            <Paper sx={{ p: "10px" }} variant={isEditing ? "elevation": "outlined"} square>
                 <Grid
+                    spacing={1}
                     container
                     direction="row"
                     justifyContent="space-between"
@@ -296,13 +342,30 @@ const RecipientInput = ({
                 >
                     <Grid item>
                         <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h4">
-                            {t("recipientLbl")}{" " + (index + 1)}
+                            {t("recipientLbl")}{" " + (index + 1)} {isEditing ? "*": ""}
                         </Typography>
                     </Grid>
                     <Grid item>
-                        <IconButton size="small" onClick={() => onRemove(index)} >
-                            <DeleteIcon />
-                        </IconButton>
+                        {!isEditing &&
+                            <>
+                                <IconButton size="small" onClick={() => onRemove(index)} >
+                                    <DeleteIcon />
+                                </IconButton>
+                                <IconButton size="small" onClick={onEdit} >
+                                    <EditIcon />
+                                </IconButton>
+                            </>
+                        }
+                        {isEditing &&
+                            <>
+                                <IconButton size="small" onClick={onSaveChanges} >
+                                    <SaveIcon />
+                                </IconButton>
+                                <IconButton size="small" onClick={onCancelEdit} >
+                                    <CloseIcon />
+                                </IconButton>
+                            </>
+                        }
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
@@ -310,9 +373,11 @@ const RecipientInput = ({
                         <FormControl fullWidth size="small">
                             <InputLabel htmlFor={`input-email-${index}`}>{t("emailLbl")}</InputLabel>
                             <OutlinedInput
+                                disabled={!isEditing}
                                 type="email"
                                 id={`input-email-${index}`}
-                                value={value.email}
+                                value={content.email}
+                                autoComplete="email"
                                 onChange={onChangeEmail}
                                 placeholder={t("emailPlaceholder")}
                                 label={t("emailLbl")}
@@ -326,8 +391,9 @@ const RecipientInput = ({
                         <FormControl fullWidth size="small">
                             <InputLabel id={`lbl-recipient-type-${index}`}>{t("recipientType")}</InputLabel>
                             <Select
+                                disabled={!isEditing}
                                 labelId={`lbl-recipient-type-${index}`}
-                                value={value.type}
+                                value={content.type}
                                 label={t("recipientType")}
                                 onChange={onChangeType}
                             >
@@ -344,11 +410,13 @@ const RecipientInput = ({
                         <FormControl fullWidth size="small">
                             <InputLabel htmlFor={`input-name-${index}`}>{t("fullNameLbl")}</InputLabel>
                             <OutlinedInput
+                                disabled={!isEditing}
                                 type="text"
+                                autoComplete="name"
                                 id={`input-name-${index}`}
                                 placeholder="Fernando Abc Xyz"
                                 label={t("fullNameLbl")}
-                                value={value.name}
+                                value={content.name}
                                 onChange={onChangeName}
                             />
                             <FormHelperText>
