@@ -9,7 +9,7 @@ export type RecipientCreateReq = {
     email: string
     type: RecipientType
 }
-export type Recipient = {
+export interface Recipient{
     id: string
     fullName: string
     email: string
@@ -19,4 +19,8 @@ export type RecipientUpdateReq = {
     fullName: string
     email: string
     type: RecipientType
+}
+
+export interface RecipientItem extends Recipient{
+    isNew?: boolean
 }

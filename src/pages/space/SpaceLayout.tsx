@@ -91,7 +91,7 @@ export const SpaceLayout = () => {
                                     render={getDocuments}
                                     update={updateNavbar}
                                     onReady={onReadyDocsList}
-                                    resolve2={documentsPromise}
+                                    resolve={documentsPromise}
                                     error={(_error) => <>
                                         <ApiError title={ t("spaceDocsApiError") }/>
                                     </>}

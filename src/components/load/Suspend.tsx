@@ -14,40 +14,34 @@ type SuspendProps<R = any, E = any> = {
     update?: boolean
     fallback: ReactNode,
     idle?: ReactNode,
-    resolve?: Promise<R>,
-    resolve2?: () => Promise<R>,
+    resolve: () => Promise<R>,
     error?: ErrorRenderFunction<E>,
     onReady?: () => void
     children: ResolveRenderFunction<R>
 }
 
 export const Suspend = <R = any, E = any>({
-                                     render = true,
+                                              render = true,
                                               update = false,
                                               idle,
-                            fallback,
+                                              fallback,
                                               error: errorComponent,
-                                     resolve,
-                                              resolve2,
+                                              resolve,
                                               onReady,
-                                     children
+                                              children
                         }: SuspendProps<R, E>) => {
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [data, setData] = useState<Awaited<R> | null>(null)
     const [error, setError] = useState<E | null>(null)
     const [idleState, setIdleState] = useState(true)
     const invokeResolve = async () => {
+        setIdleState(false)
         setLoading(true)
         setData(null)
         setError(null)
         try {
-            if (resolve) {
-                const res = await resolve
-                setData(res)
-            } else if(resolve2){
-                const res = await resolve2()
-                setData(res)
-            }
+            const res = await resolve()
+            setData(res)
         } catch (e) {
             setError(e as E)
         }
@@ -57,18 +51,10 @@ export const Suspend = <R = any, E = any>({
         }
     }
     useEffect(() => {
-        if (render) {
-            setIdleState(false)
+        if (render || update) {
             invokeResolve().then()
         }
-    }, [render]);
-
-    useEffect(() => {
-        if (update) {
-            setIdleState(false)
-            invokeResolve().then()
-        }
-    }, [update]);
+    }, [render, update]);
 
     return (<>
         {idle && idleState &&
