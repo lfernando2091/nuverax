@@ -29,5 +29,6 @@
   "emailInputHelper": "Input a valid email.",
   "recipientInputHelper": "Choose recipient type.",
   "fullNameInputHelper": "Input full name.",
-  "emptyRecipients": "No Recipients registered yet."
+  "emptyRecipients": "No Recipients registered yet.",
+  "errorRecipients": "Unable to load recipients from Space."
 }

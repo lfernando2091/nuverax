@@ -1,5 +1,5 @@
 import {defer, useLoaderData, useLocation, useNavigate, useParams} from "react-router-dom";
-import {ChangeEvent, useEffect, useState} from "react";
+import {ChangeEvent, useState} from "react";
 import {
     Accordion,
     AccordionDetails,
@@ -11,6 +11,7 @@ import {
     Grid,
     IconButton,
     InputLabel,
+    LinearProgress,
     MenuItem,
     OutlinedInput,
     Paper,
@@ -29,7 +30,7 @@ import {Suspend} from "../../components/load/Suspend";
 import {ApiError} from "../../components/error/Error";
 import {SpaceSkeleton} from "./skeleton/Skeleton";
 import {spaceService} from "./services/SpaceService";
-import {RecipientType, SpaceRes} from "./models/SpaceModel";
+import {SpaceRes} from "./models/SpaceModel";
 import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
 import {CloseResult, LocalUpload} from "../components/LocalUpload";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -37,6 +38,8 @@ import {useAppContext} from "../../@core";
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import SaveIcon from '@mui/icons-material/Save';
+import {recipientService} from "./services/RecipientService";
+import {Recipient, RecipientType} from "./models/RecipientModel";
 
 type SelectOption = {
     name: string
@@ -57,7 +60,7 @@ export const spaceLoader = async ({ params }: { params: any }) => {
 }
 
 const newEmptyRecipient: RecipientItem =
-    { id: "", name: "", email: "", type: RecipientType.REQUIRED_SIGNATURE, isNew: true }
+    { id: "", name: "", email: "", type: RecipientType.REQUIRES_SIGNATURE, isNew: true }
 
 const randomChars = (size: number = 7) => (Math.random() + 1).toString(36).substring(size)
 
@@ -65,6 +68,7 @@ export const Space = () => {
     const { t } = useTranslation("spaceNS");
     const { onUpdateNavbar } = useAppContext()
     const params = useParams()
+    const recipientServ = recipientService()
     const apiService = useLoaderData() as any
     const navigate = useNavigate()
     const location = useLocation()
@@ -75,6 +79,7 @@ export const Space = () => {
     const [recipients, setRecipients] =
         useState<RecipientItem[]>([ ])
     const MAX_RECIPIENTS = 5
+    const recipientsPromise = () => recipientServ.getAll(params["idSpace"]!!)
 
     const onAiAnalyst = () => {
         setShorAiAnalyst(true)
@@ -111,11 +116,30 @@ export const Space = () => {
         }
     }
 
-    const onUpdateRecipient = (newValue: RecipientItem) => {
+    const onUpdateRecipient = async (newValue: RecipientItem) => {
+        if (newValue.isNew) {
+            const res = await recipientServ.create({
+                spaceId: params.idSpace!!,
+                email: newValue.email,
+                type: newValue.type,
+                fullName: newValue.name
+            })
+            newValue.isNew = false
+            newValue.id = res.id
+        } else {
+            await recipientServ.update(newValue.id,{
+                email: newValue.email,
+                fullName: newValue.name,
+                type: newValue.type
+            })
+        }
         setRecipients(recipients.map((e) => e.id === newValue.id ? newValue : e))
     }
 
-    const onRemoveItem = (value: RecipientItem) => {
+    const onRemoveItem = async (value: RecipientItem) => {
+        if (!value.isNew) {
+            await recipientServ.del(value.id)
+        }
         setRecipients(recipients.filter((e) => e.id !== value.id))
     }
 
@@ -194,6 +218,16 @@ export const Space = () => {
                 </Button>
             </Grid>
         </Grid>
+        <Suspend<Recipient[], Error>
+            error={(_error) => <>
+                <ApiError title={ t("errorRecipients") }/>
+            </>}
+            fallback={<LinearProgress />}
+            resolve2={recipientsPromise}>
+            {(data) => (
+                <></>
+            )}
+        </Suspend>
         <Accordion expanded={showRecipients}
                    square
                    onChange={onShowRecipients}
@@ -218,10 +252,10 @@ export const Space = () => {
                                 {t("emptyRecipients")}
                             </Alert>
                         }
-                        { JSON.stringify(recipients) }
-                        {recipients.map((e) => (
+                        {recipients.map((e, i) => (
                             <RecipientInput
                                 key={e.id}
+                                index={i}
                                 value={e}
                                 isEditingContent={e.isNew}
                                 onRemove={onRemoveItem}
@@ -259,6 +293,7 @@ export const Space = () => {
 }
 
 type RecipientInputProps = {
+    index: number
     isEditingContent?: boolean
     value: RecipientItem
     onUpdateRecipient: (value: RecipientItem) => void
@@ -266,11 +301,12 @@ type RecipientInputProps = {
 }
 
 const listOptions: SelectOption[] = [
-    { name: "signatureRequiredOpt", value: RecipientType.REQUIRED_SIGNATURE },
+    { name: "signatureRequiredOpt", value: RecipientType.REQUIRES_SIGNATURE },
     { name: "ccOpt", value: RecipientType.COPY }
 ]
 
 const RecipientInput = ({
+                            index = 0,
                             value,
                             onUpdateRecipient,
                             onRemove,
@@ -313,14 +349,11 @@ const RecipientInput = ({
         if (content.name !== "" && content.email !== "") {
             setIsEditing(false)
             if (content.name !== value.name || content.email !== value.email) {
-                setContent({
-                    ...content,
-                    isNew: false
-                })
-                onUpdateRecipient({
-                    ...content,
-                    isNew: false
-                })
+                // setContent({
+                //     ...content,
+                //     isNew: false
+                // })
+                onUpdateRecipient(content)
             }
         }
     }
@@ -335,7 +368,7 @@ const RecipientInput = ({
                 >
                     <Grid item>
                         <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h4">
-                            {t("recipientLbl")}{" " + (content.id + 1)} {isEditing ? "*": ""}
+                            {t("recipientLbl")}{" " + (index + 1)} {isEditing ? "*": ""}
                         </Typography>
                     </Grid>
                     <Grid item>

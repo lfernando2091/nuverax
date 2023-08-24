@@ -29,5 +29,6 @@
   "emailInputHelper": "Ingresa un correo electronico valido.",
   "recipientInputHelper": "Selecciona el tipo de destinatario.",
   "fullNameInputHelper": "Ingresa el nombre completo.",
-  "emptyRecipients": "Sin destinatarios registrados todavia."
+  "emptyRecipients": "Sin destinatarios registrados todavia.",
+  "errorRecipients": "No pudimos cargar los destinatarios del Espacio."
 }
