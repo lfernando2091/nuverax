@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {RecipientItem, RecipientType} from "../../models/RecipientModel";
 import {Accordion, AccordionDetails, AccordionSummary, Alert, Button, Grid, Typography} from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -10,6 +10,7 @@ import {useParams} from "react-router-dom";
 
 export type RecipientLayoutProps = {
     recipients: RecipientItem[]
+    onCountRecipients?: (value: number) => void
 }
 
 const newEmptyRecipient: RecipientItem =
@@ -18,7 +19,8 @@ const newEmptyRecipient: RecipientItem =
 const randomChars = (size: number = 7) => (Math.random() + 1).toString(36).substring(size)
 
 export const RecipientLayout = ({
-                                    recipients = []
+                                    recipients = [],
+                                    onCountRecipients
                                 }: RecipientLayoutProps) => {
     const params = useParams()
     const recipientServ = recipientService()
@@ -65,6 +67,12 @@ export const RecipientLayout = ({
         }
         setRecipients(recipientsList.map((e) => e.id === newValue.id ? newValue : e))
     }
+
+    useEffect(() => {
+        if (onCountRecipients) {
+            onCountRecipients(recipientsList.length)
+        }
+    }, [recipientsList]);
 
     return (<>
         <Accordion expanded={showRecipients}

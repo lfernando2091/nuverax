@@ -41,7 +41,7 @@ export const Space = () => {
     const [showFileUpload, setShowFileUpload] = useState(false)
     const [uploadOption, setUploadOption] = useState<UploadOption | null>(null)
     const [recipients, setRecipients] =
-        useState<RecipientItem[]>([ ])
+        useState(0)
     const [renderRecipients, setRenderRecipients] = useState(false)
 
     const recipientsPromise = () => recipientServ.getAll(params["idSpace"]!!)
@@ -75,6 +75,10 @@ export const Space = () => {
         if (res && res.shouldUpdate) {
             onUpdateNavbar(true)
         }
+    }
+
+    const onCountRecipients = (value: number) => {
+        setRecipients(value)
     }
 
     return (<>
@@ -130,7 +134,7 @@ export const Space = () => {
                                 color="inherit"
                                 fullWidth
                                 disableElevation
-                                disabled={recipients.length === 0}
+                                disabled={recipients === 0}
                                 sx={{
                                     borderRadius: "0px",
                                     paddingTop: "10px",
@@ -154,7 +158,7 @@ export const Space = () => {
             resolve={recipientsPromise}
             onReady={() => setRenderRecipients(false)}>
             {(data: Recipient[]) => (
-                <RecipientLayout recipients={data}/>
+                <RecipientLayout onCountRecipients={onCountRecipients} recipients={data}/>
             )}
         </Suspend>
 

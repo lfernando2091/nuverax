@@ -77,7 +77,9 @@ export const RecipientInput = ({
     const onSaveChanges = () => {
         if (content.fullName !== "" && content.email !== "") {
             setIsEditing(false)
-            if (content.fullName !== value.fullName || content.email !== value.email) {
+            if (content.fullName !== value.fullName
+                || content.email !== value.email
+                || content.type !== value.type) {
                 // setContent({
                 //     ...content,
                 //     isNew: false
