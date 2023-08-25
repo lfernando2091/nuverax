@@ -30,11 +30,16 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {SuccessfulModal} from "./Successful";
+import {SuccessfulModal} from "./components/Successful";
 import {EditorContextProvider, useEditorContext} from "./EditorContext";
 import {FieldType} from "../../components/pdf-viewer";
 import {v4 as uuidv4} from 'uuid'
-import {RecipientType} from "../space";
+import {RecipientType, spaceService} from "../space";
+import {SpaceRes} from "../space/models/SpaceModel";
+import {useTranslation} from "react-i18next";
+import { Suspend } from "../../components/load/Suspend";
+import {ApiError} from "../../components/error/Error";
+import {EditorTitleSkeleton} from "./skeleton/Skeleton";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -80,9 +85,12 @@ export const EditorView = () => {
         document,
         recipient
     } = useEditorContext()
+    const { get } = spaceService()
     const [searchParams, _setSearchParams] = useSearchParams()
     const params = useParams()
     const [succesful, setSuccessful] = useState(false)
+    const getSpacePromise = () => get(params["idSpace"]!!)
+    const { t } = useTranslation("spaceNS");
 
     const onChangeRecipient = (event: SelectChangeEvent) => {
         setRecipient(event.target.value as string)
@@ -142,18 +150,30 @@ export const EditorView = () => {
                                 </Button>
                             </>
                         }
-                        <Typography sx={{
-                            marginTop: "10px",
-                            px: "16px"
-                        }} variant="h6" component="h6">
-                            Editor
-                        </Typography>
-                        <Typography sx={{
-                            fontSize: 14,
-                            px: "16px"
-                        }} color="text.secondary" gutterBottom>
-                            Space {params["idSpace"]}
-                        </Typography>
+                        <Suspend<SpaceRes, Error>
+                            error={(_error: Error) => <>
+                                <ApiError title={ t("spaceDocsApiError") }/>
+                            </>}
+                            fallback={<EditorTitleSkeleton/>}
+                            resolve={getSpacePromise}
+                        >
+                            {(data: SpaceRes) =>
+                                <>
+                                    <Typography sx={{
+                                        marginTop: "10px",
+                                        px: "16px"
+                                    }} variant="h6" component="h6">
+                                        Editor
+                                    </Typography>
+                                    <Typography sx={{
+                                        fontSize: 14,
+                                        px: "16px"
+                                    }} color="text.secondary" gutterBottom>
+                                        Space {data.name}
+                                    </Typography>
+                                </>
+                            }
+                        </Suspend>
                         <FormControl sx={{
                             marginTop: "20px",
                             width: "210px",

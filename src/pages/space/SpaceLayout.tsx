@@ -8,7 +8,7 @@ import SmartButtonIcon from '@mui/icons-material/SmartButton';
 import ArticleIcon from '@mui/icons-material/Article';
 import {SpaceDocument} from "./models/SpaceModel";
 import {useTranslation} from "react-i18next";
-import {spaceService} from "./services/SpaceService";
+import {spaceService} from "../services/SpaceService";
 import {Suspend} from "../../components/load/Suspend";
 import {ApiError} from "../../components/error/Error";
 import {NavDocumentsListSkeleton} from "./skeleton/Skeleton";

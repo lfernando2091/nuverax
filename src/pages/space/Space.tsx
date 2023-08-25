@@ -14,14 +14,14 @@ import {useTranslation} from "react-i18next";
 import {Suspend} from "../../components/load/Suspend";
 import {ApiError} from "../../components/error/Error";
 import {SpaceSkeleton} from "./skeleton/Skeleton";
-import {spaceService} from "./services/SpaceService";
+import {spaceService} from "../services/SpaceService";
 import {SpaceRes} from "./models/SpaceModel";
 import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
 import {CloseResult, LocalUpload} from "../components/LocalUpload";
 import {useAppContext} from "../../@core";
 import {recipientService} from "./services/RecipientService";
 import {Recipient, RecipientItem} from "./models/RecipientModel";
-import {RecipientLayout} from "./componets";
+import {RecipientLayout} from "./components";
 
 export const spaceLoader = async ({ params }: { params: any }) => {
     const { get } = spaceService()

@@ -1,7 +1,7 @@
-import {SpaceCreateReq, SpaceDocument, SpaceRes} from "../models/SpaceModel";
-import {IdResponse} from "../../../models/ResponseModel";
-import {authHeaders} from "../../../@auth/SharedHeaders";
-import {ExtraProps, UploadService, UploadTask} from "../../components/DragAndDropInput";
+import {SpaceCreateReq, SpaceDocument, SpaceRes} from "../space/models/SpaceModel";
+import {IdResponse} from "../../models/ResponseModel";
+import {authHeaders} from "../../@auth/SharedHeaders";
+import {ExtraProps, UploadService, UploadTask} from "../components/DragAndDropInput";
 
 interface SpaceServiceDef extends UploadService{
     create: (data?: SpaceCreateReq) => Promise<IdResponse>
