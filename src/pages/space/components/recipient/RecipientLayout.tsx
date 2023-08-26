@@ -5,7 +5,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {RecipientInput} from "./RecipientInput";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import {useTranslation} from "react-i18next";
-import {recipientService} from "../../services/RecipientService";
+import {recipientService} from "../../../services/RecipientService";
 import {useParams} from "react-router-dom";
 
 export type RecipientLayoutProps = {

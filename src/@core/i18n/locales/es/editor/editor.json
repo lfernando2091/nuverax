@@ -1,0 +1,18 @@
+{
+  "editorSpaceLoadError": "No pudimos cargar los datos del Espacio.",
+  "recipientsError": "No pudimos cargar los datos de los destinatarios.",
+  "documentsError": "Unable to load documents information",
+  "editorSubtitle": "Espacio",
+  "emptyRecipients": "No encontramos destinatarios.",
+  "recipientTxt": "Destinatario",
+  "signatureRequiredTxt": "Firma Requerida",
+  "receivesCopyTxt": "Recibe una copia",
+  "documentTxt": "Documento",
+  "fieldTxt": "Campos",
+  "signatureTxt": "Firma",
+  "dateTxt": "Fecha",
+  "nameTxt": "Nombre",
+  "emailTxt": "Correo Electronico",
+  "pagesTxt": "Paginas",
+  "pageTxt": "Pagina"
+}

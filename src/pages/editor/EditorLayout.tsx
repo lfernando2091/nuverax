@@ -1,5 +1,6 @@
 import {MainContent, NavMenu, OneColumnLayout} from "../../@core";
 import {
+    Alert,
     Box,
     Button,
     Divider,
@@ -22,7 +23,7 @@ import {
     Typography
 } from "@mui/material";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
-import {Link, Outlet, useParams, useSearchParams} from "react-router-dom";
+import {defer, Link, Outlet, useLoaderData, useParams, useSearchParams} from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {ChangeEvent, useState} from "react";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -34,12 +35,15 @@ import {SuccessfulModal} from "./components/Successful";
 import {EditorContextProvider, useEditorContext} from "./EditorContext";
 import {FieldType} from "../../components/pdf-viewer";
 import {v4 as uuidv4} from 'uuid'
-import {RecipientType, spaceService} from "../space";
-import {SpaceRes} from "../space/models/SpaceModel";
+import {spaceService} from "../space";
+import {SpaceDocument, SpaceRes} from "../space/models/SpaceModel";
 import {useTranslation} from "react-i18next";
-import { Suspend } from "../../components/load/Suspend";
+import {Suspend} from "../../components/load/Suspend";
 import {ApiError} from "../../components/error/Error";
-import {EditorTitleSkeleton} from "./skeleton/Skeleton";
+import {EditorRecipientSkeleton, EditorTitleSkeleton} from "./skeleton/Skeleton";
+import {recipientService} from "../services/RecipientService";
+import {Recipient, RecipientType} from "../space/models/RecipientModel";
+import {If} from "../../components/common/IfStatement";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -58,14 +62,14 @@ interface RecipientOption extends Option {
     type: RecipientType
 }
 
-const recipients: RecipientOption[] = [
-    { name: "ABC 1", value: "abc-a123", type: RecipientType.REQUIRED_SIGNATURE },
-    { name: "ABC 2", value: "abc-a124", type: RecipientType.REQUIRED_SIGNATURE },
-    { name: "ABC 3", value: "abc-a125", type: RecipientType.COPY },
-    { name: "ABC 4", value: "abc-a126", type: RecipientType.COPY },
-    { name: "ABC 5", value: "abc-a127", type: RecipientType.REQUIRED_SIGNATURE },
-    { name: "ABC 6", value: "abc-a128", type: RecipientType.COPY }
-]
+// const recipients: RecipientOption[] = [
+//     { name: "ABC 1", value: "abc-a123", type: RecipientType.REQUIRED_SIGNATURE },
+//     { name: "ABC 2", value: "abc-a124", type: RecipientType.REQUIRED_SIGNATURE },
+//     { name: "ABC 3", value: "abc-a125", type: RecipientType.COPY },
+//     { name: "ABC 4", value: "abc-a126", type: RecipientType.COPY },
+//     { name: "ABC 5", value: "abc-a127", type: RecipientType.REQUIRED_SIGNATURE },
+//     { name: "ABC 6", value: "abc-a128", type: RecipientType.COPY }
+// ]
 
 const documents: Option[] = [
     { name: "Document 1", value: "abc-a123" },
@@ -74,7 +78,20 @@ const documents: Option[] = [
     { name: "Document 4", value: "abc-a126" }
 ]
 
-export const EditorView = () => {
+export const editorLoader = async ({ params }: { params: any }) => {
+    const { get } = spaceService()
+    return defer({
+        getPromise: get(params.idSpace)
+    })
+}
+
+export type EditorViewProps = {
+    getPromise: Promise<SpaceRes>
+}
+
+export const EditorView = ({
+                               getPromise
+                           }: EditorViewProps) => {
     const {
         pages,
         setPage,
@@ -85,12 +102,16 @@ export const EditorView = () => {
         document,
         recipient
     } = useEditorContext()
-    const { get } = spaceService()
+    const { getAll } = recipientService()
+    const { documents } = spaceService()
     const [searchParams, _setSearchParams] = useSearchParams()
     const params = useParams()
     const [succesful, setSuccessful] = useState(false)
-    const getSpacePromise = () => get(params["idSpace"]!!)
-    const { t } = useTranslation("spaceNS");
+    const [loadRecipients, setLoadRecipients] = useState(false)
+    const getSpacePromise = () => getPromise
+    const getAllRecipients = () => getAll(params.idSpace!!)
+    const getDocuments = () => documents(params.idSpace!!)
+    const { t } = useTranslation("editorNS");
 
     const onChangeRecipient = (event: SelectChangeEvent) => {
         setRecipient(event.target.value as string)
@@ -152,10 +173,11 @@ export const EditorView = () => {
                         }
                         <Suspend<SpaceRes, Error>
                             error={(_error: Error) => <>
-                                <ApiError title={ t("spaceDocsApiError") }/>
+                                <ApiError title={ t("editorSpaceLoadError") }/>
                             </>}
                             fallback={<EditorTitleSkeleton/>}
                             resolve={getSpacePromise}
+                            onReady={() => setLoadRecipients(true)}
                         >
                             {(data: SpaceRes) =>
                                 <>
@@ -169,60 +191,85 @@ export const EditorView = () => {
                                         fontSize: 14,
                                         px: "16px"
                                     }} color="text.secondary" gutterBottom>
-                                        Space {data.name}
+                                        {t("editorSubtitle") + " "} {data.name}
                                     </Typography>
                                 </>
                             }
                         </Suspend>
-                        <FormControl sx={{
-                            marginTop: "20px",
-                            width: "210px",
-                            px: "16px"
-                        }} size="small">
-                            <InputLabel id="lbl-recipient-id">Recipient</InputLabel>
-                            <Select
-                                variant="standard"
-                                labelId="lbl-recipient-id"
-                                id="input-recipient-id"
-                                value={recipient}
-                                label="Recipient"
-                                onChange={onChangeRecipient}
-                            >
-                                <ListSubheader>Signature Required</ListSubheader>
-                                {recipients
-                                    .filter((e, i) => e.type === RecipientType.REQUIRED_SIGNATURE)
-                                    .map((e, i) => (
-                                        <MenuItem key={i} value={ e.value }>{ e.name }</MenuItem>
-                                    ))}
-                                <ListSubheader>Receives a Copy</ListSubheader>
-                                {recipients
-                                    .filter((e, i) => e.type === RecipientType.COPY)
-                                    .map((e, i) => (
-                                        <MenuItem key={i} disabled value={ e.value }>{ e.name }</MenuItem>
-                                    ))}
-                            </Select>
-                        </FormControl>
-                        <FormControl sx={{
-                            marginTop: "20px",
-                            marginBottom: "20px",
-                            width: "210px",
-                            px: "16px"
-                        }} size="small" disabled={recipient === ""}>
-                            <InputLabel id="lbl-document-id">Document</InputLabel>
-                            <Select
-                                variant="standard"
-                                labelId="lbl-document-id"
-                                id="input-document-id"
-                                value={document}
-                                label="Document"
-                                onChange={onChangeDocument}
-                            >
-                                {documents.map((e, i) => (
-                                    <MenuItem key={i} value={ e.value }>{ e.name }</MenuItem>
-                                ))
-                                }
-                            </Select>
-                        </FormControl>
+                        <Suspend<Recipient[], Error>
+                            render={loadRecipients}
+                            error={(_error: Error) => <>
+                                <ApiError title={ t("recipientsError") }/>
+                            </>}
+                            fallback={<EditorRecipientSkeleton/>}
+                            resolve={getAllRecipients}
+                        >
+                            { (data) => (
+                                <>
+                                    <If condition={data.length > 0}
+                                        elseRender={<Alert severity="info">{ t("emptyRecipients") }</Alert>}>
+                                        <FormControl sx={{
+                                            marginTop: "20px",
+                                            width: "210px",
+                                            px: "16px"
+                                        }} size="small">
+                                            <InputLabel id="lbl-recipient-id">{t("recipientTxt")}</InputLabel>
+                                            <Select
+                                                variant="standard"
+                                                labelId="lbl-recipient-id"
+                                                id="input-recipient-id"
+                                                value={recipient}
+                                                label={t("recipientTxt")}
+                                                onChange={onChangeRecipient}
+                                            >
+                                                <ListSubheader>{t("signatureRequiredTxt")}</ListSubheader>
+                                                {data
+                                                    .filter((e, i) => e.type === RecipientType.REQUIRES_SIGNATURE)
+                                                    .map((e, i) => (
+                                                        <MenuItem key={i} value={ e.id }>{ e.fullName }</MenuItem>
+                                                    ))}
+                                                <ListSubheader>{t("receivesCopyTxt")}</ListSubheader>
+                                                {data
+                                                    .filter((e, i) => e.type === RecipientType.COPY)
+                                                    .map((e, i) => (
+                                                        <MenuItem key={i} disabled value={ e.id }>{ e.fullName }</MenuItem>
+                                                    ))}
+                                            </Select>
+                                        </FormControl>
+                                    </If>
+                                </>
+                            ) }
+                        </Suspend>
+                        <Suspend<SpaceDocument[], Error>
+                            render={loadRecipients}
+                            error={(_error: Error) => <>
+                                <ApiError title={ t("documentsError") }/>
+                            </>}
+                            fallback={<EditorRecipientSkeleton/>}
+                            resolve={getDocuments}
+                        >
+                            {(data) => (<FormControl sx={{
+                                marginTop: "20px",
+                                marginBottom: "20px",
+                                width: "210px",
+                                px: "16px"
+                            }} size="small" disabled={recipient === ""}>
+                                <InputLabel id="lbl-document-id">{t("documentTxt")}</InputLabel>
+                                <Select
+                                    variant="standard"
+                                    labelId="lbl-document-id"
+                                    id="input-document-id"
+                                    value={document}
+                                    label={t("documentTxt")}
+                                    onChange={onChangeDocument}
+                                >
+                                    {data.map((e, i) => (
+                                        <MenuItem key={i} value={ e.shortId }>{ e.name }</MenuItem>
+                                    ))
+                                    }
+                                </Select>
+                            </FormControl>)}
+                        </Suspend>
 
                         <Divider />
 
@@ -231,7 +278,7 @@ export const EditorView = () => {
                               component="nav"
                               subheader={
                                   <ListSubheader component="div">
-                                      Fields
+                                      {t("fieldTxt") }
                                   </ListSubheader>
                               }>
                             <ListItemButton
@@ -239,25 +286,25 @@ export const EditorView = () => {
                                 selected={false}
                                 disabled={document === ""}>
                                 <ListItemIcon>{<DriveFileRenameOutlineIcon/>}</ListItemIcon>
-                                <ListItemText primary="Signature"/>
+                                <ListItemText primary={t("signatureTxt")}/>
                             </ListItemButton>
                             <ListItemButton
                                 selected={false}
                                 disabled={true}>
                                 <ListItemIcon>{<CalendarMonthIcon/>}</ListItemIcon>
-                                <ListItemText primary="Date"/>
+                                <ListItemText primary={t("dateTxt")}/>
                             </ListItemButton>
                             <ListItemButton
                                 selected={false}
                                 disabled={true}>
                                 <ListItemIcon>{<TextFieldsIcon/>}</ListItemIcon>
-                                <ListItemText primary="Name"/>
+                                <ListItemText primary={t("nameTxt")}/>
                             </ListItemButton>
                             <ListItemButton
                                 selected={false}
                                 disabled={true}>
                                 <ListItemIcon>{<AlternateEmailIcon/>}</ListItemIcon>
-                                <ListItemText primary="Email"/>
+                                <ListItemText primary={t("emailTxt")}/>
                             </ListItemButton>
                         </List>
                     </Grid>
@@ -311,7 +358,7 @@ export const EditorView = () => {
                       component="nav"
                       subheader={
                           <ListSubheader component="div">
-                              Pages
+                              {t("pagesTxt")}
                           </ListSubheader>
                       }>
                     {Array(pages).fill({ }).map((_e, i) => (
@@ -320,7 +367,7 @@ export const EditorView = () => {
                                 onClick={() => onSelectPage(i + 1)}
                                 selected={(i + 1) === page}
                                 disabled={false}>
-                                <ListItemText primary={`Page ${i + 1}`}/>
+                                <ListItemText primary={`${t("pageTxt")} ${i + 1}`}/>
                             </ListItemButton>
                     ))}
                 </List>
@@ -330,9 +377,10 @@ export const EditorView = () => {
 }
 
 export const EditorLayout = () => {
+    const apiService = useLoaderData() as any
     return (<>
         <EditorContextProvider>
-            <EditorView/>
+            <EditorView getPromise={apiService.getPromise}/>
         </EditorContextProvider>
     </>)
 }

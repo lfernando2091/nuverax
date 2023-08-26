@@ -1,6 +1,6 @@
-import {authHeaders} from "../../../@auth/SharedHeaders";
-import {Recipient, RecipientCreateReq, RecipientUpdateReq} from "../models/RecipientModel";
-import {IdResponse} from "../../../models/ResponseModel";
+import {authHeaders} from "../../@auth/SharedHeaders";
+import {Recipient, RecipientCreateReq, RecipientUpdateReq} from "../space/models/RecipientModel";
+import {IdResponse} from "../../models/ResponseModel";
 
 
 interface RecipientService {

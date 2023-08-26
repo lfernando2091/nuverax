@@ -6,3 +6,9 @@ export const EditorTitleSkeleton = () => {
         <Skeleton sx={{ marginBottom: "10px" }} variant="rectangular" height={20} />
     </>)
 }
+
+export const EditorRecipientSkeleton = () => {
+    return (<>
+        <Skeleton sx={{ marginBottom: "20px" }} variant="rectangular" height={40} />
+    </>)
+}

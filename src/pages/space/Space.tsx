@@ -19,7 +19,7 @@ import {SpaceRes} from "./models/SpaceModel";
 import {FileUploadOptions, UploadOption} from "../components/FileUploadOptions";
 import {CloseResult, LocalUpload} from "../components/LocalUpload";
 import {useAppContext} from "../../@core";
-import {recipientService} from "./services/RecipientService";
+import {recipientService} from "../services/RecipientService";
 import {Recipient, RecipientItem} from "./models/RecipientModel";
 import {RecipientLayout} from "./components";
 

@@ -1,0 +1,18 @@
+{
+  "editorSpaceLoadError": "Unable to load Space information.",
+  "recipientsError": "Unable to load recipients information.",
+  "documentsError": "Unable to load documents information",
+  "editorSubtitle": "Space",
+  "emptyRecipients": "No recipients found.",
+  "recipientTxt": "Recipient",
+  "signatureRequiredTxt": "Signature Required",
+  "receivesCopyTxt": "Receives a Copy",
+  "documentTxt": "Document",
+  "fieldTxt": "Fields",
+  "signatureTxt": "Signature",
+  "dateTxt": "Date",
+  "nameTxt": "Name",
+  "emailTxt": "Email",
+  "pagesTxt": "Pages",
+  "pageTxt": "Page"
+}
