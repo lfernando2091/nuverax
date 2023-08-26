@@ -14,5 +14,6 @@
   "nameTxt": "Nombre",
   "emailTxt": "Correo Electronico",
   "pagesTxt": "Paginas",
-  "pageTxt": "Pagina"
+  "pageTxt": "Pagina",
+  "selectRecipientAndDocumentInfo": "Selecciona un destinatario y un documento."
 }

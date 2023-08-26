@@ -8,12 +8,14 @@ import {Document, Page} from "react-pdf";
 import {useTranslation} from "react-i18next";
 import {ReactNode, useState} from "react";
 import {FieldsLayer} from "./fields/FieldsLayer";
-import {Field, FieldType, PageSize} from "./models/PDFViewerModel";
-import {Signature} from "./fields/Signature";
+import {PageSize} from "./models/PDFViewerModel";
 
 const options: Options = {
     cMapUrl: 'cmaps/',
     standardFontDataUrl: 'standard_fonts/',
+    httpHeaders: {
+        "Authorization": "Basic ABC"
+    }
 }
 type PDFFile = string | File | null;
 
@@ -22,14 +24,16 @@ export type PDFViewerProps = {
     onLoadSuccess?: (page: PDFDocumentProxy) => void
     page?: number
     children: ReactNode
-    onFieldsLayerReady?: () => void
+    onFieldsLayerReady?: () => void,
+    extraParams?: Options
 }
 export const PDFViewer = ({
                               file,
                               onLoadSuccess,
                               page = 1,
                               children,
-                              onFieldsLayerReady
+                              onFieldsLayerReady,
+                              extraParams
                           }: PDFViewerProps) => {
     const [pageSize, setPageSize] = useState<PageSize | null>(null)
     const { t } = useTranslation("pdfViewerNS");
@@ -79,7 +83,7 @@ export const PDFViewer = ({
                       <Alert severity="info">{ t("pdfLoading") }</Alert>
                   </>}
                   onLoadSuccess={onDocumentLoadSuccess}
-                  options={options}>
+                  options={extraParams}>
             <Page
                 className="page-viewer"
                 error={<>

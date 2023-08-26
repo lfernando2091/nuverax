@@ -1,5 +1,5 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Typography} from "@mui/material";
-import {documentService} from "./services/DocumentService";
+import {documentService} from "../../services/DocumentService";
 import {useTranslation} from "react-i18next";
 import {ApiError} from "../../../components/error/Error";
 import {Suspend} from "../../../components/load/Suspend";

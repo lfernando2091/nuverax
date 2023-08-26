@@ -1,10 +1,14 @@
-import {authHeaders} from "../../../../@auth/SharedHeaders";
-import {DocumentResponse, PageContent} from "../models/DocumentModel";
-import {IdResponse} from "../../../../models/ResponseModel";
+import {authHeaders} from "../../@auth/SharedHeaders";
+import {DocumentResponse, PageContent} from "../space/document/models/DocumentModel";
+import {IdResponse} from "../../models/ResponseModel";
 
 type DocumentServiceDef = {
     get: (id: string, options?: { page: number }) => Promise<DocumentResponse | PageContent>
     del: (id: string) => Promise<IdResponse>,
+    downloadUrl: (
+        id: string,
+        disposition?: "INLINE" | "ATTACHMENT",
+        type?: "ORIGINAL" | "SIGNED") => URL
 }
 
 export const documentService = (): DocumentServiceDef => {
@@ -40,8 +44,19 @@ export const documentService = (): DocumentServiceDef => {
         return Promise.reject(new Error("Error"))
     }
 
+    const downloadUrl = (id: string,
+                         disposition = "ATTACHMENT",
+                         type = "ORIGINAL"): URL => {
+        const url = new URL(`${process.env.REACT_APP_BACKEND_URL}/doc/${id}/download`)
+        const search = new URLSearchParams()
+        search.set("disposition", disposition)
+        search.set("type", type)
+        url.search = search.toString()
+        return url
+    }
     return {
         get,
-        del
+        del,
+        downloadUrl
     }
 }

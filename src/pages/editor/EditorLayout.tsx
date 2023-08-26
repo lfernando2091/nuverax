@@ -53,31 +53,6 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-interface Option {
-    name: string,
-    value: string
-}
-
-interface RecipientOption extends Option {
-    type: RecipientType
-}
-
-// const recipients: RecipientOption[] = [
-//     { name: "ABC 1", value: "abc-a123", type: RecipientType.REQUIRED_SIGNATURE },
-//     { name: "ABC 2", value: "abc-a124", type: RecipientType.REQUIRED_SIGNATURE },
-//     { name: "ABC 3", value: "abc-a125", type: RecipientType.COPY },
-//     { name: "ABC 4", value: "abc-a126", type: RecipientType.COPY },
-//     { name: "ABC 5", value: "abc-a127", type: RecipientType.REQUIRED_SIGNATURE },
-//     { name: "ABC 6", value: "abc-a128", type: RecipientType.COPY }
-// ]
-
-const documents: Option[] = [
-    { name: "Document 1", value: "abc-a123" },
-    { name: "Document 2", value: "abc-a124" },
-    { name: "Document 3", value: "abc-a125" },
-    { name: "Document 4", value: "abc-a126" }
-]
-
 export const editorLoader = async ({ params }: { params: any }) => {
     const { get } = spaceService()
     return defer({
