@@ -33,7 +33,7 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {SuccessfulModal} from "./components/Successful";
 import {EditorContextProvider, useEditorContext} from "./EditorContext";
-import {FieldType} from "../../components/pdf-viewer";
+import {Field, FieldType} from "../../components/pdf-viewer";
 import {v4 as uuidv4} from 'uuid'
 import {spaceService} from "../space";
 import {SpaceDocument, SpaceRes} from "../space/models/SpaceModel";
@@ -111,7 +111,7 @@ export const EditorView = ({
     }
 
     const onAddNewSignatureField = () => {
-        setNewField({
+        const newElement: Field = {
             type: FieldType.SIGNATURE,
             id: uuidv4(),
             size: {
@@ -125,7 +125,9 @@ export const EditorView = ({
             page,
             recipientId: recipient,
             documentId: document
-        })
+        }
+        setNewField(newElement)
+
         setSaveChanges(true)
     }
 
