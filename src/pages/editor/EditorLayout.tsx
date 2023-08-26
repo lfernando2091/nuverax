@@ -44,6 +44,7 @@ import {EditorRecipientSkeleton, EditorTitleSkeleton} from "./skeleton/Skeleton"
 import {recipientService} from "../services/RecipientService";
 import {Recipient, RecipientType} from "../space/models/RecipientModel";
 import {If} from "../../components/common/IfStatement";
+import SaveIcon from '@mui/icons-material/Save';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -75,7 +76,9 @@ export const EditorView = ({
         setRecipient,
         setDocument,
         document,
-        recipient
+        recipient,
+        saveChanges,
+        setSaveChanges
     } = useEditorContext()
     const { getAll } = recipientService()
     const { documents } = spaceService()
@@ -123,6 +126,11 @@ export const EditorView = ({
             recipientId: recipient,
             documentId: document
         })
+        setSaveChanges(true)
+    }
+
+    const onSaveChanges = () => {
+        setSaveChanges(false)
     }
 
     return (<>
@@ -303,6 +311,13 @@ export const EditorView = ({
                         <Grid item>
                             <Stack direction="row" spacing={2}>
                                 <TopToolbar/>
+                                <IconButton
+                                    onClick={onSaveChanges}
+                                    disabled={!saveChanges}
+                                    color="primary"
+                                    size="small">
+                                    <SaveIcon />
+                                </IconButton>
                                 <Button
                                     onClick={onSuccessful}
                                     endIcon={<ArrowForwardIcon />}

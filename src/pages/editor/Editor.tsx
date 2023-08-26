@@ -20,7 +20,8 @@ export const Editor = () => {
         newField,
         setNewField,
         recipient,
-        document
+        document,
+        setSaveChanges
     } = useEditorContext()
     const { downloadUrl } = documentService()
     const { t } = useTranslation("editorNS");
@@ -44,6 +45,7 @@ export const Editor = () => {
     const onUpdate = (value: Field) => {
         setFields(fields
             .map((e) => e.id === value.id ? value: e))
+        setSaveChanges(true)
     }
 
     const loadRecipientDocumentField = async () => {
@@ -71,6 +73,9 @@ export const Editor = () => {
 
     useEffect(() => {
         if (document !== "") {
+            // TODO Add warning
+            setSaveChanges(false)
+
             setPages(0)
             setPage(1)
             setFileUrl(downloadUrl(document, "INLINE").toString())

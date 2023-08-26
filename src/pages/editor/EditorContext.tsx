@@ -12,6 +12,8 @@ export type EditorState = {
     setRecipient: (value: string) => void
     document: string
     setDocument: (value: string) => void
+    setSaveChanges: (value: boolean) => void
+    saveChanges: boolean
 }
 
 export const EditorContext = createContext<EditorState>({
@@ -24,7 +26,9 @@ export const EditorContext = createContext<EditorState>({
     recipient: "",
     setRecipient: (_value: string) => { },
     document: "",
-    setDocument: (_value: string) => { }
+    setDocument: (_value: string) => { },
+    saveChanges: false,
+    setSaveChanges: (_value: boolean) => { }
 })
 
 export const useEditorContext = () => useContext(EditorContext)
@@ -39,6 +43,7 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
     const [newField, setNewField] = useState<Field | null>(null)
     const [recipient, setRecipient] = useState("")
     const [document, setDocument] = useState("")
+    const [saveChanges, setSaveChanges] = useState(false)
 
     const pageCount = (value: number) => {
         setPages(value)
@@ -60,6 +65,10 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
         setDocument(value)
     }
 
+    const onSaveChanges = (value: boolean) => {
+        setSaveChanges(value)
+    }
+
     const state: EditorState = {
         pages,
         setPages: pageCount,
@@ -70,7 +79,9 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
         document,
         setDocument: setCurrentDocument,
         recipient,
-        setRecipient: setCurrentRecipient
+        setRecipient: setCurrentRecipient,
+        saveChanges,
+        setSaveChanges: onSaveChanges
     }
     return (<EditorContext.Provider value={state}>
         { props.children }
