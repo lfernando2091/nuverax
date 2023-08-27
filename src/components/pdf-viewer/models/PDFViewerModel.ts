@@ -19,14 +19,3 @@ export enum FieldType {
     NAME = "name",
     EMAIL = "email"
 }
-
-export type Field = {
-    id: string
-    documentId: string
-    recipientId: string
-    page: number
-    position: Position
-    size: Size
-    type: FieldType
-    action?: "update" | "delete" | "create"
-}

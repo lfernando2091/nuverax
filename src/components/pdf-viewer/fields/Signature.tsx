@@ -1,7 +1,7 @@
-import {Field} from "../models/PDFViewerModel";
 import {Text as KonvaText, Rect, Group} from 'react-konva';
 import {useRef, useState} from "react";
 import Konva from "konva";
+import { Field } from '../../../pages/models/FieldModel';
 
 export type SignatureProps = {
     data: Field
@@ -20,8 +20,8 @@ export const Signature = ({
             x={data.position.x}
             y={data.position.y}
             draggable
-            width={data.size.w}
-            height={data.size.h}
+            width={data.size.width}
+            height={data.size.height}
             onDragStart={() => {
                 setIsDragging(true)
             }}
@@ -56,10 +56,10 @@ export const Signature = ({
                 fill={isDragging ? '#013338b3' : '#02505A'}
                 stroke={isDragging ? '#F7AC34B3' : '#013338'}
                 strokeWidth={3}
-                width={data.size.w}
-                height={data.size.h}/>
+                width={data.size.width}
+                height={data.size.height}/>
             <KonvaText
-                width={data.size.w}
+                width={data.size.width}
                 text="(FIRMA)"
                 align="center"
                 padding={5}

@@ -33,7 +33,7 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {SuccessfulModal} from "./components/Successful";
 import {EditorContextProvider, useEditorContext} from "./EditorContext";
-import {Field, FieldType} from "../../components/pdf-viewer";
+import {FieldType} from "../../components/pdf-viewer";
 import {v4 as uuidv4} from 'uuid'
 import {spaceService} from "../space";
 import {SpaceDocument, SpaceRes} from "../space/models/SpaceModel";
@@ -46,6 +46,7 @@ import {Recipient, RecipientType} from "../space/models/RecipientModel";
 import {If} from "../../components/common/IfStatement";
 import SaveIcon from '@mui/icons-material/Save';
 import {fieldService} from "../services/FieldService";
+import { Field } from "../models/FieldModel";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -78,8 +79,9 @@ export const EditorView = ({
         setDocument,
         document,
         recipient,
-        saveChanges,
-        setSaveChanges
+        changes,
+        setChanges,
+        setOnSaveChanges
     } = useEditorContext()
     const { create } = fieldService()
     const { getAll } = recipientService()
@@ -114,11 +116,12 @@ export const EditorView = ({
 
     const onAddNewSignatureField = () => {
         const newElement: Field = {
+            spaceId: params.idSpace!!,
             type: FieldType.SIGNATURE,
-            id: uuidv4(),
+            uuId: uuidv4(),
             size: {
-                h: 30,
-                w: 100
+                height: 30,
+                width: 100
             },
             position: {
                 y: 0,
@@ -130,11 +133,11 @@ export const EditorView = ({
             action: "create"
         }
         setNewField(newElement)
-        setSaveChanges(true)
+        setChanges(true)
     }
 
     const onSaveChanges = () => {
-        setSaveChanges(false)
+        setOnSaveChanges(true)
     }
 
     return (<>
@@ -317,7 +320,7 @@ export const EditorView = ({
                                 <TopToolbar/>
                                 <IconButton
                                     onClick={onSaveChanges}
-                                    disabled={!saveChanges}
+                                    disabled={!changes}
                                     color="primary"
                                     size="small">
                                     <SaveIcon />

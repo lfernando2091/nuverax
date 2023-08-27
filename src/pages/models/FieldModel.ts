@@ -1,3 +1,4 @@
+import {FieldType} from "../../components/pdf-viewer";
 
 export type Position = {
     x: number,
@@ -49,7 +50,8 @@ export type Field = {
     documentId: string
     recipientId: string
     page: number
-    type: string
+    type: FieldType
     position: Position
     size: Size
+    action?: "update" | "delete" | "create"
 }

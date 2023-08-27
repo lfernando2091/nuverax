@@ -1,4 +1,4 @@
-import {Field, FieldType, PDFViewer, Signature} from "../../components/pdf-viewer";
+import {FieldType, PDFViewer, Signature} from "../../components/pdf-viewer";
 import {useEditorContext} from "./EditorContext";
 import {PDFDocumentProxy} from "pdfjs-dist";
 import {useEffect, useMemo, useState} from "react";
@@ -8,6 +8,9 @@ import {useTranslation} from "react-i18next";
 import {documentService} from "../services/DocumentService";
 import {Options} from "react-pdf/src/shared/types";
 import {authHeaders} from "../../@auth/SharedHeaders";
+import {fieldService} from "../services/FieldService";
+import {useParams} from "react-router-dom";
+import {Field} from "../models/FieldModel";
 
 const url = "http://localhost:3000/assets/example-file.pdf"
 const url2 = "http://localhost:3000/assets/example-file-2.pdf"
@@ -21,8 +24,13 @@ export const Editor = () => {
         setNewField,
         recipient,
         document,
-        setSaveChanges
+        setChanges,
+        changes,
+        onSaveChanges,
+        setOnSaveChanges
     } = useEditorContext()
+    const params = useParams()
+    const { getFields } = fieldService()
     const { downloadUrl } = documentService()
     const { t } = useTranslation("editorNS");
     const [fields, setFields] =
@@ -44,13 +52,19 @@ export const Editor = () => {
 
     const onUpdate = (value: Field) => {
         setFields(fields
-            .map((e) => e.id === value.id ? value: e))
-        setSaveChanges(true)
+            .map((e) => e.uuId === value.uuId ? value: e))
+        setChanges(true)
     }
 
     const loadRecipientDocumentField = async () => {
+        const res = await getFields(
+            params.idSpace!!,
+            document,
+            recipient,
+            page
+        )
         // TODO CALL API TO GET CURRENT FIELDS
-        setFields([])
+        setFields(res)
         setLoadFields(false)
     }
 
@@ -71,16 +85,32 @@ export const Editor = () => {
         }
     }, [recipient, document, loadFields]);
 
-    useEffect(() => {
-        if (document !== "") {
-            // TODO Add warning
-            setSaveChanges(false)
+    const onChangeDocument = () => {
+        // TODO Add warning
+        setChanges(false)
+        setPages(0)
+        setPage(1)
+        setFileUrl(downloadUrl(document, "INLINE").toString())
+    }
 
-            setPages(0)
-            setPage(1)
-            setFileUrl(downloadUrl(document, "INLINE").toString())
+    useEffect(() => {
+        // onChangeDocument
+        if (document !== "") {
+            onChangeDocument()
         }
     }, [document]);
+
+    const onSaveChangesEvent = async () => {
+        console.log("fields" ,fields)
+    }
+
+    useEffect(() => {
+        if (changes && onSaveChanges) {
+            setOnSaveChanges(false)
+            setChanges(false)
+            onSaveChangesEvent().then()
+        }
+    }, [changes, onSaveChanges]);
 
     return (<>
         <If condition={document !== "" && fileUrl !== ""}
