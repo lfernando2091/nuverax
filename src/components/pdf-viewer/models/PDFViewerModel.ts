@@ -28,4 +28,5 @@ export type Field = {
     position: Position
     size: Size
     type: FieldType
+    action?: "update" | "delete" | "create"
 }

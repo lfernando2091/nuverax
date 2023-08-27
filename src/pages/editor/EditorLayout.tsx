@@ -45,6 +45,7 @@ import {recipientService} from "../services/RecipientService";
 import {Recipient, RecipientType} from "../space/models/RecipientModel";
 import {If} from "../../components/common/IfStatement";
 import SaveIcon from '@mui/icons-material/Save';
+import {fieldService} from "../services/FieldService";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -80,6 +81,7 @@ export const EditorView = ({
         saveChanges,
         setSaveChanges
     } = useEditorContext()
+    const { create } = fieldService()
     const { getAll } = recipientService()
     const { documents } = spaceService()
     const [searchParams, _setSearchParams] = useSearchParams()
@@ -124,10 +126,10 @@ export const EditorView = ({
             },
             page,
             recipientId: recipient,
-            documentId: document
+            documentId: document,
+            action: "create"
         }
         setNewField(newElement)
-
         setSaveChanges(true)
     }
 

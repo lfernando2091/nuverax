@@ -16,7 +16,6 @@ type FieldServiceDef = {
 }
 
 export const fieldService = (): FieldServiceDef => {
-
     const getFields = async (
         spaceId: string,
         documentId: string,
