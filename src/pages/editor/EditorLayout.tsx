@@ -47,6 +47,7 @@ import {If} from "../../components/common/IfStatement";
 import SaveIcon from '@mui/icons-material/Save';
 import {fieldService} from "../services/FieldService";
 import { Field } from "../models/FieldModel";
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -81,9 +82,11 @@ export const EditorView = ({
         recipient,
         changes,
         setChanges,
-        setOnSaveChanges
+        setOnSaveChanges,
+        selectedField,
+        setSelectedField,
+        setOndeleteField
     } = useEditorContext()
-    const { create } = fieldService()
     const { getAll } = recipientService()
     const { documents } = spaceService()
     const [searchParams, _setSearchParams] = useSearchParams()
@@ -99,6 +102,9 @@ export const EditorView = ({
         setRecipient(event.target.value as string)
     }
     const onChangeDocument = (event: SelectChangeEvent) => {
+        // TODO Add warning
+        setChanges(false)
+        setSelectedField(null)
         setDocument(event.target.value as string)
     }
 
@@ -113,6 +119,7 @@ export const EditorView = ({
     const onSelectPage = (value: number) => {
         // TODO Add warning
         setChanges(false)
+        setSelectedField(null)
         setPage(value)
     }
 
@@ -140,6 +147,10 @@ export const EditorView = ({
 
     const onSaveChanges = () => {
         setOnSaveChanges(true)
+    }
+
+    const onDeleteField = () => {
+        setOndeleteField(true)
     }
 
     return (<>
@@ -319,7 +330,14 @@ export const EditorView = ({
                         </Grid>
                         <Grid item>
                             <Stack direction="row" spacing={2}>
-                                <TopToolbar/>
+                                {/*<TopToolbar/>*/}
+                                <IconButton
+                                    disabled={selectedField === null}
+                                    onClick={onDeleteField}
+                                    color="primary"
+                                    size="small">
+                                    <DeleteIcon />
+                                </IconButton>
                                 <IconButton
                                     onClick={onSaveChanges}
                                     disabled={!changes}

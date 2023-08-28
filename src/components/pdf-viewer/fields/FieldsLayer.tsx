@@ -14,9 +14,12 @@ export const FieldsLayer = ({
                                 children,
                                 onClick
                             }: FieldsLayerProps) => {
-    const onClickStage = (_ev: Konva.KonvaEventObject<MouseEvent>) => {
-        if (onClick) {
-            onClick()
+    const onClickStage = (ev: Konva.KonvaEventObject<MouseEvent | TouchEvent>) => {
+        const clickedOnEmpty = ev.target === ev.target.getStage();
+        if (clickedOnEmpty) {
+            if (onClick) {
+                onClick()
+            }
         }
     }
 
@@ -26,7 +29,8 @@ export const FieldsLayer = ({
             position: "absolute"
         }} width={pageSize.current.w}
                height={pageSize.current.h}
-               onClick={onClickStage}>
+               onMouseDown={onClickStage}
+               onTouchStart={onClickStage}>
             <Layer className="filed-layer">
                 { children }
             </Layer>

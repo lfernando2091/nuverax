@@ -28,7 +28,11 @@ export const Editor = () => {
         setChanges,
         changes,
         onSaveChanges,
-        setOnSaveChanges
+        setOnSaveChanges,
+        selectedField,
+        setSelectedField,
+        setOndeleteField,
+        onDeleteField
     } = useEditorContext()
     const params = useParams()
     const { getFields, batch } = fieldService()
@@ -38,7 +42,6 @@ export const Editor = () => {
         useState<Field[]>([])
     const [loadFields, setLoadFields] = useState(false)
     const [fileUrl, setFileUrl] = useState("")
-    const [selectedField, setSelectedField] = useState("")
     const includeAuthHeader = useMemo((): Options => (
         {
             cMapUrl: 'cmaps/',
@@ -56,6 +59,15 @@ export const Editor = () => {
         if (value.action === undefined) {
             value.action = "update"
         }
+        updateFieldState(value)
+    }
+
+    const onDelete = (value: Field) => {
+        value.action = "delete"
+        updateFieldState(value)
+    }
+
+    const updateFieldState = (value: Field) => {
         setFields(fields
             .map((e) => e.uuId === value.uuId ? value: e))
         setChanges(true)
@@ -73,6 +85,7 @@ export const Editor = () => {
     }
 
     const onFieldsLayerReady = () => {
+        setFields([])
         setLoadFields(true)
     }
 
@@ -90,8 +103,6 @@ export const Editor = () => {
     }, [recipient, document, loadFields]);
 
     const onChangeDocument = () => {
-        // TODO Add warning
-        setChanges(false)
         setFields([])
         setPages(0)
         setPage(1)
@@ -99,7 +110,6 @@ export const Editor = () => {
     }
 
     useEffect(() => {
-        // onChangeDocument
         if (document !== "") {
             onChangeDocument()
         }
@@ -152,12 +162,20 @@ export const Editor = () => {
         }
     }, [changes, onSaveChanges]);
 
-    const onClickField = (id: string) => {
-        setSelectedField(id)
+    useEffect(() => {
+        if (onDeleteField && selectedField !== null) {
+            onDelete(selectedField)
+            setOndeleteField(false)
+            setSelectedField(null)
+        }
+    }, [onDeleteField, selectedField]);
+
+    const onClickField = (value: Field) => {
+        setSelectedField(value)
     }
 
     const onPageClick = () => {
-        setSelectedField("")
+        setSelectedField(null)
     }
 
     return (<>
@@ -174,13 +192,13 @@ export const Editor = () => {
             >
                 <>
                     {fields
-                        .filter((e) => e.page === page)
+                        .filter((e) => e.action !== "delete")
                         .map((e, i) => {
                             switch (e.type) {
                                 case FieldType.SIGNATURE:
                                     return (<Signature
                                         key={i}
-                                        selected={selectedField === e.uuId}
+                                        selected={selectedField?.uuId === e.uuId}
                                         data={e}
                                         onUpdate={onUpdate}
                                         onClick={onClickField}

@@ -16,6 +16,10 @@ export type EditorState = {
     setChanges: (value: boolean) => void
     onSaveChanges: boolean
     setOnSaveChanges: (value: boolean) => void
+    selectedField: Field | null
+    setSelectedField: (value: Field | null) => void
+    onDeleteField: boolean
+    setOndeleteField: (value: boolean) => void
 }
 
 export const EditorContext = createContext<EditorState>({
@@ -33,6 +37,10 @@ export const EditorContext = createContext<EditorState>({
     setChanges: (_value: boolean) => { },
     onSaveChanges: false,
     setOnSaveChanges: _value => { },
+    selectedField: null,
+    setSelectedField: (_value: Field | null) => { },
+    onDeleteField: false,
+    setOndeleteField: (_value: boolean) => { }
 })
 
 export const useEditorContext = () => useContext(EditorContext)
@@ -49,6 +57,8 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
     const [document, setDocument] = useState("")
     const [changes, setChanges] = useState(false)
     const [onSaveChanges, setOnSaveChanges] = useState(false)
+    const [selectedField, setSelectedField] = useState<Field | null>(null)
+    const [onDeleteField, setOndeleteField] = useState(false)
 
     const pageCount = (value: number) => {
         setPages(value)
@@ -78,6 +88,14 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
         setOnSaveChanges(value)
     }
 
+    const onSetSelectedFieldEvent = (value: Field | null) => {
+        setSelectedField(value)
+    }
+
+    const setOndeleteFieldEvent = (value: boolean) => {
+        setOndeleteField(value)
+    }
+
     const state: EditorState = {
         pages,
         setPages: pageCount,
@@ -92,7 +110,11 @@ export const EditorContextProvider = (props: EditorContextProviderProps) => {
         changes,
         setChanges: onChanges,
         onSaveChanges,
-        setOnSaveChanges: onChangesEvent
+        setOnSaveChanges: onChangesEvent,
+        selectedField,
+        setSelectedField: onSetSelectedFieldEvent,
+        onDeleteField,
+        setOndeleteField: setOndeleteFieldEvent
     }
     return (<EditorContext.Provider value={state}>
         { props.children }
