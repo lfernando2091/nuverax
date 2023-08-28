@@ -10,7 +10,7 @@ import {Options} from "react-pdf/src/shared/types";
 import {authHeaders} from "../../@auth/SharedHeaders";
 import {fieldService} from "../services/FieldService";
 import {useParams} from "react-router-dom";
-import {Field} from "../models/FieldModel";
+import {Field, FieldCreateReq, FieldUpdateBatchReq, FieldUpdateDataBatchReq} from "../models/FieldModel";
 
 const url = "http://localhost:3000/assets/example-file.pdf"
 const url2 = "http://localhost:3000/assets/example-file-2.pdf"
@@ -30,7 +30,7 @@ export const Editor = () => {
         setOnSaveChanges
     } = useEditorContext()
     const params = useParams()
-    const { getFields } = fieldService()
+    const { getFields, batch } = fieldService()
     const { downloadUrl } = documentService()
     const { t } = useTranslation("editorNS");
     const [fields, setFields] =
@@ -51,6 +51,9 @@ export const Editor = () => {
     }
 
     const onUpdate = (value: Field) => {
+        if (value.action === undefined) {
+            value.action = "update"
+        }
         setFields(fields
             .map((e) => e.uuId === value.uuId ? value: e))
         setChanges(true)
@@ -63,7 +66,6 @@ export const Editor = () => {
             recipient,
             page
         )
-        // TODO CALL API TO GET CURRENT FIELDS
         setFields(res)
         setLoadFields(false)
     }
@@ -101,7 +103,42 @@ export const Editor = () => {
     }, [document]);
 
     const onSaveChangesEvent = async () => {
-        console.log("fields" ,fields)
+        const update: FieldUpdateDataBatchReq[] = []
+        const create: FieldCreateReq[] = []
+        const del: string[] = []
+        fields.forEach((e) => {
+            switch (e.action) {
+                case "update":
+                    update.push({
+                        uuId: e.uuId,
+                        position: e.position,
+                        size: e.size
+                    })
+                    break;
+                case "create":
+                    create.push({
+                        uuId: e.uuId,
+                        spaceId: e.spaceId,
+                        documentId: e.documentId,
+                        recipientId: e.recipientId,
+                        page: e.page,
+                        type: e.type,
+                        position: e.position,
+                        size: e.size
+                    })
+                    break;
+                case "delete":
+                    del.push(e.uuId)
+                    break;
+            }
+        })
+        const data: FieldUpdateBatchReq = {
+            update,
+            create,
+            delete: del
+        }
+        await batch(data)
+        await loadRecipientDocumentField()
     }
 
     useEffect(() => {

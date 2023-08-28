@@ -6,9 +6,10 @@ import {PDFDocumentProxy} from "pdfjs-dist";
 import {Alert, LinearProgress} from "@mui/material";
 import {Document, Page} from "react-pdf";
 import {useTranslation} from "react-i18next";
-import {ReactNode, useState} from "react";
+import {ReactNode, useEffect, useState} from "react";
 import {FieldsLayer} from "./fields/FieldsLayer";
 import {PageSize} from "./models/PDFViewerModel";
+import {If} from "../common/IfStatement";
 
 const options: Options = {
     cMapUrl: 'cmaps/',
@@ -43,8 +44,8 @@ export const PDFViewer = ({
         }
     }
 
-    const onPageLoadStart = () => {
-        setPageSize(null)
+    const onDocumentError = (_e: Error) => {
+
     }
 
     const onPageError = (_error: Error) => {
@@ -62,13 +63,14 @@ export const PDFViewer = ({
                 w: page.originalWidth
             }
         })
-    }
-
-    const onFieldsLayerReadyEvent = () => {
         if (onFieldsLayerReady) {
             onFieldsLayerReady()
         }
     }
+
+    useEffect(() => {
+        setPageSize(null)
+    }, [page, file]);
 
     return (<div className="pdf-viewer-container">
         <Document className="document-viewer" file={file}
@@ -82,6 +84,7 @@ export const PDFViewer = ({
                       <LinearProgress />
                       <Alert severity="info">{ t("pdfLoading") }</Alert>
                   </>}
+                  onLoadError={onDocumentError}
                   onLoadSuccess={onDocumentLoadSuccess}
                   options={extraParams}>
             <Page
@@ -94,21 +97,17 @@ export const PDFViewer = ({
                     <Alert severity="info">{ t("pdfPageLoading") }</Alert>
                 </>}
                 onLoadError={onPageError}
-                onLoadStart={onPageLoadStart}
                 onLoadSuccess={onPageReady}
                 noData={<>
                     <Alert severity="info">{ t("pdfPageNoData")}</Alert>
                 </>}
                 pageNumber={page} />
-            {pageSize !== null &&
-                <>
-                    <FieldsLayer
-                        onReady={onFieldsLayerReadyEvent}
-                        pageSize={pageSize}>
-                        { children }
-                    </FieldsLayer>
-                </>
-            }
+            <If condition={pageSize !== null}>
+                <FieldsLayer
+                    pageSize={pageSize!!}>
+                    { children }
+                </FieldsLayer>
+            </If>
         </Document>
     </div>)
 }

@@ -14,8 +14,8 @@ export type Position = {
 }
 
 export enum FieldType {
-    SIGNATURE = "signature",
-    DATE = "date",
-    NAME = "name",
-    EMAIL = "email"
+    SIGNATURE = "SIGNATURE",
+    DATE = "DATE",
+    NAME = "NAME",
+    EMAIL = "EMAIL"
 }
