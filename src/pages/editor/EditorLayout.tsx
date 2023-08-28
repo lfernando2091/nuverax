@@ -111,6 +111,8 @@ export const EditorView = ({
     }
 
     const onSelectPage = (value: number) => {
+        // TODO Add warning
+        setChanges(false)
         setPage(value)
     }
 

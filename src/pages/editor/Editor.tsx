@@ -17,6 +17,7 @@ const url2 = "http://localhost:3000/assets/example-file-2.pdf"
 
 export const Editor = () => {
     const {
+        pages,
         setPages,
         setPage,
         page,
@@ -90,6 +91,7 @@ export const Editor = () => {
     const onChangeDocument = () => {
         // TODO Add warning
         setChanges(false)
+        setFields([])
         setPages(0)
         setPage(1)
         setFileUrl(downloadUrl(document, "INLINE").toString())
