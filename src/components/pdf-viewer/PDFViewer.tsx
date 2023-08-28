@@ -26,7 +26,8 @@ export type PDFViewerProps = {
     page?: number
     children: ReactNode
     onFieldsLayerReady?: () => void,
-    extraParams?: Options
+    extraParams?: Options,
+    onPageClick?: () => void
 }
 export const PDFViewer = ({
                               file,
@@ -34,7 +35,8 @@ export const PDFViewer = ({
                               page = 1,
                               children,
                               onFieldsLayerReady,
-                              extraParams
+                              extraParams,
+                              onPageClick
                           }: PDFViewerProps) => {
     const [pageSize, setPageSize] = useState<PageSize | null>(null)
     const { t } = useTranslation("pdfViewerNS");
@@ -65,6 +67,12 @@ export const PDFViewer = ({
         })
         if (onFieldsLayerReady) {
             onFieldsLayerReady()
+        }
+    }
+
+    const onPageClickEvent = () => {
+        if (onPageClick) {
+            onPageClick()
         }
     }
 
@@ -104,6 +112,7 @@ export const PDFViewer = ({
                 pageNumber={page} />
             <If condition={pageSize !== null}>
                 <FieldsLayer
+                    onClick={onPageClickEvent}
                     pageSize={pageSize!!}>
                     { children }
                 </FieldsLayer>

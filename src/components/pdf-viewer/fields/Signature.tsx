@@ -4,19 +4,31 @@ import Konva from "konva";
 import { Field } from '../../../pages/models/FieldModel';
 
 export type SignatureProps = {
+    selected?: boolean
     data: Field
     onUpdate: (value: Field) => void
+    onClick?: (id: string) => void
 }
 
 export const Signature = ({
+                              selected = false,
                               data,
-                              onUpdate
+                              onUpdate,
+                              onClick
                           }: SignatureProps) => {
     const [isDragging, setIsDragging] = useState(false)
     const rectRef = useRef<Konva.Rect>(null)
 
+    const onClickEvent = (_ev: Konva.KonvaEventObject<MouseEvent>) => {
+        if (onClick) {
+            onClick(data.uuId)
+        }
+        _ev.cancelBubble = true
+    }
+
     return (<>
         <Group
+            id={data.uuId}
             x={data.position.x}
             y={data.position.y}
             draggable
@@ -50,12 +62,15 @@ export const Signature = ({
                     container.style.cursor = "default"
                 }
             }}
+            onClick={onClickEvent}
         >
             <Rect
                 ref={rectRef}
                 fill={isDragging ? '#013338b3' : '#02505A'}
                 stroke={isDragging ? '#F7AC34B3' : '#013338'}
-                strokeWidth={3}
+                strokeWidth={selected ? 4: 0}
+                dash={[5, 5]}
+                dashEnabled={selected}
                 width={data.size.width}
                 height={data.size.height}/>
             <KonvaText

@@ -38,6 +38,7 @@ export const Editor = () => {
         useState<Field[]>([])
     const [loadFields, setLoadFields] = useState(false)
     const [fileUrl, setFileUrl] = useState("")
+    const [selectedField, setSelectedField] = useState("")
     const includeAuthHeader = useMemo((): Options => (
         {
             cMapUrl: 'cmaps/',
@@ -151,6 +152,14 @@ export const Editor = () => {
         }
     }, [changes, onSaveChanges]);
 
+    const onClickField = (id: string) => {
+        setSelectedField(id)
+    }
+
+    const onPageClick = () => {
+        setSelectedField("")
+    }
+
     return (<>
         <If condition={document !== "" && fileUrl !== ""}
         elseRender={<Alert severity="info">
@@ -161,6 +170,7 @@ export const Editor = () => {
                        onFieldsLayerReady={onFieldsLayerReady}
                        onLoadSuccess={onLoadSuccess}
                        extraParams={includeAuthHeader}
+                       onPageClick={onPageClick}
             >
                 <>
                     {fields
@@ -170,8 +180,10 @@ export const Editor = () => {
                                 case FieldType.SIGNATURE:
                                     return (<Signature
                                         key={i}
+                                        selected={selectedField === e.uuId}
                                         data={e}
                                         onUpdate={onUpdate}
+                                        onClick={onClickField}
                                     />)
                             }
                             return (<></>)
