@@ -8,7 +8,8 @@ type NotifyServiceDef = {
 
 export const notifyService = (): NotifyServiceDef => {
     const get = async (
-        spaceId: string
+        spaceId: string,
+        language: "es-MX" | "en-US" = "es-MX"
     ): Promise<IdResponse> => {
         const url = new URL(`${process.env.REACT_APP_BACKEND_ORCHESTRATOR_URL}/notify/${spaceId}`)
         const res = await fetch(
@@ -16,6 +17,7 @@ export const notifyService = (): NotifyServiceDef => {
             {
                 headers: {
                     "Content-Type": "application/json",
+                    "Content-Language": language,
                     ...authHeaders()
                 },
                 method: "GET"
