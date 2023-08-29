@@ -109,7 +109,6 @@ export const Editor = () => {
     }
 
     const onChangeRecipient = () => {
-        setFields([])
         setPage(1)
         onFieldsLayerReady()
     }
