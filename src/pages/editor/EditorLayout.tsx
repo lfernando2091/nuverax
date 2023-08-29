@@ -23,7 +23,7 @@ import {
     Typography
 } from "@mui/material";
 import ChromeReaderModeIcon from "@mui/icons-material/ChromeReaderMode";
-import {defer, Link, Outlet, useLoaderData, useParams, useSearchParams} from "react-router-dom";
+import {defer, Link, Outlet, useLoaderData, useNavigate, useParams, useSearchParams} from "react-router-dom";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {ChangeEvent, useState} from "react";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
@@ -31,7 +31,6 @@ import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutli
 import TextFieldsIcon from '@mui/icons-material/TextFields';
 import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import {SuccessfulModal} from "./components/Successful";
 import {EditorContextProvider, useEditorContext} from "./EditorContext";
 import {FieldType} from "../../components/pdf-viewer";
 import {v4 as uuidv4} from 'uuid'
@@ -48,6 +47,8 @@ import SaveIcon from '@mui/icons-material/Save';
 import {fieldService} from "../services/FieldService";
 import { Field } from "../models/FieldModel";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ConfirmDialog } from "../../components/dialog/ConfirmDialog";
+import {notifyService} from "../services/NotifyService";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -89,16 +90,22 @@ export const EditorView = ({
     } = useEditorContext()
     const { getAll } = recipientService()
     const { documents } = spaceService()
+    const { get } = notifyService()
+    const navigate = useNavigate()
     const [searchParams, _setSearchParams] = useSearchParams()
     const params = useParams()
-    const [succesful, setSuccessful] = useState(false)
+    const [confirmDialog, setConfirmDialog] = useState(false)
     const [loadRecipients, setLoadRecipients] = useState(false)
+    const promiseNotifyGet = () => get(params.idSpace!!)
     const getSpacePromise = () => getPromise
     const getAllRecipients = () => getAll(params.idSpace!!)
     const getDocuments = () => documents(params.idSpace!!)
     const { t } = useTranslation("editorNS");
 
     const onChangeRecipient = (event: SelectChangeEvent) => {
+        // TODO Add warning
+        setChanges(false)
+        setSelectedField(null)
         setRecipient(event.target.value as string)
     }
     const onChangeDocument = (event: SelectChangeEvent) => {
@@ -108,12 +115,15 @@ export const EditorView = ({
         setDocument(event.target.value as string)
     }
 
-    const onSuccessful = () => {
-        setSuccessful(true)
+    const onShowConfirm = () => {
+        setConfirmDialog(true)
     }
 
-    const onCloseSuccessfulDialog = () => {
-        setSuccessful(false)
+    const onCloseSuccessfulDialog = (shouldUpdate?: boolean) => {
+        setConfirmDialog(false)
+        if (shouldUpdate) {
+            navigate(`/s/${params["idSpace"]}`)
+        }
     }
 
     const onSelectPage = (value: number) => {
@@ -346,13 +356,24 @@ export const EditorView = ({
                                     <SaveIcon />
                                 </IconButton>
                                 <Button
-                                    onClick={onSuccessful}
+                                    onClick={onShowConfirm}
                                     endIcon={<ArrowForwardIcon />}
                                     variant="contained"
                                     size="small">
-                                    Next
+                                    {t("sendBtn")}
                                 </Button>
-                                <SuccessfulModal onClose={onCloseSuccessfulDialog} open={succesful}/>
+                                <ConfirmDialog
+                                    fun={promiseNotifyGet}
+                                    show={confirmDialog}
+                                    title={t("confirmRequestTitle")}
+                                    description={t("confirmRequestContent")}
+                                    cancelText={t("cancelBtn")}
+                                    confirmText={t("confirmBtn")}
+                                    closeText={t("closeBtn")}
+                                    errorText={t("errorNotifyRecipients")}
+                                    successText={t("successNotifyRecipients")}
+                                    onClose={onCloseSuccessfulDialog}
+                                />
                             </Stack>
                         </Grid>
                     </Grid>

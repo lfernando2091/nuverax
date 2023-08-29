@@ -24,6 +24,7 @@ import {PageContent} from "./PageContent";
 import {useApiHelper} from "../../../utils/ApiHelper";
 import {waitUntil} from "../../../utils/Utils";
 import {useAppContext} from "../../../@core";
+import {ConfirmDialog} from "../../../components/dialog/ConfirmDialog";
 
 export const documentLoader = async ({ params }: { params: any }) => {
     const { get } = documentService()
@@ -183,112 +184,6 @@ export const Document = () => {
             }}
             show={showAiAnalyst}
             onClose={onClose}/>
-    </>)
-}
-
-type DeleteDialogProps<R = any> = {
-    show: boolean
-    title: string
-    description: string
-    errorText?: string
-    successText?: string
-    cancelText?: string
-    confirmText?: string
-    closeText?: string
-    onClose: (shouldUpdate?: boolean) => void
-    fun:() => Promise<R>
-}
-
-export const ConfirmDialog = <R = any, E = any>({
-                                   show,
-                                  onClose,
-                                  title,
-                                  description,
-                                                    errorText = "Error",
-                                                    successText = "Success",
-                                  cancelText = "Cancel",
-                                  confirmText = "Confirm",
-                                                    closeText = "Close",
-                                       fun
-                               }: DeleteDialogProps<R>) => {
-    const [start, setStart] = useState(false)
-
-    const {
-        loading,
-        data,
-        error
-    } = useApiHelper<R, E>(
-        fun,
-        {
-            enabled: start
-        }
-    )
-
-    const onCloseDialog = (e: any, reason: "backdropClick" | "escapeKeyDown") => {
-        if (loading) {
-            if (reason !== "backdropClick") {
-                onNormalClose()
-            }
-        } else if (data){
-            onSuccessClose()
-        } else {
-            onNormalClose()
-        }
-    }
-
-    const onConfirmAction = () => {
-        setStart(true)
-    }
-
-    const onNormalClose = () => {
-        setStart(false)
-        onClose()
-    }
-
-    const onSuccessClose = () => {
-        setStart(false)
-        onClose(true)
-    }
-
-    return (<>
-        <Dialog keepMounted={true} disableEscapeKeyDown={loading} open={show} onClose={onCloseDialog}>
-            <DialogTitle>
-                { title }
-            </DialogTitle>
-            <DialogContent>
-                { description }
-                {loading &&
-                    <LinearProgress />
-                }
-                {data &&
-                    <Alert severity="success">{ successText }</Alert>
-                }
-                {error &&
-                    <>
-                        <ApiError title={ errorText }/>
-                    </>
-                }
-            </DialogContent>
-            <DialogActions>
-                {data &&
-                    <Button onClick={onSuccessClose}>
-                        { closeText }
-                    </Button>
-                }
-                {data === null &&
-                    <>
-                        <Button disabled={loading} onClick={() => onNormalClose()}>
-                            { cancelText }
-                        </Button>
-                        {error === undefined &&
-                            <Button disabled={loading} variant="outlined" onClick={onConfirmAction}>
-                                { confirmText }
-                            </Button>
-                        }
-                    </>
-                }
-            </DialogActions>
-        </Dialog>
     </>)
 }
 

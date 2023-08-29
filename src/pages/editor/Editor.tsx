@@ -17,7 +17,6 @@ const url2 = "http://localhost:3000/assets/example-file-2.pdf"
 
 export const Editor = () => {
     const {
-        pages,
         setPages,
         setPage,
         page,
@@ -109,11 +108,23 @@ export const Editor = () => {
         setFileUrl(downloadUrl(document, "INLINE").toString())
     }
 
+    const onChangeRecipient = () => {
+        setFields([])
+        setPage(1)
+        onFieldsLayerReady()
+    }
+
     useEffect(() => {
         if (document !== "") {
             onChangeDocument()
         }
     }, [document]);
+
+    useEffect(() => {
+        if (recipient !== "") {
+            onChangeRecipient()
+        }
+    }, [recipient]);
 
     const onSaveChangesEvent = async () => {
         const update: FieldUpdateDataBatchReq[] = []

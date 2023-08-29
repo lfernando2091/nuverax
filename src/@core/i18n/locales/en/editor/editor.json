@@ -15,5 +15,13 @@
   "emailTxt": "Email",
   "pagesTxt": "Pages",
   "pageTxt": "Page",
-  "selectRecipientAndDocumentInfo": "Select a recipient and document"
+  "selectRecipientAndDocumentInfo": "Select a recipient and document",
+  "sendBtn": "Send",
+  "confirmRequestTitle": "Confirm Request",
+  "cancelBtn": "Cancel",
+  "confirmBtn": "Confirm",
+  "closeBtn": "Close",
+  "confirmRequestContent": "We will notify recipients about your request.",
+  "errorNotifyRecipients": "Something went wrong, unable to Notify recipients.",
+  "successNotifyRecipients": "Recipients notified successfully."
 }

@@ -15,5 +15,13 @@
   "emailTxt": "Correo Electronico",
   "pagesTxt": "Paginas",
   "pageTxt": "Pagina",
-  "selectRecipientAndDocumentInfo": "Selecciona un destinatario y un documento."
+  "selectRecipientAndDocumentInfo": "Selecciona un destinatario y un documento.",
+  "sendBtn": "Enviar",
+  "confirmRequestTitle": "Confirmar solicitud",
+  "cancelBtn": "Cancelar",
+  "confirmBtn": "Confirmar",
+  "closeBtn": "Salir",
+  "confirmRequestContent": "Noficaremos a los destinatarios de tu solicitud.",
+  "errorNotifyRecipients": "Algo salio mal notificando a los destinatarios.",
+  "successNotifyRecipients": "Destinatarios notificados exitosamente."
 }
