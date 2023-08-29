@@ -5,6 +5,7 @@ import { Field } from '../../../pages/models/FieldModel';
 import { If } from '../../common/IfStatement';
 
 export type SignatureProps = {
+    text?: string
     selected?: boolean
     data: Field
     onUpdate: (value: Field) => void
@@ -12,6 +13,7 @@ export type SignatureProps = {
 }
 
 export const Signature = ({
+                              text = "(FIRMA)",
                               selected = false,
                               data,
                               onUpdate,
@@ -134,7 +136,7 @@ export const Signature = ({
             <KonvaText
                 width={data.size.width}
                 height={data.size.height}
-                text="(FIRMA)"
+                text={text}
                 align="center"
                 padding={5}
                 fill={isDragging ? '#f7ac34' : '#fff'}

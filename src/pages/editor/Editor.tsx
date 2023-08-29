@@ -198,6 +198,7 @@ export const Editor = () => {
                                 case FieldType.SIGNATURE:
                                     return (<Signature
                                         key={i}
+                                        text={`(${t("signatureTxt")})`}
                                         selected={selectedField?.uuId === e.uuId}
                                         data={e}
                                         onUpdate={onUpdate}
