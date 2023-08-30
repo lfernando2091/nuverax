@@ -16,7 +16,7 @@ type SuspendProps<R = any, E = any> = {
     idle?: ReactNode,
     resolve: () => Promise<R>,
     error?: ErrorRenderFunction<E>,
-    onReady?: () => void
+    onReady?: (data?: R, error?: E) => void
     children: ResolveRenderFunction<R>
 }
 
@@ -42,13 +42,16 @@ export const Suspend = <R = any, E = any>({
         try {
             const res = await resolve()
             setData(res)
+            if (onReady) {
+                onReady(res)
+            }
         } catch (e) {
             setError(e as E)
+            if (onReady) {
+                onReady(undefined, e as E)
+            }
         }
         setLoading(false)
-        if (onReady) {
-            onReady()
-        }
     }
     useEffect(() => {
         if (render || update) {

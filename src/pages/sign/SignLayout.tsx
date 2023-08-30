@@ -15,6 +15,11 @@ import {DocumentModel} from "../space/models/SpaceModel";
 import ArticleIcon from "@mui/icons-material/Article";
 import {authorizationService} from "../services/AuthorizationService";
 import {useTranslation} from "react-i18next";
+import { Suspend } from "../../components/load/Suspend";
+import {ApiError} from "../../components/error/Error";
+import {spaceService} from "../services/SpaceService";
+import {useEffect, useState} from "react";
+import {DocumentsSkeleton} from "./skeleton/Skeleton";
 const docsList: DocumentModel[] = [
     { id: "abc1", name: "Document 1" },
     { id: "abc2", name: "Document 2" },
@@ -36,9 +41,18 @@ export const signLoader = async ({ request }: LoaderFunctionArgs) => {
 }
 export const SignLayout = () => {
     const { t } = useTranslation("signNS");
+    const { documents } = spaceService()
     const [searchParams, _] = useSearchParams()
     const token = searchParams.get("t")
+    const [getDocuments, setGetDocuments] = useState(false)
     const apiService = useLoaderData() as any
+    const documentsPromise = () => documents(apiService.introspectResult.spaceId)
+    const onDocumentsReady = () => {
+        setGetDocuments(false)
+    }
+    useEffect(() => {
+        setGetDocuments(true)
+    }, []);
     return (<>
         <OneColumnLayout>
             <NavMenu>
@@ -66,23 +80,34 @@ export const SignLayout = () => {
                                 primary={t("homeTxt")}
                                 icon={<SmartButtonIcon/>}/>
                         </List>
-                        <List dense
-                              sx={{ marginBottom: "10px" }}
-                              component="nav"
-                              subheader={
-                                  <ListSubheader component="div">
-                                      {t("documentsTxt")}
-                                  </ListSubheader>
-                              }>
-                            {docsList.map((e, i) => (
-                                <ListItemLink
-                                    key={i}
-                                    to={`d/${e.id}?t=${token}`}
-                                    disabled={false}
-                                    primary={e.name}
-                                    icon={<ArticleIcon/>}/>
-                            ))}
-                        </List>
+                        <Suspend
+                            render={getDocuments}
+                            onReady={onDocumentsReady}
+                            resolve={documentsPromise}
+                            error={(_error) => <>
+                                <ApiError title={ t("spaceDocsApiError") }/>
+                            </>}
+                            fallback={<DocumentsSkeleton/>}>
+                            {(data) => <>
+                                <List dense
+                                      sx={{ marginBottom: "10px" }}
+                                      component="nav"
+                                      subheader={
+                                          <ListSubheader component="div">
+                                              {t("documentsTxt")}
+                                          </ListSubheader>
+                                      }>
+                                    {data.map((e, i) => (
+                                        <ListItemLink
+                                            key={i}
+                                            to={`d/${e.shortId}?t=${token}`}
+                                            disabled={false}
+                                            primary={e.name}
+                                            icon={<ArticleIcon/>}/>
+                                    ))}
+                                </List>
+                            </>}
+                        </Suspend>
                     </Grid>
                 </Grid>
             </NavMenu>
