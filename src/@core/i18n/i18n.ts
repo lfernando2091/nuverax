@@ -8,6 +8,8 @@ import spaceDocEnNameSpace from './locales/en/space/document.json';
 import spaceDocEsNameSpace from './locales/es/space/document.json';
 import editorEsNameSpace from './locales/es/editor/editor.json';
 import editorEnNameSpace from './locales/en/editor/editor.json';
+import signEsNameSpace from './locales/es/sign/sign.json';
+import signEnNameSpace from './locales/en/sign/sign.json';
 import {aiAnalystEnNameSpace, aiAnalystEsNameSpace} from "../../components/ai-analyst";
 import {pdfViewerEnNameSpace, pdfViewerEsNameSpace} from "../../components/pdf-viewer";
 
@@ -23,6 +25,7 @@ i18next.use(initReactI18next).init({
             spaceNS: spaceEnNameSpace,
             spaceDocNS: spaceDocEnNameSpace,
             editorNS: editorEnNameSpace,
+            signNS: signEnNameSpace,
             aiAnalystNS: aiAnalystEnNameSpace,
             pdfViewerNS: pdfViewerEnNameSpace
         },
@@ -31,6 +34,7 @@ i18next.use(initReactI18next).init({
             spaceNS: spaceEsNameSpace,
             spaceDocNS: spaceDocEsNameSpace,
             editorNS: editorEsNameSpace,
+            signNS: signEsNameSpace,
             aiAnalystNS: aiAnalystEsNameSpace,
             pdfViewerNS: pdfViewerEsNameSpace
         },

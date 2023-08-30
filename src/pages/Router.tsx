@@ -3,6 +3,7 @@ import {spaceRouter} from "./space/Router";
 import {editorRouter} from "./editor/Router";
 import {signRouter} from "./sign/Router";
 import {editorLoader} from "./editor/EditorLayout";
+import {signLoader} from "./sign/SignLayout";
 
 export const pagesRouter = () => {
     return (<>
@@ -41,10 +42,13 @@ export const router = createBrowserRouter(
             }}>
                 { editorRouter() }
             </Route>
-            <Route path="/sign/:idSpace" lazy={async () => {
-                const { SignLayout } = await import("./sign/SignLayout")
-                return { Component: SignLayout }
-            }}>
+            <Route path="/sign" lazy={async () => {
+                const { SignLayout, signLoader, OnError } = await import("./sign/SignLayout")
+                return {
+                    Component: SignLayout,
+                    ErrorBoundary: OnError,
+                    loader: signLoader
+                }}}>
                 { signRouter() }
             </Route>
         </>
