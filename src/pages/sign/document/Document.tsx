@@ -1,7 +1,7 @@
 import {Box, Button, Grid, Paper, Stack, Typography} from "@mui/material";
 import {defer, LoaderFunctionArgs, useLoaderData, useParams, useRouteError} from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
-import {useState} from "react";
+import {useMemo, useState} from "react";
 import {AIAnalyst} from "../../../components/ai-analyst";
 import {useTranslation} from "react-i18next";
 import {useApiHelper} from "../../../utils/ApiHelper";
@@ -11,6 +11,9 @@ import { If } from "../../../components/common/IfStatement";
 import {ApiError} from "../../../components/error/Error";
 import { Suspend } from "../../../components/load/Suspend";
 import { DocumentSkeleton } from "../skeleton/Skeleton";
+import {Options} from "react-pdf/src/shared/types";
+import {authHeaders} from "../../../@auth/SharedHeaders";
+import {PDFViewer} from "../../../components/pdf-viewer";
 
 export const documentLoader = async ({ params }: LoaderFunctionArgs) => {
     const { get } = documentService()
@@ -26,6 +29,15 @@ export const Document = () => {
     const params = useParams()
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
     const documentInfo = apiService.getDocumentPromise as DocumentResponse
+    const includeAuthHeader = useMemo((): Options => (
+        {
+            cMapUrl: 'cmaps/',
+            standardFontDataUrl: 'standard_fonts/',
+            httpHeaders: {
+                ...authHeaders()
+            }
+        }
+    ), [documentInfo])
     const onAiAnalyst = () => {
         setShorAiAnalyst(true)
     }
@@ -77,6 +89,12 @@ export const Document = () => {
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
                 { documentInfo.fileName }
             </Typography>
+            <PDFViewer
+                file={downloadUrl(documentInfo.shortId, "INLINE").toString()}
+                extraParams={includeAuthHeader}
+                showAllPages>
+                <div></div>
+            </PDFViewer>
         </Box>
         <AIAnalyst
             context={{

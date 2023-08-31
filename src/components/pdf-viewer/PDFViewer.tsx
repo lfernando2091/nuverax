@@ -27,7 +27,8 @@ export type PDFViewerProps = {
     children: ReactNode
     onFieldsLayerReady?: () => void,
     extraParams?: Options,
-    onPageClick?: () => void
+    onPageClick?: () => void,
+    showAllPages?: boolean
 }
 export const PDFViewer = ({
                               file,
@@ -36,18 +37,21 @@ export const PDFViewer = ({
                               children,
                               onFieldsLayerReady,
                               extraParams,
-                              onPageClick
+                              onPageClick,
+                              showAllPages = false
                           }: PDFViewerProps) => {
     const [pageSize, setPageSize] = useState<PageSize | null>(null)
+    const [pdfProxy, setPdfProxy] = useState<PDFDocumentProxy | null>(null)
     const { t } = useTranslation("pdfViewerNS");
     const onDocumentLoadSuccess = (proxy: PDFDocumentProxy) => {
+        setPdfProxy(proxy)
         if (onLoadSuccess) {
             onLoadSuccess(proxy)
         }
     }
 
     const onDocumentError = (_e: Error) => {
-
+        setPdfProxy(null)
     }
 
     const onPageError = (_error: Error) => {
@@ -95,27 +99,48 @@ export const PDFViewer = ({
                   onLoadError={onDocumentError}
                   onLoadSuccess={onDocumentLoadSuccess}
                   options={extraParams}>
-            <Page
-                className="page-viewer"
-                error={<>
-                    <Alert severity="error">{ t("pdfPageError") }</Alert>
-                </>}
-                loading={<>
-                    <LinearProgress />
-                    <Alert severity="info">{ t("pdfPageLoading") }</Alert>
-                </>}
-                onLoadError={onPageError}
-                onLoadSuccess={onPageReady}
-                noData={<>
-                    <Alert severity="info">{ t("pdfPageNoData")}</Alert>
-                </>}
-                pageNumber={page} />
-            <If condition={pageSize !== null}>
-                <FieldsLayer
-                    onClick={onPageClickEvent}
-                    pageSize={pageSize!!}>
-                    { children }
-                </FieldsLayer>
+            <If condition={showAllPages && pdfProxy !== null}>
+                {Array(pdfProxy?.numPages).fill({ }).map((e, i) =>  (
+                    <Page
+                        key={i}
+                        className="page-viewer"
+                        error={<>
+                            <Alert severity="error">{ t("pdfPageError") }</Alert>
+                        </>}
+                        loading={<>
+                            <LinearProgress />
+                            <Alert severity="info">{ t("pdfPageLoading") }</Alert>
+                        </>}
+                        noData={<>
+                            <Alert severity="info">{ t("pdfPageNoData")}</Alert>
+                        </>}
+                        pageNumber={i + 1} />
+                ))}
+                { children }
+            </If>
+            <If condition={!showAllPages}>
+                <Page
+                    className="page-viewer"
+                    error={<>
+                        <Alert severity="error">{ t("pdfPageError") }</Alert>
+                    </>}
+                    loading={<>
+                        <LinearProgress />
+                        <Alert severity="info">{ t("pdfPageLoading") }</Alert>
+                    </>}
+                    onLoadError={onPageError}
+                    onLoadSuccess={onPageReady}
+                    noData={<>
+                        <Alert severity="info">{ t("pdfPageNoData")}</Alert>
+                    </>}
+                    pageNumber={page} />
+                <If condition={pageSize !== null}>
+                    <FieldsLayer
+                        onClick={onPageClickEvent}
+                        pageSize={pageSize!!}>
+                        { children }
+                    </FieldsLayer>
+                </If>
             </If>
         </Document>
     </div>)
