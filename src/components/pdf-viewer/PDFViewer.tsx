@@ -3,13 +3,14 @@ import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import {Options, PageCallback} from "react-pdf/src/shared/types";
 import {PDFDocumentProxy} from "pdfjs-dist";
-import {Alert, LinearProgress} from "@mui/material";
+import {Alert, LinearProgress, Menu, MenuItem} from "@mui/material";
 import {Document, Page} from "react-pdf";
 import {useTranslation} from "react-i18next";
 import {ReactNode, useEffect, useState} from "react";
 import {FieldsLayer} from "./fields/FieldsLayer";
-import {PageSize} from "./models/PDFViewerModel";
+import {PageSize, Position} from "./models/PDFViewerModel";
 import {If} from "../common/IfStatement";
+import {ContextMenuView, MouseLocation} from "./components/ContextMenuView";
 
 const options: Options = {
     cMapUrl: 'cmaps/',
@@ -40,8 +41,10 @@ export const PDFViewer = ({
                               onPageClick,
                               showAllPages = false
                           }: PDFViewerProps) => {
+    const [contextMenu, setContextMenu] = useState<MouseLocation | null>(null)
     const [pageSize, setPageSize] = useState<PageSize | null>(null)
     const [pdfProxy, setPdfProxy] = useState<PDFDocumentProxy | null>(null)
+    const [selectedText, setSelectedText] = useState<string | null>(null)
     const { t } = useTranslation("pdfViewerNS");
     const onDocumentLoadSuccess = (proxy: PDFDocumentProxy) => {
         setPdfProxy(proxy)
@@ -80,6 +83,33 @@ export const PDFViewer = ({
         }
     }
 
+    const contextMenuEvent = (ev: MouseEvent) => {
+        ev.preventDefault()
+        const currentTextSelected = window.getSelection()
+        if (currentTextSelected !== null) {
+            setSelectedText(currentTextSelected.toString())
+        }
+        setContextMenu(contextMenu === null
+            ? {
+                x: ev.clientX + 2,
+                y: ev.clientY - 6,
+            }
+            : // repeated contextmenu when it is already open closes it with Chrome 84 on Ubuntu
+              // Other native context menus might behave different.
+              // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
+            null)
+    }
+
+    const onPageMouseUp = (_ev: MouseEvent) => {
+
+    }
+
+    const onCloseContextMenu = (value?: string) => {
+        setContextMenu(null)
+
+        setSelectedText(null)
+    }
+
     useEffect(() => {
         setPageSize(null)
     }, [page, file]);
@@ -103,7 +133,7 @@ export const PDFViewer = ({
                 {Array(pdfProxy?.numPages).fill({ }).map((e, i) =>  (
                     <Page
                         key={i}
-                        className="page-viewer"
+                        className="page-viewer mb mt"
                         error={<>
                             <Alert severity="error">{ t("pdfPageError") }</Alert>
                         </>}
@@ -114,9 +144,15 @@ export const PDFViewer = ({
                         noData={<>
                             <Alert severity="info">{ t("pdfPageNoData")}</Alert>
                         </>}
+                        onMouseUp={onPageMouseUp}
+                        onContextMenu={contextMenuEvent}
                         pageNumber={i + 1} />
                 ))}
                 { children }
+                <ContextMenuView
+                    textSelectedOptions={selectedText !== null && selectedText !== ""}
+                    contextMenu={contextMenu}
+                    onSelect={onCloseContextMenu}/>
             </If>
             <If condition={!showAllPages}>
                 <Page

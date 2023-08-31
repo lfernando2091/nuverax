@@ -1,3 +1,11 @@
+.mb {
+    margin-bottom: 15px;
+}
+
+.mt {
+    margin-top: 15px;
+}
+
 .pdf-viewer-container{
     /*margin: 1em 0;*/
 }
