@@ -1,4 +1,5 @@
 import {Route} from "react-router-dom";
+import {OnError} from "./document/Document";
 
 export const signRouter = () => (
     <>
@@ -11,8 +12,8 @@ export const signRouter = () => (
             return { Component: SignOptions }
         }}/>
         <Route path="d/:idDocument" lazy={async () => {
-            const { Document } = await import("./document/Document")
-            return { Component: Document }
+            const { Document, documentLoader, OnError } = await import("./document/Document")
+            return { Component: Document, loader: documentLoader, ErrorBoundary: OnError }
         }}/>
     </>
 )

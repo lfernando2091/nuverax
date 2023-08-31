@@ -1,15 +1,31 @@
 import {Box, Button, Grid, Paper, Stack, Typography} from "@mui/material";
-import {useParams} from "react-router-dom";
+import {defer, LoaderFunctionArgs, useLoaderData, useParams, useRouteError} from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import {useState} from "react";
 import {AIAnalyst} from "../../../components/ai-analyst";
 import {useTranslation} from "react-i18next";
+import {useApiHelper} from "../../../utils/ApiHelper";
+import {documentService} from "../../services/DocumentService";
+import {DocumentResponse, PageContent} from "../../space/document/models/DocumentModel";
+import { If } from "../../../components/common/IfStatement";
+import {ApiError} from "../../../components/error/Error";
+import { Suspend } from "../../../components/load/Suspend";
+import { DocumentSkeleton } from "../skeleton/Skeleton";
+
+export const documentLoader = async ({ params }: LoaderFunctionArgs) => {
+    const { get } = documentService()
+    return defer({
+        getDocumentPromise: await get(params["idDocument"]!!)
+    })
+}
 
 export const Document = () => {
     const { t } = useTranslation("signNS");
+    const apiService = useLoaderData() as any
+    const { downloadUrl } = documentService()
     const params = useParams()
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
-
+    const documentInfo = apiService.getDocumentPromise as DocumentResponse
     const onAiAnalyst = () => {
         setShorAiAnalyst(true)
     }
@@ -56,7 +72,10 @@ export const Document = () => {
             p: 3
         }}>
             <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
-                Document {params["idDocument"]}
+                {t("documentTxt")} {documentInfo.title}
+            </Typography>
+            <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                { documentInfo.fileName }
             </Typography>
         </Box>
         <AIAnalyst
@@ -104,5 +123,16 @@ const TopToolbar = ({ onSelectTool }: TopToolbarProps) => {
             }}>
             Mars as read
         </Button>
+    </>)
+}
+
+export const OnError = () => {
+    const { t } = useTranslation("signNS");
+    const params = useParams()
+    const error = useRouteError()
+    return (<>
+        <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
+            { t("documentNotFound") } { params["idDocument"] }
+        </Typography>
     </>)
 }

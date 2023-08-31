@@ -3,7 +3,10 @@
   "spaceTxt": "Space",
   "homeTxt": "Home",
   "documentsTxt": "Documents",
+  "documentTxt": "Document",
   "spaceDataError": "Unable to load Space info.",
   "recipientDataError": "Unable to load Recipient info",
-  "recipientWelcome": "Hi! {1} you was requested to sign the next documents."
+  "recipientWelcome": "Hi! {1} you was requested to sign the next documents.",
+  "emptySpaceDocsList": "Empty document list",
+  "documentNotFound": "Document not found."
 }

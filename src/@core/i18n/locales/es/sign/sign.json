@@ -3,7 +3,10 @@
   "spaceTxt": "Espacio",
   "homeTxt": "Inicio",
   "documentsTxt": "Documentos",
+  "documentTxt": "Documento",
   "spaceDataError": "No pudimos cargar la informacion del Espacio.",
   "recipientDataError": "No pudimos cargar la informacion del Destinatario.",
-  "recipientWelcome": "Hola! {1} fuiste solicitado para firmar los documentos."
+  "recipientWelcome": "Hola! {1} fuiste solicitado para firmar los documentos.",
+  "emptySpaceDocsList": "No hay documentos dispoibles.",
+  "documentNotFound": "Documento no encontrado"
 }

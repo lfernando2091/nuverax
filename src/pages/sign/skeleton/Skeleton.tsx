@@ -15,3 +15,10 @@ export const SpaceContentSkeleton = () => (
         <Skeleton sx={{ marginBottom: "10px" }} variant="rectangular" height={20} />
     </>
 )
+
+export const DocumentSkeleton = () => {
+    return (<>
+        <Skeleton sx={{ marginBottom: "20px" }} variant="rectangular" height={40} />
+        <Skeleton sx={{ marginBottom: "10px" }} variant="rectangular" height={20} />
+    </>)
+}
