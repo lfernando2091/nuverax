@@ -1,10 +1,12 @@
-import {Box, Button, Grid, IconButton, Paper, Stack, Typography} from "@mui/material";
+import {Box, Button, Grid, Paper, Stack, Typography} from "@mui/material";
 import {useParams} from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import {useState} from "react";
-import {AIAnalyst} from "../../../components/ai-analyst/AIAnalyst";
+import {AIAnalyst} from "../../../components/ai-analyst";
+import {useTranslation} from "react-i18next";
 
 export const Document = () => {
+    const { t } = useTranslation("signNS");
     const params = useParams()
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
 

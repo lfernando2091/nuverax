@@ -20,6 +20,7 @@ import {ApiError} from "../../components/error/Error";
 import {spaceService} from "../services/SpaceService";
 import {useEffect, useState} from "react";
 import {DocumentsSkeleton} from "./skeleton/Skeleton";
+import {SignContextProvider, useSignContext} from "./SignContext";
 const docsList: DocumentModel[] = [
     { id: "abc1", name: "Document 1" },
     { id: "abc2", name: "Document 2" },
@@ -39,7 +40,9 @@ export const signLoader = async ({ request }: LoaderFunctionArgs) => {
         introspectResult: await introspect(token)
     })
 }
-export const SignLayout = () => {
+
+export const SignView = () => {
+    const { setIntrospect } = useSignContext()
     const { t } = useTranslation("signNS");
     const { documents } = spaceService()
     const [searchParams, _] = useSearchParams()
@@ -51,6 +54,7 @@ export const SignLayout = () => {
         setGetDocuments(false)
     }
     useEffect(() => {
+        setIntrospect(apiService.introspectResult)
         setGetDocuments(true)
     }, []);
     return (<>
@@ -117,6 +121,13 @@ export const SignLayout = () => {
         </OneColumnLayout>
     </>)
 }
+
+export const SignLayout = () => {
+    return (<SignContextProvider>
+        <SignView/>
+    </SignContextProvider>)
+}
+
 export const OnError = () => {
     const { t } = useTranslation("signNS");
     const error = useRouteError()

@@ -5,6 +5,7 @@ import {IdResponse} from "../../models/ResponseModel";
 
 interface RecipientService {
     create: (data: RecipientCreateReq) => Promise<IdResponse>
+    get: (recipientId: string) => Promise<Recipient>
     getAll: (spaceId: string) => Promise<Recipient[]>
     update: (recipientId: string, data: RecipientUpdateReq) => Promise<IdResponse>
     del: (recipientId: string) => Promise<IdResponse>
@@ -21,6 +22,21 @@ export const recipientService = (): RecipientService => {
                 },
                 body: JSON.stringify(data),
                 method: "POST"
+            })
+        if (res.ok) {
+            return await res.json()
+        }
+        return Promise.reject(new Error("Error"))
+    }
+    const get = async (recipientId: string): Promise<Recipient> => {
+        const res = await fetch(
+            `${process.env.REACT_APP_BACKEND_ORCHESTRATOR_URL}/recipient/${recipientId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    ...authHeaders()
+                },
+                method: "GET"
             })
         if (res.ok) {
             return await res.json()
@@ -75,6 +91,7 @@ export const recipientService = (): RecipientService => {
     }
     return {
         create,
+        get,
         getAll,
         update,
         del

@@ -2,5 +2,8 @@
   "errorSignPageLoad": "No pudimos cargar la sesion.",
   "spaceTxt": "Espacio",
   "homeTxt": "Inicio",
-  "documentsTxt": "Documentos"
+  "documentsTxt": "Documentos",
+  "spaceDataError": "No pudimos cargar la informacion del Espacio.",
+  "recipientDataError": "No pudimos cargar la informacion del Destinatario.",
+  "recipientWelcome": "Hola! {1} fuiste solicitado para firmar los documentos."
 }
