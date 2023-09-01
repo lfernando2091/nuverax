@@ -10,5 +10,11 @@
   "emptySpaceDocsList": "No hay documentos dispoibles.",
   "documentNotFound": "Documento no encontrado",
   "aiSpaceAnalyst": "IA Analista de Espacio",
-  "signDocuments": "Firmar documento(s)"
+  "signDocuments": "Firmar documento(s)",
+  "signingOptionsTxt": "Opciones para Firmar",
+  "drawSignatureTxt": "Dibujar Firma",
+  "tabUnderDevelop": "Pestaña en desarollo",
+  "fontTxt": "Texto",
+  "uploadFileTxt": "Subir archivo",
+  "othersTxt": "Otros"
 }

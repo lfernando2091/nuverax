@@ -96,31 +96,31 @@ export const SignOptions = () => {
                 </Grid>
                 <Grid item>
                     <Typography sx={{ marginTop: "10px", marginBottom: "10px" }} variant="h6" component="h3">
-                        Signing Options
+                        { t("signingOptionsTxt") }
                     </Typography>
                 </Grid>
             </Grid>
             <Box sx={{ fontSize: "10px", borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={tab} onChange={onChangeTab}>
-                    <Tab label="Draw Signature" {...a11yProps(0)}/>
+                    <Tab label={t("drawSignatureTxt")} {...a11yProps(0)}/>
                     <Tooltip arrow
                              title={<>
-                                 <Typography color="inherit">Tab under development</Typography>
+                                 <Typography color="inherit">{t("tabUnderDevelop")}</Typography>
                              </>}>
                         <span>
-                            <Tab label="Fonts"
+                            <Tab label={t("fontTxt")}
                                  disabled
                                  icon={<LockIcon />}
                                  iconPosition="start"
                                  {...a11yProps(1)}/>
                         </span>
                     </Tooltip>
-                    <Tab label="Upload File"
+                    <Tab label={t("uploadFileTxt")}
                          disabled
                          icon={<LockIcon />}
                          iconPosition="start"
                          {...a11yProps(2)}/>
-                    <Tab label="Others"
+                    <Tab label={t("othersTxt")}
                          disabled
                          icon={<LockIcon />}
                          iconPosition="start" {...a11yProps(3)}/>

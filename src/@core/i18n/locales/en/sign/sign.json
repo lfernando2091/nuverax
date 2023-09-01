@@ -10,5 +10,10 @@
   "emptySpaceDocsList": "Empty document list",
   "documentNotFound": "Document not found.",
   "aiSpaceAnalyst": "AI Space Analyst",
-  "signDocuments": "Sign document(s)"
+  "signDocuments": "Sign document(s)",
+  "signingOptionsTxt": "Signing Options",
+  "tabUnderDevelop": "Tab under development",
+  "fontTxt": "Font",
+  "uploadFileTxt": "Upload File",
+  "othersTxt": "Others"
 }
