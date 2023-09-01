@@ -1,5 +1,5 @@
 import {Box, Button, Grid, Typography} from "@mui/material";
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import DriveFileRenameOutlineIcon from "@mui/icons-material/DriveFileRenameOutline";
 import {useEffect, useState} from "react";
@@ -23,6 +23,8 @@ export const Sign = () => {
     const [showAiAnalyst, setShorAiAnalyst] = useState(false)
     const { get: getSpace } = spaceService()
     const { get: getRecipient } = recipientService()
+    const [searchParams, _] = useSearchParams()
+    const token = searchParams.get("t")
 
     const onAiAnalyst = () => {
         setShorAiAnalyst(true)
@@ -33,7 +35,7 @@ export const Sign = () => {
     }
 
     const onSignDocuments = () => {
-        navigate("options")
+        navigate(`options?t=${token}`)
     }
 
     const {
@@ -98,7 +100,7 @@ export const Sign = () => {
                             }}
                             onClick={onAiAnalyst}
                             startIcon={<AutoAwesomeIcon />}>
-                        AI Space Analyst
+                        {t("aiSpaceAnalyst")}
                     </Button>
                 </Grid>
                 <Grid item xs={6} md={4}>
@@ -113,7 +115,7 @@ export const Sign = () => {
                             }}
                             onClick={onSignDocuments}
                             startIcon={<DriveFileRenameOutlineIcon />}>
-                        Sign documents
+                        {t("signDocuments")}
                     </Button>
                 </Grid>
             </Grid>

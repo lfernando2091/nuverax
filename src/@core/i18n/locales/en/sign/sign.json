@@ -8,5 +8,7 @@
   "recipientDataError": "Unable to load Recipient info",
   "recipientWelcome": "Hi! {1} you was requested to sign the next documents.",
   "emptySpaceDocsList": "Empty document list",
-  "documentNotFound": "Document not found."
+  "documentNotFound": "Document not found.",
+  "aiSpaceAnalyst": "AI Space Analyst",
+  "signDocuments": "Sign document(s)"
 }

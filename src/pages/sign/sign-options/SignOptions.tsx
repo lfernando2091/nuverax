@@ -1,8 +1,9 @@
 import {Box, Grid, IconButton, LinearProgress, Tab, Tabs, Tooltip, Typography} from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams, useSearchParams} from "react-router-dom";
 import {useState, SyntheticEvent, ReactNode, Suspense, lazy} from "react";
 import LockIcon from '@mui/icons-material/Lock';
+import {useTranslation} from "react-i18next";
 
 const DrawSignature =
     lazy(() => import('./option/DrawSignature')
@@ -56,12 +57,15 @@ const SuspenseTabPanel = ({
 )
 
 export const SignOptions = () => {
+    const { t } = useTranslation("signNS");
     const params = useParams()
     const navigate = useNavigate()
     const [tab, setTab] = useState(0)
+    const [searchParams, _] = useSearchParams()
+    const token = searchParams.get("t")
 
     const onBack = () => {
-        navigate(`/sign/${params["id"]}`)
+        navigate(`/sign?t=${token}`)
     }
 
     const onChangeTab = (event: SyntheticEvent, newValue: number) => {

@@ -1,5 +1,4 @@
 import {Route} from "react-router-dom";
-import {OnError} from "./document/Document";
 
 export const signRouter = () => (
     <>

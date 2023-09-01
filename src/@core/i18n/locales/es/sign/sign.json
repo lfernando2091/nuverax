@@ -8,5 +8,7 @@
   "recipientDataError": "No pudimos cargar la informacion del Destinatario.",
   "recipientWelcome": "Hola! {1} fuiste solicitado para firmar los documentos.",
   "emptySpaceDocsList": "No hay documentos dispoibles.",
-  "documentNotFound": "Documento no encontrado"
+  "documentNotFound": "Documento no encontrado",
+  "aiSpaceAnalyst": "IA Analista de Espacio",
+  "signDocuments": "Firmar documento(s)"
 }
