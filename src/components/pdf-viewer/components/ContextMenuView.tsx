@@ -13,7 +13,7 @@ type ContextMenuViewProps = {
     onSelect: (item?: string) => void
     textSelectedOptions: boolean
 }
-
+// Abstract, Key Points, Keywords
 export const ContextMenuView = ({
                                     contextMenu,
                                     onSelect,
