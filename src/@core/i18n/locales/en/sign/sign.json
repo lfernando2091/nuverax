@@ -15,5 +15,9 @@
   "tabUnderDevelop": "Tab under development",
   "fontTxt": "Font",
   "uploadFileTxt": "Upload File",
-  "othersTxt": "Others"
+  "othersTxt": "Others",
+  "drawSignatureTxt": "Draw signature",
+  "drawSignatureDescTxt": "Draw your signature in the next area. Click on \"Accept\" to confirm",
+  "clearTxt": "Clear",
+  "acceptTxt": "Accept"
 }

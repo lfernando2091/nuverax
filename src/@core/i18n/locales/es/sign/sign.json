@@ -16,5 +16,8 @@
   "tabUnderDevelop": "Pestaña en desarollo",
   "fontTxt": "Texto",
   "uploadFileTxt": "Subir archivo",
-  "othersTxt": "Otros"
+  "othersTxt": "Otros",
+  "drawSignatureDescTxt": "Dibuja tu firma lo mas precisa que puedas, da clic en \"Aceptar\" para confirmar el firmado.",
+  "clearTxt": "Borrar todo",
+  "acceptTxt": "Aceptar"
 }
