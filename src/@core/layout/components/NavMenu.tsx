@@ -1,5 +1,7 @@
 import {ReactNode, useState} from "react";
-import {Drawer, styled, Toolbar} from "@mui/material";
+import {Box, Divider, Drawer, IconButton, styled, Toolbar} from "@mui/material";
+import {LinkButton} from "../../../components/ListItemLink";
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 
 export type NavMenuProps = {
     children: ReactNode,
@@ -64,10 +66,32 @@ export const NxNavMenu = ({
             sx={{
                 width: width ?? 240,
                 flexShrink: 0,
-                [`& .MuiDrawer-paper`]: { width: width ?? 240, boxSizing: 'border-box' },
+                [`& .MuiDrawer-paper`]: {
+                    width: width ?? 240,
+                    // boxSizing: 'border-box',
+                    height: "100vh"
+                },
             }}
         >
-            { children }
+            <LinkButton color="inherit" to="/" text="NX"/>
+            <Divider />
+            <Box sx={{
+                display: "flex",
+                flexDirection: "column",
+                flexGrow: 1,
+                justifyContent: "space-between",
+                overflowX: "hidden",
+                overflowY: "auto",
+                overscrollBehavior: "none"
+            }}>
+                { children }
+            </Box>
+            <Divider />
+            <DrawerHeader>
+                <IconButton onClick={handleDrawerToggle}>
+                    <ChevronLeftIcon/>
+                </IconButton>
+            </DrawerHeader>
         </Drawer>
     </>)
 }

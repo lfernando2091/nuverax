@@ -1,4 +1,4 @@
-import {MainContent, NavMenu, NxAppBar, NxMain, NxNavMenu, SimpleColumLayout, Footer, DrawerHeader} from "../../@core";
+import {MainContent, Header, NxMain, NxNavMenu, SimpleColumLayout, Footer, DrawerHeader} from "../../@core";
 import {Alert, Box, Divider, Grid, IconButton, List, ListSubheader, Toolbar, Typography} from "@mui/material";
 import {
     defer,
@@ -23,7 +23,6 @@ import {SignContextProvider, useSignContext} from "./SignContext";
 import {If} from "../../components/common/IfStatement";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import MenuIcon from '@mui/icons-material/Menu'
-import {Header} from "../../@core/layout/components/Header";
 
 export const signLoader = async ({ request }: LoaderFunctionArgs) => {
     const url = new URL(request.url)
@@ -63,92 +62,58 @@ export const SignView = () => {
     }, []);
     return (<>
         <SimpleColumLayout
-            header={<NxAppBar open={openNavbar} elevation={0}>
-                <Toolbar variant="dense">
-                    <IconButton
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={() => onCloseDrawer(!openNavbar)}
-                        edge="start"
-                        sx={{
-                            marginRight: 5,
-                            ...(openNavbar && { display: 'none' }),
-                        }}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Persistent drawer
-                    </Typography>
-                </Toolbar>
-            </NxAppBar>}
+            header={<Header open={openNavbar} setOpenNavbar={onCloseDrawer}/>}
             navbar={<NxNavMenu open={openNavbar} onClose={onCloseDrawer}>
-                <Grid
-                    container
-                    direction="column"
-                    justifyContent="space-between"
-                    alignItems="stretch"
-                    sx={{
-                        height: "100%"
-                    }}
-                >
-                    <Grid item>
-                        <List dense
-                              sx={{ marginBottom: "10px" }}
-                              component="nav"
-                              subheader={
-                                  <ListSubheader component="div">
-                                      {t("spaceTxt")}
-                                  </ListSubheader>
-                              }>
-                            <ListItemLink
-                                to={`/sign?t=${token}`}
-                                end
-                                disabled={false}
-                                primary={t("homeTxt")}
-                                icon={<SmartButtonIcon/>}/>
-                        </List>
-                        <List dense
-                              sx={{ marginBottom: "10px", overflowX: "hidden", overflowY: "visible" }}
-                              component="nav"
-                              subheader={
-                                  <ListSubheader component="div">
-                                      {t("documentsTxt")}
-                                  </ListSubheader>
-                              }>
-                            <Suspend
-                                render={getDocuments}
-                                onReady={onDocumentsReady}
-                                resolve={documentsPromise}
-                                error={(_error) => <>
-                                    <ApiError title={ t("spaceDocsApiError") }/>
-                                </>}
-                                fallback={<DocumentsSkeleton/>}>
-                                {(data) => <>
-                                    <If condition={data.length > 0}
-                                        elseRender={<Alert severity="info">{ t("emptySpaceDocsList") }</Alert>}>
-                                        {data.map((e, i) => (
-                                            <ListItemLink
-                                                key={i}
-                                                to={`d/${e.shortId}?t=${token}`}
-                                                disabled={false}
-                                                primary={e.name}
-                                                icon={<ArticleIcon/>}/>
-                                        ))}
-                                    </If>
-                                </>}
-                            </Suspend>
-                        </List>
-                    </Grid>
-                    <Grid item>
-                        <Divider />
-                        <DrawerHeader>
-                            <IconButton onClick={onMinimizeMenu}>
-                                <ChevronLeftIcon/>
-                            </IconButton>
-                        </DrawerHeader>
-                    </Grid>
-                </Grid>
+                <Box sx={{
+                    overflowX: "hidden", overflowY: "visible"
+                }}>
+                    <List dense
+                          sx={{ marginBottom: "10px" }}
+                          component="nav"
+                          subheader={
+                              <ListSubheader component="div">
+                                  {t("spaceTxt")}
+                              </ListSubheader>
+                          }>
+                        <ListItemLink
+                            to={`/sign?t=${token}`}
+                            end
+                            disabled={false}
+                            primary={t("homeTxt")}
+                            icon={<SmartButtonIcon/>}/>
+                    </List>
+                    <List dense
+                          sx={{ marginBottom: "10px" }}
+                          component="nav"
+                          subheader={
+                              <ListSubheader component="div">
+                                  {t("documentsTxt")}
+                              </ListSubheader>
+                          }>
+                        <Suspend
+                            render={getDocuments}
+                            onReady={onDocumentsReady}
+                            resolve={documentsPromise}
+                            error={(_error) => <>
+                                <ApiError title={ t("spaceDocsApiError") }/>
+                            </>}
+                            fallback={<DocumentsSkeleton/>}>
+                            {(data) => <>
+                                <If condition={data.length > 0}
+                                    elseRender={<Alert severity="info">{ t("emptySpaceDocsList") }</Alert>}>
+                                    {data.map((e, i) => (
+                                        <ListItemLink
+                                            key={i}
+                                            to={`d/${e.shortId}?t=${token}`}
+                                            disabled={false}
+                                            primary={e.name}
+                                            icon={<ArticleIcon/>}/>
+                                    ))}
+                                </If>
+                            </>}
+                        </Suspend>
+                    </List>
+                </Box>
             </NxNavMenu>}>
             {/*<NavMenu></NavMenu>*/}
             <NxMain open={openNavbar}>
@@ -159,7 +124,6 @@ export const SignView = () => {
         </SimpleColumLayout>
     </>)
 }
-
 export const SignLayout = () => {
     return (<SignContextProvider>
         <SignView/>

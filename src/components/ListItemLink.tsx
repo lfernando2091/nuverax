@@ -18,6 +18,7 @@ interface ListItemLinkProps {
 interface ButtonLinkProps {
     text: string;
     to: string;
+    color?: string;
 }
 
 /*
@@ -52,7 +53,7 @@ const ColorButton = styled(Button)<ButtonProps>(({ theme }) => ({
 
 export const LinkButton = (props: ButtonLinkProps) => {
     return (
-        <Button sx={{ color: "#fff", fontSize: "20px" }}
+        <Button sx={{ color: props.color ?? "#fff", fontSize: "20px" }}
                 component={NavLinkBase} to={props.to}>
             {props.text}
         </Button>
