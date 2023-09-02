@@ -1,5 +1,5 @@
 import "./Header.css"
-import {AppBar, IconButton, Menu, MenuItem, Toolbar} from "@mui/material";
+import {AppBar, AppBarProps, IconButton, Menu, MenuItem, styled, Toolbar} from "@mui/material";
 import {LinkButton} from "../../../components/ListItemLink";
 import TranslateIcon from '@mui/icons-material/Translate';
 import {MouseEvent, useState} from "react";
@@ -69,3 +69,25 @@ export const Header = () => {
         </AppBar>
     )
 }
+
+export interface NxBarProps extends AppBarProps {
+    open?: boolean;
+    drawerWidth?: number
+}
+
+export const NxAppBar = styled(AppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+})<NxBarProps>(({ theme, open, drawerWidth }) => ({
+    transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        width: `calc(100% - ${drawerWidth ?? 240}px)`,
+        marginLeft: `${drawerWidth ?? 240}px`,
+        transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}))

@@ -1,5 +1,5 @@
-import {MainContent, NavMenu, OneColumnLayout} from "../../@core";
-import {Alert, Box, Grid, List, ListSubheader, Typography} from "@mui/material";
+import {MainContent, NavMenu, NxAppBar, NxMain, NxNavMenu, SimpleColumLayout, Footer, DrawerHeader} from "../../@core";
+import {Alert, Box, Grid, IconButton, List, ListSubheader, Toolbar, Typography} from "@mui/material";
 import {
     defer,
     LoaderFunctionArgs,
@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import {ListItemLink} from "../../components/ListItemLink";
 import SmartButtonIcon from "@mui/icons-material/SmartButton";
-import {DocumentModel} from "../space/models/SpaceModel";
 import ArticleIcon from "@mui/icons-material/Article";
 import {authorizationService} from "../services/AuthorizationService";
 import {useTranslation} from "react-i18next";
@@ -22,13 +21,9 @@ import {useEffect, useState} from "react";
 import {DocumentsSkeleton} from "./skeleton/Skeleton";
 import {SignContextProvider, useSignContext} from "./SignContext";
 import {If} from "../../components/common/IfStatement";
-const docsList: DocumentModel[] = [
-    { id: "abc1", name: "Document 1" },
-    { id: "abc2", name: "Document 2" },
-    { id: "abc3", name: "Document 3" },
-    { id: "abc4", name: "Document 4" },
-    { id: "abc5", name: "Document 5" }
-]
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import {Header} from "../../@core/layout/components/Header";
+
 export const signLoader = async ({ request }: LoaderFunctionArgs) => {
     const url = new URL(request.url)
     const search = url.searchParams
@@ -50,21 +45,35 @@ export const SignView = () => {
     const token = searchParams.get("t")
     const [getDocuments, setGetDocuments] = useState(false)
     const apiService = useLoaderData() as any
+    const [openNavbar, setOpenNavbar] = useState(true)
     const documentsPromise = () => documents(apiService.introspectResult.spaceId)
     const onDocumentsReady = () => {
         setGetDocuments(false)
+    }
+    const onMinimizeMenu = () => {
+        setOpenNavbar(false)
+    }
+    const onCloseDrawer = (value: boolean) => {
+        setOpenNavbar(value)
     }
     useEffect(() => {
         setIntrospect(apiService.introspectResult)
         setGetDocuments(true)
     }, []);
     return (<>
-        <OneColumnLayout>
-            <NavMenu>
+        <SimpleColumLayout
+            header={<NxAppBar open={openNavbar} elevation={0}>
+                <Toolbar variant="dense">
+                    <Typography variant="h6" noWrap component="div">
+                        Persistent drawer
+                    </Typography>
+                </Toolbar>
+            </NxAppBar>}
+            navbar={<NxNavMenu open={openNavbar} onClose={onCloseDrawer}>
                 <Grid
                     container
                     direction="column"
-                    justifyContent="flex-start"
+                    justifyContent="space-between"
                     alignItems="stretch"
                     sx={{
                         height: "100%"
@@ -87,7 +96,7 @@ export const SignView = () => {
                                 icon={<SmartButtonIcon/>}/>
                         </List>
                         <List dense
-                              sx={{ marginBottom: "10px" }}
+                              sx={{ marginBottom: "10px", overflowX: "hidden", overflowY: "visible" }}
                               component="nav"
                               subheader={
                                   <ListSubheader component="div">
@@ -118,12 +127,21 @@ export const SignView = () => {
                             </Suspend>
                         </List>
                     </Grid>
+                    <Grid item>
+                        <DrawerHeader>
+                            <IconButton onClick={onMinimizeMenu}>
+                                <ChevronLeftIcon/>
+                            </IconButton>
+                        </DrawerHeader>
+                    </Grid>
                 </Grid>
-            </NavMenu>
-            <MainContent>
+            </NxNavMenu>}>
+            {/*<NavMenu></NavMenu>*/}
+            <NxMain open={openNavbar}>
                 <Outlet />
-            </MainContent>
-        </OneColumnLayout>
+                <Footer/>
+            </NxMain>
+        </SimpleColumLayout>
     </>)
 }
 

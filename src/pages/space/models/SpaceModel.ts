@@ -1,7 +1,3 @@
-export type DocumentModel = {
-    id: string,
-    name: string
-}
 
 export type SpaceCreateReq = {
     name?: string
