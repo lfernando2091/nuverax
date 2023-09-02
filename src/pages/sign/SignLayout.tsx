@@ -22,6 +22,7 @@ import {DocumentsSkeleton} from "./skeleton/Skeleton";
 import {SignContextProvider, useSignContext} from "./SignContext";
 import {If} from "../../components/common/IfStatement";
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import MenuIcon from '@mui/icons-material/Menu'
 import {Header} from "../../@core/layout/components/Header";
 
 export const signLoader = async ({ request }: LoaderFunctionArgs) => {
@@ -64,6 +65,18 @@ export const SignView = () => {
         <SimpleColumLayout
             header={<NxAppBar open={openNavbar} elevation={0}>
                 <Toolbar variant="dense">
+                    <IconButton
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={() => onCloseDrawer(!openNavbar)}
+                        edge="start"
+                        sx={{
+                            marginRight: 5,
+                            ...(openNavbar && { display: 'none' }),
+                        }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
                     <Typography variant="h6" noWrap component="div">
                         Persistent drawer
                     </Typography>
