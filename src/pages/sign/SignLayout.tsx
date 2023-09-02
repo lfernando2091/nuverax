@@ -1,5 +1,5 @@
 import {MainContent, NavMenu, NxAppBar, NxMain, NxNavMenu, SimpleColumLayout, Footer, DrawerHeader} from "../../@core";
-import {Alert, Box, Grid, IconButton, List, ListSubheader, Toolbar, Typography} from "@mui/material";
+import {Alert, Box, Divider, Grid, IconButton, List, ListSubheader, Toolbar, Typography} from "@mui/material";
 import {
     defer,
     LoaderFunctionArgs,
@@ -128,6 +128,7 @@ export const SignView = () => {
                         </List>
                     </Grid>
                     <Grid item>
+                        <Divider />
                         <DrawerHeader>
                             <IconButton onClick={onMinimizeMenu}>
                                 <ChevronLeftIcon/>
@@ -138,6 +139,7 @@ export const SignView = () => {
             </NxNavMenu>}>
             {/*<NavMenu></NavMenu>*/}
             <NxMain open={openNavbar}>
+                <Toolbar variant="dense"/>
                 <Outlet />
                 <Footer/>
             </NxMain>
