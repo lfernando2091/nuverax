@@ -1,9 +1,11 @@
 import {Box, Grid, IconButton, LinearProgress, Tab, Tabs, Tooltip, Typography} from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {useNavigate, useParams, useSearchParams} from "react-router-dom";
-import {useState, SyntheticEvent, ReactNode, Suspense, lazy} from "react";
+import {useState, SyntheticEvent, ReactNode, Suspense, lazy, useEffect, useRef} from "react";
 import LockIcon from '@mui/icons-material/Lock';
 import {useTranslation} from "react-i18next";
+import {useSignContext} from "../SignContext";
+import { ConfirmDialog } from "../../../components/dialog/ConfirmDialog";
 
 const DrawSignature =
     lazy(() => import('./option/DrawSignature')
@@ -57,11 +59,14 @@ const SuspenseTabPanel = ({
 )
 
 export const SignOptions = () => {
+    const { confirmSignature, setConfirmSignature } = useSignContext()
     const { t } = useTranslation("signNS");
     const params = useParams()
     const navigate = useNavigate()
+    const signaturePreview = useRef<HTMLImageElement | null>(null)
     const [tab, setTab] = useState(0)
     const [searchParams, _] = useSearchParams()
+    const [rawSignature, setRawSignature] = useState<Blob | null>(null)
     const token = searchParams.get("t")
 
     const onBack = () => {
@@ -71,6 +76,20 @@ export const SignOptions = () => {
     const onChangeTab = (event: SyntheticEvent, newValue: number) => {
         setTab(newValue);
     }
+    const onCloseConfirmSignature = (shouldUpdate?: boolean) => {
+        setRawSignature(null)
+    }
+
+    useEffect(() => {
+        if (confirmSignature !== null) {
+            setRawSignature(confirmSignature)
+            const imgTarget = signaturePreview.current
+            if (imgTarget !== null) {
+                imgTarget.src = window.URL.createObjectURL(confirmSignature)
+            }
+            setConfirmSignature(null)
+        }
+    }, [confirmSignature]);
 
     return (<>
         <Box component="div" sx={{
@@ -139,5 +158,19 @@ export const SignOptions = () => {
                 <OtherSignature/>
             </SuspenseTabPanel>
         </Box>
+        <ConfirmDialog
+            fun={() => Promise.resolve()}
+            show={rawSignature !== null}
+            title={t("confirmDeleteTitle")}
+            description={<>
+                { t("confirmDeleteDesc") }
+                <img ref={signaturePreview} height="300px" width="100%" alt="signature-preview"/>
+            </>}
+            cancelText={t("cancelBtn")}
+            confirmText={t("confirmBtn")}
+            closeText={t("closeBtn")}
+            errorText={t("errorDelete")}
+            successText={t("successDelete")}
+            onClose={onCloseConfirmSignature}/>
     </>)
 }

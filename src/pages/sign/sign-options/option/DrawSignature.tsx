@@ -6,6 +6,7 @@ import { If } from "../../../../components/common/IfStatement";
 import CreateIcon from '@mui/icons-material/Create';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import {useTranslation} from "react-i18next";
+import {useSignContext} from "../../SignContext";
 
 type LineDef = {
     points: number[]
@@ -126,6 +127,7 @@ const DrawArea = ({
 }
 
 export const DrawSignature = () => {
+    const { setConfirmSignature } = useSignContext()
     const { t } = useTranslation("signNS");
     const refDiv = useRef<HTMLDivElement>(null)
     const [ready, setReady] = useState(false)
@@ -140,7 +142,9 @@ export const DrawSignature = () => {
     }, [refDiv])
 
     const onSaveData = (value: Blob) => {
+        console.log(value) 
         setSave(false)
+        setConfirmSignature(value)
     }
 
     const onClickClear = () => {
