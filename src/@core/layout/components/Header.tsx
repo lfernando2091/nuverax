@@ -1,8 +1,8 @@
 import "./Header.css"
-import {AppBar, AppBarProps, Box, IconButton, Menu, MenuItem, styled, Toolbar} from "@mui/material";
+import {AppBar, AppBarProps, Box, IconButton, Menu, MenuItem, styled, Toolbar, useScrollTrigger} from "@mui/material";
 import {LinkButton} from "../../../components/ListItemLink";
 import TranslateIcon from '@mui/icons-material/Translate';
-import {MouseEvent, useState} from "react";
+import React, {MouseEvent, ReactElement, ReactNode, useState} from "react";
 import {useAppContext} from "../../context/AppContext";
 import {useTranslation} from "react-i18next";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -40,6 +40,7 @@ export const Header = ({ open, setOpenNavbar, isMobile }: HeaderProps) => {
     return (
         // component="nav"
         // sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        <ElevationScroll>
         <NxAppBar
             ismobile={isMobile}
             open={open}
@@ -97,7 +98,22 @@ export const Header = ({ open, setOpenNavbar, isMobile }: HeaderProps) => {
                 </Menu>
             </Toolbar>
         </NxAppBar>
+        </ElevationScroll>
     )
+}
+
+export interface ElevationScrollProps {
+    children: ReactElement
+}
+
+export const ElevationScroll = ({ children }: ElevationScrollProps) => {
+    const trigger = useScrollTrigger({
+        disableHysteresis: true,
+        threshold: 0
+    })
+    return React.cloneElement(children, {
+        elevation: trigger ? 4 : 0,
+    })
 }
 
 export interface NxBarProps extends AppBarProps {

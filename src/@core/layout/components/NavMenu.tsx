@@ -71,7 +71,7 @@ export const NxNavMenu = ({
                 [`& .MuiDrawer-paper`]: {
                     width: width ?? 240,
                     // boxSizing: 'border-box',
-                    height: "100vh"
+                    // height: "100vh"
                 },
             }}
         >

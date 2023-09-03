@@ -1,4 +1,4 @@
-import {Box, Button, Grid, Paper, Stack, Typography} from "@mui/material";
+import {Box, Button, Grid, Paper, Stack, Toolbar, Typography} from "@mui/material";
 import {defer, LoaderFunctionArgs, useLoaderData, useParams, useRouteError} from "react-router-dom";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import {useMemo, useState} from "react";
@@ -54,7 +54,11 @@ export const Document = () => {
     }
 
     return (<>
-        <Paper variant="outlined" square >
+        <Paper sx={{
+            zIndex: (theme) => theme.zIndex.appBar ,
+            position: "fixed",
+            width: "100%"
+        }} variant="outlined" square >
             <Grid
                 container
                 direction="row"
@@ -71,6 +75,7 @@ export const Document = () => {
                 </Grid>
             </Grid>
         </Paper>
+        <Toolbar variant="dense"/>
         <Box component="div" sx={{
             display: 'flex',
             flexDirection: 'column',

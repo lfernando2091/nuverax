@@ -171,8 +171,8 @@ export const DrawSignature = () => {
             {t("drawSignatureDescTxt")}
         </Typography>
         <Grid container>
-            <Grid item xs={12} sm={12} md={2} lg={1} xl={4}></Grid>
-            <Grid item xs={12} sm={12} md={8} lg={10} xl={4}>
+            <Grid item xs={12} sm={12} md={2} lg={3} xl={4}></Grid>
+            <Grid item xs={12} sm={12} md={8} lg={6} xl={4}>
                 <ToggleButtonGroup size="small" onChange={handlePencil} value={pencilType} exclusive>
                     <ToggleButton value="eraser">
                         <DeleteOutlineIcon fontSize="small"/>
@@ -204,7 +204,7 @@ export const DrawSignature = () => {
                     {t("acceptTxt")}
                 </Button>
             </Grid>
-            <Grid item xs={12} sm={12} md={2} lg={1} xl={4}></Grid>
+            <Grid item xs={12} sm={12} md={2} lg={3} xl={4}></Grid>
         </Grid>
     </>)
 }
