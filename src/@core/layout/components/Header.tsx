@@ -8,11 +8,12 @@ import {useTranslation} from "react-i18next";
 import MenuIcon from "@mui/icons-material/Menu";
 
 export type HeaderProps = {
+    isMobile?: boolean
     open?: boolean
     setOpenNavbar?: (value: boolean) => void
 }
 
-export const Header = ({ open, setOpenNavbar }: HeaderProps) => {
+export const Header = ({ open, setOpenNavbar, isMobile }: HeaderProps) => {
     const { i18n } = useTranslation();
     const [anchorTranslate, setAnchorTranslate] = useState<null | HTMLElement>(null)
     const { language, setLanguage } = useAppContext()
@@ -38,8 +39,9 @@ export const Header = ({ open, setOpenNavbar }: HeaderProps) => {
 
     return (
         // component="nav"
+        // sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         <NxAppBar
-            sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            ismobile={isMobile}
             open={open}
             position="fixed"
             elevation={0}>
@@ -59,7 +61,7 @@ export const Header = ({ open, setOpenNavbar }: HeaderProps) => {
                     <Box sx={{
                         ...(open && { display: 'none' }),
                     }}>
-                        <LinkButton to="/"
+                        <LinkButton color="#fff" to="/"
                                     text="NX"/>
                     </Box>
                 </Box>
@@ -99,20 +101,21 @@ export const Header = ({ open, setOpenNavbar }: HeaderProps) => {
 }
 
 export interface NxBarProps extends AppBarProps {
+    ismobile?: boolean
     open?: boolean;
-    drawerWidth?: number
+    drawerwidth?: number
 }
 
 export const NxAppBar = styled(AppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})<NxBarProps>(({ theme, open, drawerWidth }) => ({
+})<NxBarProps>(({ theme, open, drawerwidth , ismobile}) => ({
     transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
-    ...(open && {
-        width: `calc(100% - ${drawerWidth ?? 240}px)`,
-        marginLeft: `${drawerWidth ?? 240}px`,
+    ...(open && !ismobile && {
+        width: `calc(100% - ${drawerwidth ?? 240}px)`,
+        marginLeft: `${drawerwidth ?? 240}px`,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,

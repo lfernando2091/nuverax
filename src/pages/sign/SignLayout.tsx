@@ -1,5 +1,5 @@
 import {MainContent, Header, NxMain, NxNavMenu, SimpleColumLayout, Footer, DrawerHeader} from "../../@core";
-import {Alert, Box, Divider, Grid, IconButton, List, ListSubheader, Toolbar, Typography} from "@mui/material";
+import {Alert, Box, Divider, Grid, IconButton, List, ListSubheader, Toolbar, Typography, useMediaQuery, useTheme} from "@mui/material";
 import {
     defer,
     LoaderFunctionArgs,
@@ -38,6 +38,8 @@ export const signLoader = async ({ request }: LoaderFunctionArgs) => {
 }
 
 export const SignView = () => {
+    const theme = useTheme();
+    const matches = useMediaQuery(theme.breakpoints.down('md'))
     const { setIntrospect } = useSignContext()
     const { t } = useTranslation("signNS");
     const { documents } = spaceService()
@@ -45,25 +47,30 @@ export const SignView = () => {
     const token = searchParams.get("t")
     const [getDocuments, setGetDocuments] = useState(false)
     const apiService = useLoaderData() as any
-    const [openNavbar, setOpenNavbar] = useState(true)
+    const [openNavbar, setOpenNavbar] = useState(!matches)
     const documentsPromise = () => documents(apiService.introspectResult.spaceId)
     const onDocumentsReady = () => {
         setGetDocuments(false)
     }
-    const onMinimizeMenu = () => {
-        setOpenNavbar(false)
-    }
     const onCloseDrawer = (value: boolean) => {
         setOpenNavbar(value)
     }
+    const triggerGetDocuments = () => {
+        setGetDocuments(true)
+    }
     useEffect(() => {
         setIntrospect(apiService.introspectResult)
-        setGetDocuments(true)
     }, []);
+    useEffect(triggerGetDocuments, [matches]);
+    useEffect(() => {
+        if (openNavbar && matches) {
+            triggerGetDocuments()
+        }
+    }, [openNavbar]);
     return (<>
         <SimpleColumLayout
-            header={<Header open={openNavbar} setOpenNavbar={onCloseDrawer}/>}
-            navbar={<NxNavMenu open={openNavbar} onClose={onCloseDrawer}>
+            header={<Header open={openNavbar} isMobile={matches} setOpenNavbar={onCloseDrawer}/>}
+            navbar={<NxNavMenu open={openNavbar} isMobile={matches} onClose={onCloseDrawer}>
                 <Box sx={{
                     overflowX: "hidden", overflowY: "visible"
                 }}>
@@ -116,7 +123,7 @@ export const SignView = () => {
                 </Box>
             </NxNavMenu>}>
             {/*<NavMenu></NavMenu>*/}
-            <NxMain open={openNavbar}>
+            <NxMain isMobile={matches} open={openNavbar}>
                 <Toolbar variant="dense"/>
                 <Outlet />
                 <Footer/>

@@ -39,6 +39,7 @@ export const NavMenu = ({
 }
 
 export type NxNavMenuProps = {
+    isMobile?: boolean
     children: ReactNode,
     anchor?: 'left' | 'top' | 'right' | 'bottom',
     width?: number
@@ -47,6 +48,7 @@ export type NxNavMenuProps = {
 }
 
 export const NxNavMenu = ({
+                              isMobile,
                             children,
                             anchor,
                             width,
@@ -59,7 +61,7 @@ export const NxNavMenu = ({
 
     return (<>
         <Drawer
-            variant="persistent"
+            variant={isMobile ? "temporary": "persistent"}
             open={open}
             onClose={handleDrawerToggle}
             anchor={anchor ?? "left"}
@@ -88,7 +90,7 @@ export const NxNavMenu = ({
             </Box>
             <Divider />
             <DrawerHeader>
-                <IconButton onClick={handleDrawerToggle}>
+                <IconButton onClick={handleDrawerToggle} size="small">
                     <ChevronLeftIcon/>
                 </IconButton>
             </DrawerHeader>

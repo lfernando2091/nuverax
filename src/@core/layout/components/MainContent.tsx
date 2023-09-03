@@ -21,20 +21,25 @@ export const MainContent = ({ children }: MainContentProps) => {
 }
 
 export interface NxMainProps {
+    isMobile?: boolean
     open?: boolean;
     drawerWidth?: number
 }
 
 export const NxMain =
     styled('main', { shouldForwardProp: (prop) => prop !== 'open' })
-    <NxMainProps>(({ theme, open, drawerWidth }) => ({
+    <NxMainProps>(({ theme, open, drawerWidth , isMobile}) => ({
     flexGrow: 1,
     transition: theme.transitions.create('margin', {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: `-${drawerWidth ?? 240}px`,
-    ...(open && {
+    ...(!isMobile && {
+        marginLeft: `-${drawerWidth ?? 240}px`
+    }), ...(isMobile && {
+            marginLeft: `0px`
+    }),
+    ...(open && !isMobile && {
         transition: theme.transitions.create('margin', {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
