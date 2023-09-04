@@ -1,16 +1,20 @@
 import {Footer, Header, NxMain, NxNavMenu, SimpleColumLayout} from "../../@core"
-import React, {ReactNode, useState} from "react";
+import React, {ReactNode, useEffect, useState} from "react";
 import {useMediaQuery, useTheme, Box, Toolbar} from "@mui/material";
 
 
 export type DashboardLayoutProps = {
     navbar: ReactNode
     children: ReactNode
+    onChangeScreenSize?: (isMobile: boolean) => void
+    onOpenTemporalDrawer?: () => void
 }
 
 export const DashboardLayout = ({
                                     navbar,
-                                    children
+                                    children,
+                                    onChangeScreenSize,
+                                    onOpenTemporalDrawer
                                 }: DashboardLayoutProps) => {
     const theme = useTheme();
     const matches = useMediaQuery(theme.breakpoints.down('md'))
@@ -18,6 +22,19 @@ export const DashboardLayout = ({
     const onCloseDrawer = (value: boolean) => {
         setOpenNavbar(value)
     }
+
+    useEffect(() => {
+        if (onChangeScreenSize) {
+            onChangeScreenSize(matches)
+        }
+    }, [matches]);
+    useEffect(() => {
+        if (openNavbar && matches) {
+            if (onOpenTemporalDrawer) {
+                onOpenTemporalDrawer()
+            }
+        }
+    }, [openNavbar]);
 
     return (<SimpleColumLayout
         header={<Header open={openNavbar} isMobile={matches} setOpenNavbar={onCloseDrawer}/>}

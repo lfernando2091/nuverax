@@ -14,6 +14,7 @@ import {ApiError} from "../../components/error/Error";
 import {NavDocumentsListSkeleton} from "./skeleton/Skeleton";
 import {useEffect, useState} from "react";
 import {SpaceContext, SpaceState} from "./SpaceContext";
+import {DashboardLayout} from "../common/DashboardLayout";
 
 export const spaceLoader = async ({ params }: { params: any }) => {
     return defer({
@@ -35,14 +36,104 @@ export const SpaceLayout = () => {
         setGetDocuments(false)
     }
 
-    useEffect(() => {
+    const triggerGetDocuments = () => {
         setGetDocuments(true)
-    }, []);
+    }
+
+    const onChangeScreenSize = (_isMobile: boolean) => {
+        triggerGetDocuments()
+    }
+
+    const onOpenTemporalDrawer = () => {
+        triggerGetDocuments()
+    }
 
     const state: SpaceState = {
 
     }
 
+    return (<>
+        <SpaceContext.Provider value={state}>
+            <DashboardLayout
+                onChangeScreenSize={onChangeScreenSize}
+                onOpenTemporalDrawer={onOpenTemporalDrawer}
+                navbar={<>
+                <Button size="small"
+                        component={Link}
+                        to="/"
+                        sx={{ marginTop: "10px", marginBottom: "10px" }}
+                        startIcon={<ArrowBackIosIcon />}>
+                    { t("nav.backBtn") }
+                </Button>
+                <List dense
+                      sx={{ marginBottom: "10px" }}
+                      component="nav"
+                      subheader={
+                          <ListSubheader component="div">
+                              { t("nav.spaceHeader") }
+                          </ListSubheader>
+                      }>
+                    <ListItemLink
+                        to=""
+                        end
+                        disabled={false}
+                        primary={ t("nav.homeBtn") }
+                        icon={<SmartButtonIcon/>}/>
+                </List>
+                <List dense
+                      sx={{ marginBottom: "10px" }}
+                      component="nav"
+                      subheader={
+                          <ListSubheader component="div">
+                              { t("nav.docsHeader") }
+                          </ListSubheader>
+                      }>
+                    <Suspend
+                        render={getDocuments}
+                        update={updateNavbar}
+                        onReady={onReadyDocsList}
+                        resolve={documentsPromise}
+                        error={(_error) => <>
+                            <ApiError title={ t("spaceDocsApiError") }/>
+                        </>}
+                        fallback={<NavDocumentsListSkeleton/>}>
+                        { (data) => <>
+                            {(data as SpaceDocument[]).length === 0 &&
+                                <>
+                                    <Alert severity="info">{ t("emptySpaceDocsList") }</Alert>
+                                </>
+                            }
+                            {(data as SpaceDocument[]).map((e, i) => (
+                                <ListItemLink
+                                    key={i}
+                                    to={`d/${e.shortId}`}
+                                    disabled={false}
+                                    primary={e.name}
+                                    icon={<ArticleIcon/>}/>
+                            ))}
+                        </>
+                        }
+                    </Suspend>
+                </List>
+            </>}>
+                <Paper variant="outlined" square >
+                    <IconButton size="small">
+                        <ChromeReaderModeIcon />
+                    </IconButton>
+                </Paper>
+                <Box component="div" sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    minHeight: '85vh',
+                    flexGrow: 1,
+                    p: 3
+                }}>
+                    <Outlet />
+                </Box>
+            </DashboardLayout>
+        </SpaceContext.Provider>
+    </>)
+    /*
     return (<>
         <SpaceContext.Provider value={state}>
             <OneColumnLayout>
@@ -57,83 +148,15 @@ export const SpaceLayout = () => {
                         }}
                     >
                         <Grid item>
-                            <Button size="small"
-                                    component={Link}
-                                    to="/"
-                                    sx={{ marginTop: "10px", marginBottom: "10px" }}
-                                    startIcon={<ArrowBackIosIcon />}>
-                                { t("nav.backBtn") }
-                            </Button>
-                            <List dense
-                                  sx={{ marginBottom: "10px" }}
-                                  component="nav"
-                                  subheader={
-                                      <ListSubheader component="div">
-                                          { t("nav.spaceHeader") }
-                                      </ListSubheader>
-                                  }>
-                                <ListItemLink
-                                    to=""
-                                    end
-                                    disabled={false}
-                                    primary={ t("nav.homeBtn") }
-                                    icon={<SmartButtonIcon/>}/>
-                            </List>
-                            <List dense
-                                  sx={{ marginBottom: "10px" }}
-                                  component="nav"
-                                  subheader={
-                                      <ListSubheader component="div">
-                                          { t("nav.docsHeader") }
-                                      </ListSubheader>
-                                  }>
-                                <Suspend
-                                    render={getDocuments}
-                                    update={updateNavbar}
-                                    onReady={onReadyDocsList}
-                                    resolve={documentsPromise}
-                                    error={(_error) => <>
-                                        <ApiError title={ t("spaceDocsApiError") }/>
-                                    </>}
-                                    fallback={<NavDocumentsListSkeleton/>}>
-                                    { (data) => <>
-                                        {(data as SpaceDocument[]).length === 0 &&
-                                            <>
-                                                <Alert severity="info">{ t("emptySpaceDocsList") }</Alert>
-                                            </>
-                                        }
-                                        {(data as SpaceDocument[]).map((e, i) => (
-                                            <ListItemLink
-                                                key={i}
-                                                to={`d/${e.shortId}`}
-                                                disabled={false}
-                                                primary={e.name}
-                                                icon={<ArticleIcon/>}/>
-                                        ))}
-                                    </>
-                                    }
-                                </Suspend>
-                            </List>
+
                         </Grid>
                     </Grid>
                 </NavMenu>
                 <MainContent>
-                    <Paper variant="outlined" square >
-                        <IconButton size="small">
-                            <ChromeReaderModeIcon />
-                        </IconButton>
-                    </Paper>
-                    <Box component="div" sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        minHeight: '85vh',
-                        flexGrow: 1,
-                        p: 3
-                    }}>
-                        <Outlet />
-                    </Box>
+
                 </MainContent>
             </OneColumnLayout>
         </SpaceContext.Provider>
     </>)
+     */
 }

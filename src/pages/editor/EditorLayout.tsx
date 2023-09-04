@@ -49,6 +49,7 @@ import { Field } from "../models/FieldModel";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ConfirmDialog } from "../../components/dialog/ConfirmDialog";
 import {notifyService} from "../services/NotifyService";
+import { DashboardLayout } from "../common/DashboardLayout";
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
@@ -164,230 +165,219 @@ export const EditorView = ({
     }
 
     return (<>
-        <OneColumnLayout>
-            <NavMenu>
+        <DashboardLayout
+            navbar={<>
+                {searchParams.has("relay_state") &&
+                    <>
+                        <Button size="small"
+                                component={Link}
+                                to={searchParams.get("relay_state") ?? "/"}
+                                sx={{ marginTop: "10px", marginBottom: "10px" }}
+                                startIcon={<ArrowBackIosIcon />}>
+                            Back
+                        </Button>
+                    </>
+                }
+                <Suspend<SpaceRes, Error>
+                    error={(_error: Error) => <>
+                        <ApiError title={ t("editorSpaceLoadError") }/>
+                    </>}
+                    fallback={<EditorTitleSkeleton/>}
+                    resolve={getSpacePromise}
+                    onReady={() => setLoadRecipients(true)}
+                >
+                    {(data: SpaceRes) =>
+                        <>
+                            <Typography sx={{
+                                marginTop: "10px",
+                                px: "16px"
+                            }} variant="h6" component="h6">
+                                Editor
+                            </Typography>
+                            <Typography sx={{
+                                fontSize: 14,
+                                px: "16px"
+                            }} color="text.secondary" gutterBottom>
+                                {t("editorSubtitle") + " "} {data.name}
+                            </Typography>
+                        </>
+                    }
+                </Suspend>
+                <Suspend<Recipient[], Error>
+                    render={loadRecipients}
+                    error={(_error: Error) => <>
+                        <ApiError title={ t("recipientsError") }/>
+                    </>}
+                    fallback={<EditorRecipientSkeleton/>}
+                    resolve={getAllRecipients}
+                >
+                    { (data) => (
+                        <>
+                            <If condition={data.length > 0}
+                                elseRender={<Alert severity="info">{ t("emptyRecipients") }</Alert>}>
+                                <FormControl sx={{
+                                    marginTop: "20px",
+                                    width: "210px",
+                                    px: "16px"
+                                }} size="small">
+                                    <InputLabel id="lbl-recipient-id">{t("recipientTxt")}</InputLabel>
+                                    <Select
+                                        variant="standard"
+                                        labelId="lbl-recipient-id"
+                                        id="input-recipient-id"
+                                        value={recipient}
+                                        label={t("recipientTxt")}
+                                        onChange={onChangeRecipient}
+                                    >
+                                        <ListSubheader>{t("signatureRequiredTxt")}</ListSubheader>
+                                        {data
+                                            .filter((e, i) => e.type === RecipientType.REQUIRES_SIGNATURE)
+                                            .map((e, i) => (
+                                                <MenuItem key={i} value={ e.id }>{ e.fullName }</MenuItem>
+                                            ))}
+                                        <ListSubheader>{t("receivesCopyTxt")}</ListSubheader>
+                                        {data
+                                            .filter((e, i) => e.type === RecipientType.COPY)
+                                            .map((e, i) => (
+                                                <MenuItem key={i} disabled value={ e.id }>{ e.fullName }</MenuItem>
+                                            ))}
+                                    </Select>
+                                </FormControl>
+                            </If>
+                        </>
+                    ) }
+                </Suspend>
+                <Suspend<SpaceDocument[], Error>
+                    render={loadRecipients}
+                    error={(_error: Error) => <>
+                        <ApiError title={ t("documentsError") }/>
+                    </>}
+                    fallback={<EditorRecipientSkeleton/>}
+                    resolve={getDocuments}
+                >
+                    {(data) => (<FormControl sx={{
+                        marginTop: "20px",
+                        marginBottom: "20px",
+                        width: "210px",
+                        px: "16px"
+                    }} size="small" disabled={recipient === ""}>
+                        <InputLabel id="lbl-document-id">{t("documentTxt")}</InputLabel>
+                        <Select
+                            variant="standard"
+                            labelId="lbl-document-id"
+                            id="input-document-id"
+                            value={document}
+                            label={t("documentTxt")}
+                            onChange={onChangeDocument}
+                        >
+                            {data.map((e, i) => (
+                                <MenuItem key={i} value={ e.shortId }>{ e.name }</MenuItem>
+                            ))
+                            }
+                        </Select>
+                    </FormControl>)}
+                </Suspend>
+
+                <Divider />
+
+                <List dense
+                      sx={{ marginBottom: "10px" }}
+                      component="nav"
+                      subheader={
+                          <ListSubheader component="div">
+                              {t("fieldTxt") }
+                          </ListSubheader>
+                      }>
+                    <ListItemButton
+                        onClick={onAddNewSignatureField}
+                        selected={false}
+                        disabled={document === ""}>
+                        <ListItemIcon>{<DriveFileRenameOutlineIcon/>}</ListItemIcon>
+                        <ListItemText primary={t("signatureTxt")}/>
+                    </ListItemButton>
+                    <ListItemButton
+                        selected={false}
+                        disabled={true}>
+                        <ListItemIcon>{<CalendarMonthIcon/>}</ListItemIcon>
+                        <ListItemText primary={t("dateTxt")}/>
+                    </ListItemButton>
+                    <ListItemButton
+                        selected={false}
+                        disabled={true}>
+                        <ListItemIcon>{<TextFieldsIcon/>}</ListItemIcon>
+                        <ListItemText primary={t("nameTxt")}/>
+                    </ListItemButton>
+                    <ListItemButton
+                        selected={false}
+                        disabled={true}>
+                        <ListItemIcon>{<AlternateEmailIcon/>}</ListItemIcon>
+                        <ListItemText primary={t("emailTxt")}/>
+                    </ListItemButton>
+                </List>
+            </>}>
+            <Paper
+                sx={{ position: "sticky" }}
+                variant="outlined" square>
                 <Grid
                     container
-                    direction="column"
-                    justifyContent="flex-start"
-                    alignItems="stretch"
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
                 >
                     <Grid item>
-                        {searchParams.has("relay_state") &&
-                            <>
-                                <Button size="small"
-                                        component={Link}
-                                        to={searchParams.get("relay_state") ?? "/"}
-                                        sx={{ marginTop: "10px", marginBottom: "10px" }}
-                                        startIcon={<ArrowBackIosIcon />}>
-                                    Back
-                                </Button>
-                            </>
-                        }
-                        <Suspend<SpaceRes, Error>
-                            error={(_error: Error) => <>
-                                <ApiError title={ t("editorSpaceLoadError") }/>
-                            </>}
-                            fallback={<EditorTitleSkeleton/>}
-                            resolve={getSpacePromise}
-                            onReady={() => setLoadRecipients(true)}
-                        >
-                            {(data: SpaceRes) =>
-                                <>
-                                    <Typography sx={{
-                                        marginTop: "10px",
-                                        px: "16px"
-                                    }} variant="h6" component="h6">
-                                        Editor
-                                    </Typography>
-                                    <Typography sx={{
-                                        fontSize: 14,
-                                        px: "16px"
-                                    }} color="text.secondary" gutterBottom>
-                                        {t("editorSubtitle") + " "} {data.name}
-                                    </Typography>
-                                </>
-                            }
-                        </Suspend>
-                        <Suspend<Recipient[], Error>
-                            render={loadRecipients}
-                            error={(_error: Error) => <>
-                                <ApiError title={ t("recipientsError") }/>
-                            </>}
-                            fallback={<EditorRecipientSkeleton/>}
-                            resolve={getAllRecipients}
-                        >
-                            { (data) => (
-                                <>
-                                    <If condition={data.length > 0}
-                                        elseRender={<Alert severity="info">{ t("emptyRecipients") }</Alert>}>
-                                        <FormControl sx={{
-                                            marginTop: "20px",
-                                            width: "210px",
-                                            px: "16px"
-                                        }} size="small">
-                                            <InputLabel id="lbl-recipient-id">{t("recipientTxt")}</InputLabel>
-                                            <Select
-                                                variant="standard"
-                                                labelId="lbl-recipient-id"
-                                                id="input-recipient-id"
-                                                value={recipient}
-                                                label={t("recipientTxt")}
-                                                onChange={onChangeRecipient}
-                                            >
-                                                <ListSubheader>{t("signatureRequiredTxt")}</ListSubheader>
-                                                {data
-                                                    .filter((e, i) => e.type === RecipientType.REQUIRES_SIGNATURE)
-                                                    .map((e, i) => (
-                                                        <MenuItem key={i} value={ e.id }>{ e.fullName }</MenuItem>
-                                                    ))}
-                                                <ListSubheader>{t("receivesCopyTxt")}</ListSubheader>
-                                                {data
-                                                    .filter((e, i) => e.type === RecipientType.COPY)
-                                                    .map((e, i) => (
-                                                        <MenuItem key={i} disabled value={ e.id }>{ e.fullName }</MenuItem>
-                                                    ))}
-                                            </Select>
-                                        </FormControl>
-                                    </If>
-                                </>
-                            ) }
-                        </Suspend>
-                        <Suspend<SpaceDocument[], Error>
-                            render={loadRecipients}
-                            error={(_error: Error) => <>
-                                <ApiError title={ t("documentsError") }/>
-                            </>}
-                            fallback={<EditorRecipientSkeleton/>}
-                            resolve={getDocuments}
-                        >
-                            {(data) => (<FormControl sx={{
-                                marginTop: "20px",
-                                marginBottom: "20px",
-                                width: "210px",
-                                px: "16px"
-                            }} size="small" disabled={recipient === ""}>
-                                <InputLabel id="lbl-document-id">{t("documentTxt")}</InputLabel>
-                                <Select
-                                    variant="standard"
-                                    labelId="lbl-document-id"
-                                    id="input-document-id"
-                                    value={document}
-                                    label={t("documentTxt")}
-                                    onChange={onChangeDocument}
-                                >
-                                    {data.map((e, i) => (
-                                        <MenuItem key={i} value={ e.shortId }>{ e.name }</MenuItem>
-                                    ))
-                                    }
-                                </Select>
-                            </FormControl>)}
-                        </Suspend>
-
-                        <Divider />
-
-                        <List dense
-                              sx={{ marginBottom: "10px" }}
-                              component="nav"
-                              subheader={
-                                  <ListSubheader component="div">
-                                      {t("fieldTxt") }
-                                  </ListSubheader>
-                              }>
-                            <ListItemButton
-                                onClick={onAddNewSignatureField}
-                                selected={false}
-                                disabled={document === ""}>
-                                <ListItemIcon>{<DriveFileRenameOutlineIcon/>}</ListItemIcon>
-                                <ListItemText primary={t("signatureTxt")}/>
-                            </ListItemButton>
-                            <ListItemButton
-                                selected={false}
-                                disabled={true}>
-                                <ListItemIcon>{<CalendarMonthIcon/>}</ListItemIcon>
-                                <ListItemText primary={t("dateTxt")}/>
-                            </ListItemButton>
-                            <ListItemButton
-                                selected={false}
-                                disabled={true}>
-                                <ListItemIcon>{<TextFieldsIcon/>}</ListItemIcon>
-                                <ListItemText primary={t("nameTxt")}/>
-                            </ListItemButton>
-                            <ListItemButton
-                                selected={false}
-                                disabled={true}>
-                                <ListItemIcon>{<AlternateEmailIcon/>}</ListItemIcon>
-                                <ListItemText primary={t("emailTxt")}/>
-                            </ListItemButton>
-                        </List>
+                        <IconButton size="small">
+                            <ChromeReaderModeIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item>
+                        <Stack direction="row" spacing={2}>
+                            {/*<TopToolbar/>*/}
+                            <IconButton
+                                disabled={selectedField === null}
+                                onClick={onDeleteField}
+                                color="primary"
+                                size="small">
+                                <DeleteIcon />
+                            </IconButton>
+                            <IconButton
+                                onClick={onSaveChanges}
+                                disabled={!changes}
+                                color="primary"
+                                size="small">
+                                <SaveIcon />
+                            </IconButton>
+                            <Button
+                                onClick={onShowConfirm}
+                                endIcon={<ArrowForwardIcon />}
+                                variant="contained"
+                                size="small">
+                                {t("sendBtn")}
+                            </Button>
+                            <ConfirmDialog
+                                fun={promiseNotifyGet}
+                                show={confirmDialog}
+                                title={t("confirmRequestTitle")}
+                                description={t("confirmRequestContent")}
+                                cancelText={t("cancelBtn")}
+                                confirmText={t("confirmBtn")}
+                                closeText={t("closeBtn")}
+                                errorText={t("errorNotifyRecipients")}
+                                successText={t("successNotifyRecipients")}
+                                onClose={onCloseSuccessfulDialog}
+                            />
+                        </Stack>
                     </Grid>
                 </Grid>
-            </NavMenu>
-            <MainContent>
-                <Paper
-                    sx={{ position: "sticky" }}
-                    variant="outlined" square>
-                    <Grid
-                        container
-                        direction="row"
-                        justifyContent="space-between"
-                        alignItems="center"
-                    >
-                        <Grid item>
-                            <IconButton size="small">
-                                <ChromeReaderModeIcon />
-                            </IconButton>
-                        </Grid>
-                        <Grid item>
-                            <Stack direction="row" spacing={2}>
-                                {/*<TopToolbar/>*/}
-                                <IconButton
-                                    disabled={selectedField === null}
-                                    onClick={onDeleteField}
-                                    color="primary"
-                                    size="small">
-                                    <DeleteIcon />
-                                </IconButton>
-                                <IconButton
-                                    onClick={onSaveChanges}
-                                    disabled={!changes}
-                                    color="primary"
-                                    size="small">
-                                    <SaveIcon />
-                                </IconButton>
-                                <Button
-                                    onClick={onShowConfirm}
-                                    endIcon={<ArrowForwardIcon />}
-                                    variant="contained"
-                                    size="small">
-                                    {t("sendBtn")}
-                                </Button>
-                                <ConfirmDialog
-                                    fun={promiseNotifyGet}
-                                    show={confirmDialog}
-                                    title={t("confirmRequestTitle")}
-                                    description={t("confirmRequestContent")}
-                                    cancelText={t("cancelBtn")}
-                                    confirmText={t("confirmBtn")}
-                                    closeText={t("closeBtn")}
-                                    errorText={t("errorNotifyRecipients")}
-                                    successText={t("successNotifyRecipients")}
-                                    onClose={onCloseSuccessfulDialog}
-                                />
-                            </Stack>
-                        </Grid>
-                    </Grid>
-                </Paper>
-                <Box component="div" sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    minHeight: '85vh',
-                    flexGrow: 1,
-                    p: 3
-                }}>
-                    <Outlet />
-                </Box>
-            </MainContent>
+            </Paper>
+            <Box component="div" sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                minHeight: '85vh',
+                flexGrow: 1,
+                p: 3
+            }}>
+                <Outlet />
+            </Box>
             <NavMenu
                 anchor="right"
                 width={100}>
@@ -400,17 +390,17 @@ export const EditorView = ({
                           </ListSubheader>
                       }>
                     {Array(pages).fill({ }).map((_e, i) => (
-                            <ListItemButton
-                                key={i}
-                                onClick={() => onSelectPage(i + 1)}
-                                selected={(i + 1) === page}
-                                disabled={false}>
-                                <ListItemText primary={`${t("pageTxt")} ${i + 1}`}/>
-                            </ListItemButton>
+                        <ListItemButton
+                            key={i}
+                            onClick={() => onSelectPage(i + 1)}
+                            selected={(i + 1) === page}
+                            disabled={false}>
+                            <ListItemText primary={`${t("pageTxt")} ${i + 1}`}/>
+                        </ListItemButton>
                     ))}
                 </List>
             </NavMenu>
-        </OneColumnLayout>
+        </DashboardLayout>
     </>)
 }
 

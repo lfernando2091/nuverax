@@ -65,32 +65,4 @@ export const HomeLayout = () => {
             <Outlet />
         </Box>
     </DashboardLayout>)
-
-    // return (<>
-    //     <SimpleColumLayout
-    //         header={}
-    //         navbar={}>
-    //         <NavMenu>
-    //             <Grid
-    //                 container
-    //                 direction="column"
-    //                 justifyContent="space-between"
-    //                 alignItems="stretch"
-    //                 sx={{
-    //                     height: "100%"
-    //                 }}
-    //             >
-    //                 <Grid item>
-
-    //                 </Grid>
-    //                 <Grid item>
-
-    //                 </Grid>
-    //             </Grid>
-    //         </NavMenu>
-    //         <MainContent>
-
-    //         </MainContent>
-    //     </SimpleColumLayout>
-    // </>)
 }
