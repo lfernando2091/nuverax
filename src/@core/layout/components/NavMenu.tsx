@@ -32,7 +32,6 @@ export const NavMenu = ({
                 [`& .MuiDrawer-paper`]: { width: width ?? 220, boxSizing: 'border-box' },
             }}
         >
-            <Toolbar variant="dense"/>
             { children }
         </Drawer>
     </>)

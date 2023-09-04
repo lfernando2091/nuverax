@@ -192,7 +192,7 @@ export const Home = () => {
         <Grid container spacing={2}>
             <Grid item xs={6} md={4}>
                 <LoadingButtonArea loading={loading}>
-                    <Button variant="outlined"
+                    <Button variant="contained"
                             color="secondary"
                             sx={{
                                 paddingTop: "10px",

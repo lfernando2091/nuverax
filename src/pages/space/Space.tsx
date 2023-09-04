@@ -100,7 +100,7 @@ export const Space = () => {
                       sx={{ marginTop: "10px", marginBottom: "10px" }}
                       spacing={2}>
                     <Grid item xs={6} md={4}>
-                        <Button variant="outlined"
+                        <Button variant="contained"
                                 color="secondary"
                                 fullWidth
                                 disableElevation

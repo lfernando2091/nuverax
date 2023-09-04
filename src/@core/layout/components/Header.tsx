@@ -11,9 +11,11 @@ export type HeaderProps = {
     isMobile?: boolean
     open?: boolean
     setOpenNavbar?: (value: boolean) => void
+    openRightNavbar?: boolean
+    rightDrawerWidth?: number
 }
 
-export const Header = ({ open, setOpenNavbar, isMobile }: HeaderProps) => {
+export const Header = ({ open, setOpenNavbar, isMobile, openRightNavbar, rightDrawerWidth }: HeaderProps) => {
     const { i18n } = useTranslation();
     const [anchorTranslate, setAnchorTranslate] = useState<null | HTMLElement>(null)
     const { language, setLanguage } = useAppContext()
@@ -45,6 +47,8 @@ export const Header = ({ open, setOpenNavbar, isMobile }: HeaderProps) => {
             ismobile={isMobile}
             open={open}
             position="fixed"
+            openRightDrawer={openRightNavbar}
+            rightDrawerWidth={rightDrawerWidth}
             elevation={0}>
             <Toolbar variant="dense">
                 <IconButton
@@ -118,23 +122,36 @@ export const ElevationScroll = ({ children }: ElevationScrollProps) => {
 
 export interface NxBarProps extends AppBarProps {
     ismobile?: boolean
-    open?: boolean;
+    open?: boolean
     drawerwidth?: number
+    openRightDrawer?: boolean
+    rightDrawerWidth?: number
 }
 
 export const NxAppBar = styled(AppBar, {
     shouldForwardProp: (prop) => prop !== 'open',
-})<NxBarProps>(({ theme, open, drawerwidth , ismobile}) => ({
+})<NxBarProps>(({
+                                                  theme,
+                                                  open,
+                                                  drawerwidth ,
+                                                  ismobile,
+                                                  openRightDrawer,
+                                                  rightDrawerWidth
+}) => ({
     transition: theme.transitions.create(['margin', 'width'], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
     ...(open && !ismobile && {
-        width: `calc(100% - ${drawerwidth ?? 240}px)`,
+        width: `calc(100% - ${drawerwidth ?? 240 }px)`,
         marginLeft: `${drawerwidth ?? 240}px`,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,
         }),
+    }),
+    ...(openRightDrawer && {
+        width: `calc(100% - ${rightDrawerWidth ?? 0}px)`,
+        marginRight: `${rightDrawerWidth ?? 0}px`
     }),
 }))

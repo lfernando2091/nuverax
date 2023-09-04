@@ -1,5 +1,5 @@
 import {Outlet, Route, Link, useParams, defer, useLoaderData} from "react-router-dom";
-import {MainContent, NavMenu, OneColumnLayout, useAppContext} from "../../@core";
+import {MainContent, OneColumnLayout, useAppContext} from "../../@core";
 import {Alert, Box, Button, Grid, IconButton, List, ListSubheader, Paper} from "@mui/material";
 import ChromeReaderModeIcon from '@mui/icons-material/ChromeReaderMode';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';

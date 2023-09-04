@@ -314,7 +314,33 @@ export const EditorView = ({
                         <ListItemText primary={t("emailTxt")}/>
                     </ListItemButton>
                 </List>
-            </>}>
+            </>}
+            rightNavbar={<>
+                <NavMenu
+                    anchor="right"
+                    width={100}>
+                    <List dense
+                          sx={{ marginBottom: "10px" }}
+                          component="nav"
+                          subheader={
+                              <ListSubheader component="div">
+                                  {t("pagesTxt")}
+                              </ListSubheader>
+                          }>
+                        {Array(pages).fill({ }).map((_e, i) => (
+                            <ListItemButton
+                                key={i}
+                                onClick={() => onSelectPage(i + 1)}
+                                selected={(i + 1) === page}
+                                disabled={false}>
+                                <ListItemText primary={`${t("pageTxt")} ${i + 1}`}/>
+                            </ListItemButton>
+                        ))}
+                    </List>
+                </NavMenu>
+            </>}
+            rightNavbarOpen={true}
+            rightDrawerWidth={100}>
             <Paper
                 sx={{ position: "sticky" }}
                 variant="outlined" square>
@@ -378,28 +404,6 @@ export const EditorView = ({
             }}>
                 <Outlet />
             </Box>
-            <NavMenu
-                anchor="right"
-                width={100}>
-                <List dense
-                      sx={{ marginBottom: "10px" }}
-                      component="nav"
-                      subheader={
-                          <ListSubheader component="div">
-                              {t("pagesTxt")}
-                          </ListSubheader>
-                      }>
-                    {Array(pages).fill({ }).map((_e, i) => (
-                        <ListItemButton
-                            key={i}
-                            onClick={() => onSelectPage(i + 1)}
-                            selected={(i + 1) === page}
-                            disabled={false}>
-                            <ListItemText primary={`${t("pageTxt")} ${i + 1}`}/>
-                        </ListItemButton>
-                    ))}
-                </List>
-            </NavMenu>
         </DashboardLayout>
     </>)
 }
