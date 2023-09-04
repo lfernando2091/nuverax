@@ -78,6 +78,9 @@ export const SignOptions = () => {
     }
     const onCloseConfirmSignature = (shouldUpdate?: boolean) => {
         setRawSignature(null)
+        if (shouldUpdate) {
+            navigate("/")
+        }
     }
 
     useEffect(() => {
@@ -161,16 +164,25 @@ export const SignOptions = () => {
         <ConfirmDialog
             fun={() => Promise.resolve()}
             show={rawSignature !== null}
-            title={t("confirmDeleteTitle")}
+            title={t("confirmSignatureTitle")}
             description={<>
-                { t("confirmDeleteDesc") }
-                <img ref={signaturePreview} height="300px" width="100%" alt="signature-preview"/>
+                { t("confirmSignatureDesc") }
+                <img ref={signaturePreview}
+                     style={{
+                         marginTop: "20px",
+                         borderRadius: "15px",
+                         backgroundColor: "#fff",
+                         boxShadow: "5px 5px 8px #d3d3d3, -5px -5px 8px #ededed"
+                }}
+                     height="300px"
+                     width="100%"
+                     alt="signature-preview"/>
             </>}
             cancelText={t("cancelBtn")}
             confirmText={t("confirmBtn")}
             closeText={t("closeBtn")}
-            errorText={t("errorDelete")}
-            successText={t("successDelete")}
+            errorText={t("errorSignature")}
+            successText={t("successSignature")}
             onClose={onCloseConfirmSignature}/>
     </>)
 }

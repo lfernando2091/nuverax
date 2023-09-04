@@ -19,5 +19,12 @@
   "othersTxt": "Otros",
   "drawSignatureDescTxt": "Dibuja tu firma lo mas precisa que puedas, da clic en \"Aceptar\" para confirmar el firmado.",
   "clearTxt": "Borrar todo",
-  "acceptTxt": "Aceptar"
+  "acceptTxt": "Aceptar",
+  "confirmSignatureTitle": "Confirmar firma",
+  "confirmSignatureDesc": "Previsualiza tu firma, despues da clic en \"Confirmar\"",
+  "cancelBtn": "Cancelar",
+  "confirmBtn": "Confirmar",
+  "closeBtn":  "Salir",
+  "errorSignature": "No pudimos confirmar la firma",
+  "successSignature": "Confirmado de la firma exitosa."
 }

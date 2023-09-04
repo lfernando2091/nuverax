@@ -19,5 +19,12 @@
   "drawSignatureTxt": "Draw signature",
   "drawSignatureDescTxt": "Draw your signature in the next area. Click on \"Accept\" to confirm",
   "clearTxt": "Clear",
-  "acceptTxt": "Accept"
+  "acceptTxt": "Accept",
+  "confirmSignatureTitle": "Confirm Signature",
+  "confirmSignatureDesc": "Preview your signature, then click \"Confirm\" your signature.",
+  "cancelBtn": "Cancel",
+  "confirmBtn": "Confirm",
+  "closeBtn":  "Close",
+  "errorSignature": "Unable to confirm signature.",
+  "successSignature": "Successful signature confirm."
 }
