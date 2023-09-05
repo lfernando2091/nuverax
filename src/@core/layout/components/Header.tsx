@@ -44,7 +44,7 @@ export const Header = ({ open, setOpenNavbar, isMobile, openRightNavbar, rightDr
         // sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
         <ElevationScroll>
         <NxAppBar
-            ismobile={isMobile}
+            isMobile={isMobile}
             open={open}
             position="fixed"
             openRightDrawer={openRightNavbar}
@@ -121,20 +121,22 @@ export const ElevationScroll = ({ children }: ElevationScrollProps) => {
 }
 
 export interface NxBarProps extends AppBarProps {
-    ismobile?: boolean
+    isMobile?: boolean
     open?: boolean
-    drawerwidth?: number
+    drawerWidth?: number
     openRightDrawer?: boolean
     rightDrawerWidth?: number
 }
 
 export const NxAppBar = styled(AppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
+    shouldForwardProp: (prop) =>
+        prop !== 'open' && prop !== 'isMobile' && prop !== 'drawerWidth' && prop !== 'openRightDrawer'
+        && prop !== 'rightDrawerWidth',
 })<NxBarProps>(({
                                                   theme,
                                                   open,
-                                                  drawerwidth ,
-                                                  ismobile,
+                                                  drawerWidth ,
+                                                  isMobile,
                                                   openRightDrawer,
                                                   rightDrawerWidth
 }) => ({
@@ -142,9 +144,9 @@ export const NxAppBar = styled(AppBar, {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
     }),
-    ...(open && !ismobile && {
-        width: `calc(100% - ${drawerwidth ?? 240 }px)`,
-        marginLeft: `${drawerwidth ?? 240}px`,
+    ...(open && !isMobile && {
+        width: `calc(100% - ${drawerWidth ?? 240 }px)`,
+        marginLeft: `${drawerWidth ?? 240}px`,
         transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.easeOut,
             duration: theme.transitions.duration.enteringScreen,

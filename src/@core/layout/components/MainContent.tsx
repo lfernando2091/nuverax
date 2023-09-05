@@ -27,7 +27,10 @@ export interface NxMainProps {
 }
 
 export const NxMain =
-    styled('main', { shouldForwardProp: (prop) => prop !== 'open' })
+    styled('main', {
+        shouldForwardProp: (prop) =>
+            prop !== 'open' && prop !== 'isMobile' && prop !== 'drawerWidth'
+    })
     <NxMainProps>(({ theme, open, drawerWidth , isMobile}) => ({
     flexGrow: 1,
     transition: theme.transitions.create('margin', {

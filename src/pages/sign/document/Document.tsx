@@ -56,7 +56,7 @@ export const Document = () => {
     return (<>
         <Paper sx={{
             zIndex: (theme) => theme.zIndex.appBar ,
-            position: "fixed",
+            position: "sticky",
             width: "100%"
         }} variant="outlined" square >
             <Grid
